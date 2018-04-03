@@ -1,28 +1,15 @@
 import React, { Component } from 'react';
 import {
   Platform,
-  StyleSheet,
   Text,
   View
 } from 'react-native';
+import { Stacks } from './utils/navigation';
 
 export default class App extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>
-          The Natural Fitness
-        </Text>
-      </View>
+      <Stacks />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-});
