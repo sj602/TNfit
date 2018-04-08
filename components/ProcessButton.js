@@ -10,24 +10,39 @@ import { width } from '../utils/helpers';
 
 export default class ProcessButton extends Component {
   render() {
+    const { navigate } = this.props.navigation;
+    const { previous, next } = this.props;
+
     return (
-      <View style={{flex:1, flexDirection: 'row'}}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.props.navigation.navigate(this.props.previous)}
-        >
-          <Text style={styles.text}>
-            이전
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.props.navigation.navigate(this.props.next)}
-        >
-          <Text style={styles.text}>
-            다음
-          </Text>
-        </TouchableOpacity>
+      <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'stretch'}}>
+        { previous
+          ?
+          (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigate(previous)}
+          >
+            <Text style={styles.text}>
+              이전
+            </Text>
+          </TouchableOpacity>
+          )
+          : null
+        }
+        { next
+          ?
+          (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigate(next)}
+          >
+            <Text style={styles.text}>
+              다음
+            </Text>
+          </TouchableOpacity>
+          )
+          : null
+        }
       </View>
     )
   }
@@ -35,6 +50,7 @@ export default class ProcessButton extends Component {
 
 const styles = StyleSheet.create({
   button: {
+    margin: 10,
     padding: 10,
     backgroundColor: "#841584",
     borderRadius: 5

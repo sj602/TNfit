@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { width } from '../utils/helpers';
 import NavigationBar from './NavigationBar';
+import ProcessButton from './ProcessButton';
 
 export default class Main extends Component {
   render() {
@@ -20,20 +21,14 @@ export default class Main extends Component {
               The Natural Fit은 여러분의 다이어트를 응원합니다!
             </Text>
           </View>
-          <View style={{flex:1}}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.props.navigation.navigate('PersonalInfo')}
-            >
-              <Text style={styles.text}>
-                시작
-              </Text>
-            </TouchableOpacity>
+          <View style={{flex:1, flexDirection: 'column', alignItems: 'center', borderWidth: 1}}>
+            <ProcessButton
+              navigation={this.props.navigation}
+              next='PersonalInfo'
+            />
           </View>
         </View>
-        <View style={{flex:1, flexDirection: 'row', width: width, height: 100}}>
-          <NavigationBar />
-        </View>
+        <NavigationBar />
       </View>
     );
   }

@@ -6,6 +6,8 @@ import {
   View
 } from 'react-native';
 import NavigationBar from './NavigationBar';
+import { width } from '../utils/helpers';
+import ProcessButton from './ProcessButton';
 
 export default class WhatWorkout extends Component {
   render() {
@@ -14,9 +16,18 @@ export default class WhatWorkout extends Component {
         <Text>
           오늘 하루 운동한 정보를 입력해주세요
         </Text>
-        <View style={{flex:1, flexDirection: 'row', width: width, height: 100, borderWidth: 1}}>
-          <NavigationBar />
+
+        <View style={{flex:8, width: width, flexDirection: 'column', justifyContent: 'center'}}>
+          <View style={{flex:7, flexDirection: 'column', borderWidth: 1 }}>
+          </View>
+          <ProcessButton
+            navigation={this.props.navigation}
+            previous='WhatFood'
+            next='Result'
+          />
         </View>
+
+        <NavigationBar />
       </View>
     );
   }

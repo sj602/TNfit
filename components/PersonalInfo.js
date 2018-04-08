@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Button
 } from 'react-native';
+import { CheckBox } from 'react-native-elements';
 import { width } from '../utils/helpers';
 import NavigationBar from './NavigationBar';
 import ProcessButton from './ProcessButton';
@@ -20,6 +21,8 @@ export default class PersonalInfo extends Component {
     height: '',
     weight: '',
     targetWeight: '',
+    manChecked: true,
+    womanChecked: false,
   }
 
   render() {
@@ -39,7 +42,7 @@ export default class PersonalInfo extends Component {
               </Text>
             </View>
             <View
-              style={{flex:1, width: 80, height: 40, borderColor: 'gray', alignItems: 'center'}}
+              style={styles.inputBox}
             >
               <TextInput
                 style={{width: 80}}
@@ -56,7 +59,7 @@ export default class PersonalInfo extends Component {
               </Text>
             </View>
             <View
-              style={{flex:1, width: 80, height: 40, borderColor: 'gray', alignItems: 'center'}}
+              style={styles.inputBox}
             >
               <TextInput
                 style={{width: 80}}
@@ -73,12 +76,25 @@ export default class PersonalInfo extends Component {
               </Text>
             </View>
             <View
-              style={{flex:1, width: 80, height: 40, borderColor: 'gray', alignItems: 'center'}}
+              style={{flex:1, flexDirection: 'row', borderWidth: 1}}
             >
-              <TextInput
-                style={{width: 80}}
-                onChangeText={(gender) => this.setState({gender})}
-                value={this.state.gender}
+              <CheckBox
+                size={16}
+                title='남성'
+                onPress={() => this.setState({
+                  manChecked: !this.state.manChecked,
+                  womanChecked: !this.state.womanChecked
+                })}
+                checked={this.state.manChecked}
+              />
+              <CheckBox
+                size={16}
+                title='여성'
+                onPress={() => this.setState({
+                  womanChecked: !this.state.womanChecked,
+                  manChecked: !this.state.manChecked,
+                })}
+                checked={this.state.womanChecked}
               />
             </View>
           </View>
@@ -90,7 +106,7 @@ export default class PersonalInfo extends Component {
               </Text>
             </View>
             <View
-              style={{flex:1, width: 80, height: 40, borderColor: 'gray', alignItems: 'center'}}
+              style={styles.inputBox}
             >
               <TextInput
                 style={{width: 80}}
@@ -107,7 +123,7 @@ export default class PersonalInfo extends Component {
               </Text>
             </View>
             <View
-              style={{flex:1, width: 80, height: 40, borderColor: 'gray', alignItems: 'center'}}
+              style={styles.inputBox}
             >
               <TextInput
                 style={{width: 80}}
@@ -124,7 +140,7 @@ export default class PersonalInfo extends Component {
               </Text>
             </View>
             <View
-              style={{flex:1, width: 80, height: 40, borderColor: 'gray', alignItems: 'center'}}
+              style={styles.inputBox}
             >
               <TextInput
                 style={{width: 80}}
@@ -140,9 +156,7 @@ export default class PersonalInfo extends Component {
           />
         </View>
 
-        <View style={{flex:1, flexDirection: 'row', width: width, height: 100}}>
-          <NavigationBar />
-        </View>
+        <NavigationBar />
       </View>
     );
   }
@@ -164,5 +178,12 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     textAlign: 'center',
+  },
+  inputBox: {
+    flex:1,
+    width: 80,
+    height: 40,
+    alignItems: 'center',
+    marginTop: 10
   }
 });

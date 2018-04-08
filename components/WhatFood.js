@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import NavigationBar from './NavigationBar';
 import { width } from '../utils/helpers';
+import ProcessButton from './ProcessButton';
 
 export default class WhatFood extends Component {
   renderRow() {
@@ -42,9 +43,7 @@ export default class WhatFood extends Component {
           </View>
         </View>
 
-        <View style={{flex:1, flexDirection: 'row', width: width, height: 100}}>
-          <NavigationBar />
-        </View>
+        <NavigationBar />
       </View>
     );
   }
