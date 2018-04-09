@@ -27,7 +27,9 @@ export default class WhatWorkout extends Component {
           />
         </View>
 
-        <NavigationBar />
+        <NavigationBar
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }

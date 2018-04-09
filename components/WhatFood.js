@@ -43,7 +43,9 @@ export default class WhatFood extends Component {
           </View>
         </View>
 
-        <NavigationBar />
+        <NavigationBar
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }

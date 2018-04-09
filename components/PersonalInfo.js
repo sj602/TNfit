@@ -6,7 +6,8 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  Button
+  Button,
+  Alert
 } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { width } from '../utils/helpers';
@@ -17,15 +18,16 @@ export default class PersonalInfo extends Component {
   state = {
     name: '',
     age: '',
-    gender: '',
+    manChecked: true,
+    womanChecked: false,
     height: '',
     weight: '',
     targetWeight: '',
-    manChecked: true,
-    womanChecked: false,
   }
 
   render() {
+    const personalInfo = this.state;
+
     return (
       <View style={styles.container}>
         <View style={{flex:9, width: width}}>
@@ -76,9 +78,10 @@ export default class PersonalInfo extends Component {
               </Text>
             </View>
             <View
-              style={{flex:1, flexDirection: 'row', borderWidth: 1}}
+              style={{flex:1, flexDirection: 'row'}}
             >
               <CheckBox
+                containerStyle={{width: 70, height: 40, marginTop: 12}}
                 size={16}
                 title='남성'
                 onPress={() => this.setState({
@@ -88,6 +91,7 @@ export default class PersonalInfo extends Component {
                 checked={this.state.manChecked}
               />
               <CheckBox
+                containerStyle={{width: 70, height: 40, marginTop: 12}}
                 size={16}
                 title='여성'
                 onPress={() => this.setState({
@@ -136,7 +140,7 @@ export default class PersonalInfo extends Component {
           <View style={{flex:1, flexDirection: 'row'}}>
             <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
               <Text style={{textAlign: 'center'}}>
-                목표몸무게
+                목표 몸무게
               </Text>
             </View>
             <View
@@ -153,10 +157,13 @@ export default class PersonalInfo extends Component {
             navigation={this.props.navigation}
             previous='Main'
             next='WhatFood'
+            personalInfo={personalInfo}
           />
         </View>
 
-        <NavigationBar />
+        <NavigationBar
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }

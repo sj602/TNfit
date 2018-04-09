@@ -13,6 +13,8 @@ import ProcessButton from './ProcessButton';
 
 export default class Main extends Component {
   render() {
+    const { navigation } = this.props;
+    
     return (
       <View style={styles.container}>
         <View style={{flex:9, width: width}}>
@@ -23,12 +25,14 @@ export default class Main extends Component {
           </View>
           <View style={{flex:1, flexDirection: 'column', alignItems: 'center', borderWidth: 1}}>
             <ProcessButton
-              navigation={this.props.navigation}
+              navigation={navigation}
               next='PersonalInfo'
             />
           </View>
         </View>
-        <NavigationBar />
+        <NavigationBar
+          navigation={navigation}
+        />
       </View>
     );
   }

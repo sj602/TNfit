@@ -26,7 +26,9 @@ export default class Result extends Component {
           />
         </View>
 
-        <NavigationBar />
+        <NavigationBar
+          navigation={this.props.navigation}
+        />
       </View>
     );
   }
