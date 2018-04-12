@@ -5,12 +5,20 @@ import {
   Text,
   View
 } from 'react-native';
+import { connect } from 'react-redux';
 import NavigationBar from './NavigationBar';
 import { width } from '../utils/helpers';
 import ProcessButton from './ProcessButton';
+import { workoutList } from '../database/db_workout';
+import { initWorkoutList } from '../actions/index';
 
-export default class WhatWorkout extends Component {
+class WhatWorkout extends Component {
+  componentDidMount() {
+    console.log(this)
+  }
   render() {
+    // const { workoutList } = this.props.WhatWorkout;
+
     return (
       <View style={styles.container}>
         <Text>
@@ -29,6 +37,7 @@ export default class WhatWorkout extends Component {
 
         <NavigationBar
           navigation={this.props.navigation}
+          selectedIndex={2}
         />
       </View>
     );
@@ -43,3 +52,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
 });
+
+const mapStateToProps = (state) => {
+  return {
+    WhatWorkout: state.WhatWorkout
+  }
+};
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     initWorkoutList: () => dispatch(INIT_WORKOUT_LIST);
+//   }
+// }
+
+export default connect(mapStateToProps, undefined)(WhatWorkout);

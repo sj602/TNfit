@@ -28,6 +28,7 @@ export default class Result extends Component {
 
         <NavigationBar
           navigation={this.props.navigation}
+          selectedIndex={3}
         />
       </View>
     );

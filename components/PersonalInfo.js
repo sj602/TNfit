@@ -9,12 +9,13 @@ import {
   Button,
   Alert
 } from 'react-native';
+import { connect } from 'react-redux';
 import { CheckBox } from 'react-native-elements';
 import { width } from '../utils/helpers';
 import NavigationBar from './NavigationBar';
 import ProcessButton from './ProcessButton';
 
-export default class PersonalInfo extends Component {
+class PersonalInfo extends Component {
   state = {
     name: '',
     age: '',
@@ -37,8 +38,8 @@ export default class PersonalInfo extends Component {
             </Text>
           </View>
 
-          <View style={{flex:1, flexDirection: 'row'}}>
-            <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{flex:1, flexDirection: 'row', borderWidth: 1}}>
+            <View style={{flex:1, justifyContent: 'center', alignItems: 'center', borderWidth: 1}}>
               <Text style={{textAlign: 'center'}}>
                 이름
               </Text>
@@ -163,6 +164,7 @@ export default class PersonalInfo extends Component {
 
         <NavigationBar
           navigation={this.props.navigation}
+          selectedIndex={0}
         />
       </View>
     );
@@ -191,6 +193,21 @@ const styles = StyleSheet.create({
     width: 80,
     height: 40,
     alignItems: 'center',
-    marginTop: 10
+    marginTop: 10,
+    // borderWidth: 1
   }
 });
+
+const mapStateToProps = (state) => {
+  return {
+    PersonalInfo: state.PersonalInfo
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    savePersonalInfo,
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PersonalInfo);

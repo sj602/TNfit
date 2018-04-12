@@ -45,6 +45,7 @@ export default class WhatFood extends Component {
 
         <NavigationBar
           navigation={this.props.navigation}
+          selectedIndex={1}
         />
       </View>
     );

@@ -13,47 +13,47 @@ export default class NavigationBar extends Component {
     super()
     this.state = {
       selectedIndex: undefined,
-      selectedMenu: '',
     }
+
+    this.updateIndex = this.updateIndex.bind(this);
   }
 
-  updateIndex(selectedIndex) {
+  componentWillMount() {
+    const {selectedIndex} = this.props;
     this.setState({selectedIndex})
   }
 
-  updateNavigation() {
-    const { selectedIndex, selectedMenu } = this.state;
+  updateIndex(selectedIndex) {
+    const { navigate } = this.props.navigation;
 
     switch(selectedIndex) {
       case 0:
-        this.setState({selectedMenu: 'PersonalInfo'});
+        this.setState({selectedIndex});
+        navigate('PersonalInfo');
         break;
       case 1:
-        this.setState({selectedMenu: 'WhatFood'});
+        this.setState({selectedIndex});
+        navigate('WhatFood');
         break;
       case 2:
-        this.setState({selectedMenu: 'WhatWorkout'});
+        this.setState({selectedIndex});
+        navigate('WhatWorkout');
         break;
       case 3:
-        this.setState({selectedMenu: 'Result'});
+        this.setState({selectedIndex});
+        navigate('Result');
         break;
     }
   }
 
   render() {
-    const buttons = ['개인정보', '음식정보', '음식정보', '결과']
-    const { selectedIndex, selectedMenu } = this.state
-
-    const { navigate } = this.props.navigation;
+    const buttons = ['개인정보', '음식정보', '운동정보', '결과']
+    const { selectedIndex } = this.state
     const { previous, next } = this.props;
 
     return (
       <ButtonGroup
-        onPress={() => {
-          this.updateIndex();
-          this.updateNavigation();
-          navigate(selectedMenu);
-        }}
+        component={undefined}
         selectedIndex={selectedIndex}
         buttons={buttons}
         containerStyle={{width: width, marginBottom: 0}}

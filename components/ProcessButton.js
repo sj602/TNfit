@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import { width } from '../utils/helpers';
+import { savePersonalInfo } from '../actions';
 
 export default class ProcessButton extends Component {
   state = {
@@ -57,12 +58,8 @@ export default class ProcessButton extends Component {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              if(personalInfo){
-                this.validate();
-                if(isValidated) navigate(next);
-              }else {
-                navigate(next);
-              }
+              // if(personalInfo) this.props.store.dispatch(savePersonalInfo(personalInfo));
+              navigate(next)
             }}
           >
             <Text style={styles.text}>
@@ -89,3 +86,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   }
 });
+
+// <TouchableOpacity
+//   style={styles.button}
+//   onPress={() => {
+//     if(personalInfo){
+//       this.validate();
+//       if(isValidated) navigate(next);
+//     }else {
+//       navigate(next);
+//     }
+//   }}
+// >

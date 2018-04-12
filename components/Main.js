@@ -14,7 +14,7 @@ import ProcessButton from './ProcessButton';
 export default class Main extends Component {
   render() {
     const { navigation } = this.props;
-    
+
     return (
       <View style={styles.container}>
         <View style={{flex:9, width: width}}>
