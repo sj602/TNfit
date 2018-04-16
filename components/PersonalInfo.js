@@ -9,21 +9,23 @@ import {
   Button,
   Alert
 } from 'react-native';
-import { connect } from 'react-redux';
 import { CheckBox } from 'react-native-elements';
 import { width } from '../utils/helpers';
 import NavigationBar from './NavigationBar';
 import ProcessButton from './ProcessButton';
 
-class PersonalInfo extends Component {
-  state = {
-    name: '',
-    age: '',
-    manChecked: true,
-    womanChecked: false,
-    height: '',
-    weight: '',
-    targetWeight: '',
+export default class PersonalInfo extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      age: '',
+      manChecked: true,
+      womanChecked: false,
+      height: '',
+      weight: '',
+      targetWeight: '',
+    }
   }
 
   render() {
@@ -197,17 +199,3 @@ const styles = StyleSheet.create({
     // borderWidth: 1
   }
 });
-
-const mapStateToProps = (state) => {
-  return {
-    PersonalInfo: state.PersonalInfo
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    savePersonalInfo,
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PersonalInfo);

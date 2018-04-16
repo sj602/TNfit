@@ -5,8 +5,66 @@ import {
   Text,
   View
 } from 'react-native';
-import { ButtonGroup } from 'react-native-elements';
+import { ButtonGroup, Icon } from 'react-native-elements';
 import { width } from '../utils/helpers';
+
+//Process buttons
+const component1 = () => {
+  return (
+    <View>
+      <Icon
+        name='ios-body'
+        type='ionicon'
+        color='#517fa4'
+      />
+      <Text>
+        개인정보
+      </Text>
+    </View>
+  )
+};
+const component2 = () => {
+  return (
+    <View>
+      <Icon
+        name='food'
+        type='material-community'
+        color='#517fa4'
+      />
+      <Text>
+        음식정보
+      </Text>
+    </View>
+  )
+}
+const component3 = () => {
+  return (
+    <View>
+      <Icon
+        name='weight-kilogram'
+        type='material-community'
+        color='#517fa4'
+      />
+      <Text>
+        운동정보
+      </Text>
+    </View>
+  )
+}
+const component4 = () => {
+  return (
+    <View>
+      <Icon
+        name='results'
+        type='foundation'
+        color='#517fa4'
+      />
+      <Text>
+        결과
+      </Text>
+    </View>
+  )
+}
 
 export default class NavigationBar extends Component {
   constructor () {
@@ -47,8 +105,8 @@ export default class NavigationBar extends Component {
   }
 
   render() {
-    const buttons = ['개인정보', '음식정보', '운동정보', '결과']
-    const { selectedIndex } = this.state
+    const buttons = [{element: component1}, {element: component2}, {element: component3}, {element: component4}];
+    const { selectedIndex } = this.state;
     const { previous, next } = this.props;
 
     return (

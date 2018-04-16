@@ -13,6 +13,7 @@ import ProcessButton from './ProcessButton';
 
 export default class Main extends Component {
   render() {
+    console.log(this.props)
     const { navigation } = this.props;
 
     return (
@@ -23,7 +24,7 @@ export default class Main extends Component {
               The Natural Fit은 여러분의 다이어트를 응원합니다!
             </Text>
           </View>
-          <View style={{flex:1, flexDirection: 'column', alignItems: 'center', borderWidth: 1}}>
+          <View style={{flex:1, flexDirection: 'column', alignItems: 'center'}}>
             <ProcessButton
               navigation={navigation}
               next='PersonalInfo'

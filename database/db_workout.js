@@ -36,7 +36,7 @@ export const workoutList = {
     minutes: 0,
   },
   weighttraining: {
-    name: '웨이트트레이닝',
+    name: '헬스',
     calories: 500,
     done: false,
     minutes: 0,
@@ -73,11 +73,11 @@ export const workoutList = {
   },
   balling: {
     name: '볼링',
-    calories: 90
-,
-done: false,
-minutes: 0,  },
-  dodge: {
+    calories: 90,
+    done: false,
+    minutes: 0,
+  },
+  volleyball: {
     name: '배구',
     calories: 200,
     done: false,

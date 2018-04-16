@@ -4,16 +4,12 @@ import {
   Text,
   View
 } from 'react-native';
-import { Tabs } from './utils/navigation';
-import { Provider } from 'react-redux';
-import { store } from './store';
+import { Stacks } from './utils/navigation';
 
 export default class App extends Component {
   render() {
     return (
-      <Provider store={store}>
-        <Tabs />
-      </Provider>
+      <Stacks />
     );
   }
 }

@@ -11,8 +11,11 @@ import { width } from '../utils/helpers';
 import { savePersonalInfo } from '../actions';
 
 export default class ProcessButton extends Component {
-  state = {
-    isValidated: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      isValidated: false,
+    }
   }
 
   validate() {
@@ -58,7 +61,6 @@ export default class ProcessButton extends Component {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              // if(personalInfo) this.props.store.dispatch(savePersonalInfo(personalInfo));
               navigate(next)
             }}
           >
