@@ -16,10 +16,12 @@ export default class Result extends Component {
   }
 
   render() {
+    const { personalInfo, whatFood, whatWorkout } = this.props.navigation.state.params;
+
     return (
       <View style={styles.container}>
         <Text>
-          당신의 결과는??
+          {personalInfo.name}님의 결과는??
         </Text>
 
         <View style={{flex:9, width: width, flexDirection: 'column', justifyContent: 'center'}}>

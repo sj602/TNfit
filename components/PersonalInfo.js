@@ -10,17 +10,14 @@ import NavigationBar from './NavigationBar';
 import ProcessButton from './ProcessButton';
 
 export default class PersonalInfo extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      age: '',
-      manChecked: true,
-      womanChecked: false,
-      height: '',
-      weight: '',
-      targetWeight: '',
-    }
+  state = {
+    name: '',
+    age: '',
+    manChecked: true,
+    womanChecked: false,
+    height: '',
+    weight: '',
+    targetWeight: '',
   }
 
   render() {

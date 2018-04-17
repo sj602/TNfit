@@ -11,10 +11,7 @@ import { workoutList } from '../database/db_workout';
 import { Icon } from 'react-native-elements';
 
 export default class WhatWorkout extends Component {
-  constructor() {
-    super();
-    this.state = workoutList;
-  }
+  state = workoutList
 
   setMinutesAndDone(workout, minutes) {
     this.setState({
@@ -28,7 +25,9 @@ export default class WhatWorkout extends Component {
   }
 
   render() {
-    const workoutList = this.state;
+    const { personalInfo } = this.props.navigation.state.params;
+
+    const whatWorkout = this.state;
 
     return (
       <View style={styles.container}>
@@ -53,17 +52,17 @@ export default class WhatWorkout extends Component {
           </View>
 
           <ScrollView style={{flex:7, flexDirection: 'column', borderWidth: 1 }}>
-            { workoutList && Object.keys(workoutList).map(workout => {
+            { whatWorkout && Object.keys(whatWorkout).map(workout => {
               return (
                 <View
                   style={{flex:1, flexDirection: 'row', justifyContent: 'space-between'}}
-                  key={workoutList[workout]['name']}
+                  key={whatWorkout[workout]['name']}
                 >
                   <Text style={styles.text}>
-                    {workoutList[workout]['name']}
+                    {whatWorkout[workout]['name']}
                   </Text>
                   <Text style={styles.text}>
-                    {workoutList[workout]['calories']}
+                    {whatWorkout[workout]['calories']}
                   </Text>
                   <View style={{flex:1,justifyContent: 'center', alignItems: 'center'}}>
                     <TextInput
@@ -75,7 +74,7 @@ export default class WhatWorkout extends Component {
                       style={styles.textInput}
                     />
                   </View>
-                  { workoutList[workout]['minutes'] ?
+                  { whatWorkout[workout]['minutes'] ?
                     (
                       <View style={styles.icon}>
                         <Icon
@@ -101,6 +100,9 @@ export default class WhatWorkout extends Component {
               navigation={this.props.navigation}
               previous='WhatFood'
               next='Result'
+              personalInfo={personalInfo}
+              whatFood={whatFood}
+              whatWorkout={whatWorkout}
             />
           </View>
         </View>

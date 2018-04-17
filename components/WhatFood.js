@@ -12,6 +12,10 @@ import { width } from '../utils/helpers';
 import ProcessButton from './ProcessButton';
 
 export default class WhatFood extends Component {
+  state = {
+    kimchi: 1,
+  }
+
   renderRow() {
     <View style={{ flex: 1, alignSelf: 'stretch', flexDirection: 'row' }}>
       <View style={{ flex: 1, alignSelf: 'stretch', borderWidth: 1 }} />
@@ -23,6 +27,10 @@ export default class WhatFood extends Component {
   }
 
   render() {
+    const { personalInfo } = this.props.navigation.state.params;
+
+    const { whatFood } = this.state;
+
     return (
       <View style={styles.container}>
         <View style={styles.containerSub}>
@@ -41,6 +49,8 @@ export default class WhatFood extends Component {
                 navigation={this.props.navigation}
                 previous='PersonalInfo'
                 next='WhatWorkout'
+                personalInfo={personalInfo}
+                whatFood={whatFood}
               />
             </View>
           </View>

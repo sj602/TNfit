@@ -36,7 +36,7 @@ export default class ProcessButton extends Component {
   render() {
     const { isValidated } = this.state;
     const { navigate } = this.props.navigation;
-    const { previous, next, personalInfo } = this.props;
+    const { previous, next, personalInfo, whatFood, whatWorkout } = this.props;
 
     return (
       <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'stretch'}}>
@@ -60,7 +60,11 @@ export default class ProcessButton extends Component {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigate(next)
+              navigate(next, { // always pass data to the next screen
+                personalInfo,
+                whatFood,
+                whatWorkout
+              })
             }}
           >
             <Text style={styles.text}>
