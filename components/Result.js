@@ -5,27 +5,24 @@ import {
   Text,
   View
 } from 'react-native';
-import { connect } from 'react-redux';
 import NavigationBar from './NavigationBar';
 import { width } from '../utils/helpers';
 import ProcessButton from './ProcessButton';
 import { Slider } from 'react-native-elements';
 
-class Result extends Component {
+export default class Result extends Component {
   state = {
     value: 1500,
   }
 
   render() {
-    const {PersonalInfo} = this.props;
-
     return (
       <View style={styles.container}>
         <Text>
           당신의 결과는??
         </Text>
 
-        <View style={{flex:8, width: width, flexDirection: 'column', justifyContent: 'center'}}>
+        <View style={{flex:9, width: width, flexDirection: 'column', justifyContent: 'center'}}>
           <View style={{flex:7, flexDirection: 'column', borderWidth: 1 }}>
             <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
               <Slider
@@ -38,13 +35,6 @@ class Result extends Component {
               <Text>Value: {this.state.value}</Text>
             </View>
             <View style={{flex:1}}>
-              { PersonalInfo && Object.keys(PersonalInfo).map(info => {
-                return (
-                  <Text>
-                    info
-                  </Text>
-                )
-              })}
             </View>
           </View>
           <ProcessButton
@@ -70,11 +60,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
 });
-
-const mapStateToProps = (state) => {
-  return {
-    PersonalInfo: state.PersonalInfo
-  }
-};
-
-export default connect(mapStateToProps, undefined)(Result);

@@ -25,7 +25,7 @@ export default class WhatFood extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{flex:9, width: width}}>
+        <View style={styles.containerSub}>
           <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
             <Text>
               오늘 하루 섭취한 음식을 입력해주세요
@@ -35,11 +35,14 @@ export default class WhatFood extends Component {
           <View style={{flex:8, width: width, flexDirection: 'column', justifyContent: 'center'}}>
             <View style={{flex:7, flexDirection: 'column', borderWidth: 1 }}>
             </View>
-            <ProcessButton
-              navigation={this.props.navigation}
-              previous='PersonalInfo'
-              next='WhatWorkout'
-            />
+
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <ProcessButton
+                navigation={this.props.navigation}
+                previous='PersonalInfo'
+                next='WhatWorkout'
+              />
+            </View>
           </View>
         </View>
 
@@ -59,6 +62,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  containerSub: {
+    flex: 1,
+    width: width,
   },
   button: {
     marginLeft: 30,

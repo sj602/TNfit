@@ -8,7 +8,6 @@ import {
   Alert,
 } from 'react-native';
 import { width } from '../utils/helpers';
-import { savePersonalInfo } from '../actions';
 
 export default class ProcessButton extends Component {
   constructor(props) {

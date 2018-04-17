@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
   Platform, StyleSheet, Text,
-  View, ScrollView, TouchableOpacity
+  View, ScrollView, TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import NavigationBar from './NavigationBar';
 import { width } from '../utils/helpers';
@@ -15,11 +16,12 @@ export default class WhatWorkout extends Component {
     this.state = workoutList;
   }
 
-  setDone(workout) {
+  setMinutesAndDone(workout, minutes) {
     this.setState({
       ...(this.state),
       [workout]: {
         ...(this.state[workout]),
+        minutes: minutes.replace(/[^0-9]/g, ''), // prevent from string input, not numeric input
         done: !this.state[workout].done,
       }
     })
@@ -34,7 +36,7 @@ export default class WhatWorkout extends Component {
           오늘 하루 운동한 정보를 입력해주세요!
         </Text>
 
-        <View style={{flex:8, width: width, flexDirection: 'column', justifyContent: 'center'}}>
+        <View style={{flex:1, width: width, flexDirection: 'column', justifyContent: 'center'}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1}}>
             <Text style={styles.text}>
               운동
@@ -53,49 +55,54 @@ export default class WhatWorkout extends Component {
           <ScrollView style={{flex:7, flexDirection: 'column', borderWidth: 1 }}>
             { workoutList && Object.keys(workoutList).map(workout => {
               return (
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setDone(workout)
-                  }}
+                <View
+                  style={{flex:1, flexDirection: 'row', justifyContent: 'space-between'}}
                   key={workoutList[workout]['name']}
                 >
-                  <View style={{flex:1, flexDirection: 'row', justifyContent: 'space-between'}}>
-                    <Text style={styles.text}>
-                      {workoutList[workout]['name']}
-                    </Text>
-                    <Text style={styles.text}>
-                      {workoutList[workout]['calories']}
-                    </Text>
-                    <Text style={styles.text}>
-                      {workoutList[workout]['minutes']}
-                    </Text>
-                    { workoutList[workout]['done'] ?
-                      (
-                        <View style={styles.icon}>
-                          <Icon
-                            name='done'
-                            color='blue'
-                            size={18}
-                          />
-                        </View>
-                      )
-                      :
-                      (
-                        <Text style={styles.text}>
-                        { }
-                        </Text>
-                      ) // fake text to fill 4 flexes
-                    }
+                  <Text style={styles.text}>
+                    {workoutList[workout]['name']}
+                  </Text>
+                  <Text style={styles.text}>
+                    {workoutList[workout]['calories']}
+                  </Text>
+                  <View style={{flex:1,justifyContent: 'center', alignItems: 'center'}}>
+                    <TextInput
+                      onChangeText={(minutes) => this.setMinutesAndDone(workout, minutes)}
+                      value={this.state[workout].minutes}
+                      maxLength={2}
+                      placeholder='0'
+                      keyboardType={'numeric'}
+                      style={styles.textInput}
+                    />
                   </View>
-                </TouchableOpacity>
+                  { workoutList[workout]['minutes'] ?
+                    (
+                      <View style={styles.icon}>
+                        <Icon
+                          name='done'
+                          color='blue'
+                          size={18}
+                        />
+                      </View>
+                    )
+                    :
+                    (
+                      <Text style={styles.text}>
+                      { }
+                      </Text>
+                    ) // fake text to fill 4 flexes
+                  }
+                </View>
               )
             })}
           </ScrollView>
-          <ProcessButton
-            navigation={this.props.navigation}
-            previous='WhatFood'
-            next='Result'
-          />
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <ProcessButton
+              navigation={this.props.navigation}
+              previous='WhatFood'
+              next='Result'
+            />
+          </View>
         </View>
 
         <NavigationBar
@@ -115,8 +122,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   text: {
-    flex:1,
-    textAlign: 'center'
+    flex: 1,
+    textAlign: 'center',
+  },
+  textInput: {
+    textAlign: 'center',
+    width: 30,
+    height: 37,
   },
   icon: {
     flex:1,
