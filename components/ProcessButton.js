@@ -45,7 +45,11 @@ export default class ProcessButton extends Component {
           (
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigate(previous)}
+            onPress={() => navigate(previous, { // always pass data to the previous/next screen
+              personalInfo,
+              whatFood,
+              whatWorkout
+            })}
           >
             <Text style={styles.text}>
               이전
@@ -60,7 +64,7 @@ export default class ProcessButton extends Component {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigate(next, { // always pass data to the next screen
+              navigate(next, { // always pass data to the previous/next screen
                 personalInfo,
                 whatFood,
                 whatWorkout

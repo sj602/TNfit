@@ -25,7 +25,7 @@ export default class WhatWorkout extends Component {
   }
 
   render() {
-    const { personalInfo } = this.props.navigation.state.params;
+    const { personalInfo, whatFood } = this.props.navigation.state.params;
 
     const whatWorkout = this.state;
 

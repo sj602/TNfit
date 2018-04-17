@@ -42,6 +42,9 @@ export default class Result extends Component {
           <ProcessButton
             navigation={this.props.navigation}
             previous='WhatWorkout'
+            personalInfo={personalInfo}
+            whatFood={whatFood}
+            whatWorkout={whatWorkout}
           />
         </View>
 

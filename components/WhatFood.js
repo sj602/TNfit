@@ -29,7 +29,7 @@ export default class WhatFood extends Component {
   render() {
     const { personalInfo } = this.props.navigation.state.params;
 
-    const { whatFood } = this.state;
+    const whatFood = this.state;
 
     return (
       <View style={styles.container}>
