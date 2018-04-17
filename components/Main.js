@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TouchableOpacity,
+  Platform, StyleSheet, Text,
+  View, Button, TouchableOpacity,
+  Image,
 } from 'react-native';
 import { width } from '../utils/helpers';
 import NavigationBar from './NavigationBar';
@@ -13,15 +10,21 @@ import ProcessButton from './ProcessButton';
 
 export default class Main extends Component {
   render() {
-    console.log(this.props)
     const { navigation } = this.props;
 
     return (
       <View style={styles.container}>
         <View style={{flex:9, width: width}}>
           <View style={{flex:2, justifyContent: 'center', alignItems: 'center'}}>
-            <Text>
-              The Natural Fit은 여러분의 다이어트를 응원합니다!
+            <Image
+              style={styles.image}
+              source={require('../images/TN_logo.png')}
+            />
+            <Text style={styles.text}>
+              The Natural Fit과 함께 다이어트를 시작해보세요
+            </Text>
+            <Text style={styles.text}>
+              여러분의 다이어트를 응원합니다!
             </Text>
           </View>
           <View style={{flex:1, flexDirection: 'column', alignItems: 'center'}}>
@@ -45,7 +48,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    // backgroundColor: '#F5FCFF',
+    backgroundColor: 'white',
+  },
+  image: {
+    width: width * 0.3,
+    height: width * 0.3,
+    marginBottom: 30,
   },
   button: {
     padding: 10,
@@ -53,7 +62,8 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   text: {
-    color: 'white',
+    fontSize: 25,
     textAlign: 'center',
+    marginTop: 5,
   }
 });

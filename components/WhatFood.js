@@ -35,7 +35,7 @@ export default class WhatFood extends Component {
       <View style={styles.container}>
         <View style={styles.containerSub}>
           <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text>
+            <Text style={styles.textTitle}>
               오늘 하루 섭취한 음식을 입력해주세요
             </Text>
           </View>
@@ -71,11 +71,16 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'white',
   },
   containerSub: {
     flex: 1,
     width: width,
+  },
+  textTitle: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginTop: 10,
   },
   button: {
     marginLeft: 30,
@@ -84,8 +89,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#841584",
     borderRadius: 5
   },
-  text: {
-    color: 'white',
-    textAlign: 'center',
-  }
 });

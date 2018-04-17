@@ -31,7 +31,7 @@ export default class WhatWorkout extends Component {
 
     return (
       <View style={styles.container}>
-        <Text>
+        <Text style={styles.textTitle}>
           오늘 하루 운동한 정보를 입력해주세요!
         </Text>
 
@@ -121,7 +121,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'white',
+  },
+  textTitle: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginTop: 10,
   },
   text: {
     flex: 1,

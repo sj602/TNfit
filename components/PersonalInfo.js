@@ -27,14 +27,14 @@ export default class PersonalInfo extends Component {
       <View style={styles.container}>
         <View style={styles.containerSub}>
           <ScrollView>
-            <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-              <Text>
+            <View style={{flex:1, justifyContent: 'center', alignItems: 'center', marginBottom: 30}}>
+              <Text style={styles.textTitle}>
                 개인정보를 입력해주세요
               </Text>
             </View>
 
-            <View style={{flex:1, flexDirection: 'row', borderWidth: 1}}>
-              <View style={{flex:1, justifyContent: 'center', alignItems: 'center', borderWidth: 1}}>
+            <View style={{flex:1, flexDirection: 'row'}}>
+              <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={{textAlign: 'center'}}>
                   이름
                 </Text>
@@ -43,9 +43,10 @@ export default class PersonalInfo extends Component {
                 style={styles.inputBox}
               >
                 <TextInput
-                  style={{width: 80}}
+                  style={styles.textInput}
                   onChangeText={(name) => this.setState({name})}
                   value={this.state.name}
+                  placeholder='홍길동'
                 />
               </View>
             </View>
@@ -60,9 +61,12 @@ export default class PersonalInfo extends Component {
                 style={styles.inputBox}
               >
                 <TextInput
-                  style={{width: 80}}
+                  style={styles.textInput}
                   onChangeText={(age) => this.setState({age})}
                   value={this.state.age}
+                  maxLength={2}
+                  placeholder='25'
+                  keyboardType={'numeric'}
                 />
               </View>
             </View>
@@ -109,9 +113,12 @@ export default class PersonalInfo extends Component {
                 style={styles.inputBox}
               >
                 <TextInput
-                  style={{width: 80}}
+                  style={styles.textInput}
                   onChangeText={(height) => this.setState({height})}
                   value={this.state.height}
+                  maxLength={3}
+                  placeholder='175'
+                  keyboardType={'numeric'}
                 />
               </View>
             </View>
@@ -126,9 +133,12 @@ export default class PersonalInfo extends Component {
                 style={styles.inputBox}
               >
                 <TextInput
-                  style={{width: 80}}
+                  style={styles.textInput}
                   onChangeText={(weight) => this.setState({weight})}
                   value={this.state.weight}
+                  maxLength={3}
+                  placeholder='80'
+                  keyboardType={'numeric'}
                 />
               </View>
             </View>
@@ -143,15 +153,18 @@ export default class PersonalInfo extends Component {
                 style={styles.inputBox}
               >
                 <TextInput
-                  style={{width: 80}}
+                  style={styles.textInput}
                   onChangeText={(targetWeight) => this.setState({targetWeight})}
                   value={this.state.targetWeight}
+                  maxLength={2}
+                  placeholder='65'
+                  keyboardType={'numeric'}
                 />
               </View>
             </View>
           </ScrollView>
 
-          <View style={{justifyContent: 'center', alignItems: 'center', borderWidth: 1}}>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <ProcessButton
               navigation={this.props.navigation}
               previous='Main'
@@ -176,7 +189,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'white',
   },
   containerSub: {
     flex: 1,
@@ -187,9 +200,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#841584",
     borderRadius: 5
   },
-  text: {
-    color: 'white',
+  textTitle: {
+    fontSize: 20,
     textAlign: 'center',
+    marginTop: 10,
+  },
+  textInput: {
+    textAlign: 'center',
+    width: width * 0.2
   },
   inputBox: {
     flex:1,
@@ -197,6 +215,5 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     marginTop: 10,
-    // borderWidth: 1
   }
 });
