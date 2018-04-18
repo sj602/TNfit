@@ -18,7 +18,7 @@ export default class WhatWorkout extends Component {
       ...(this.state),
       [workout]: {
         ...(this.state[workout]),
-        minutes: minutes.replace(/[^0-9]/g, ''), // prevent from string input, not numeric input
+        minutes: Number(minutes.replace(/[^0-9]/g, '')), // prevent from string input, not numeric input
         done: !this.state[workout].done,
       }
     })
