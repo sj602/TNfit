@@ -25,20 +25,16 @@ export default class WhatFood extends Component {
 
     return (
       <View style={styles.container}>
-        <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={styles.textTitle}>
-            오늘 하루 섭취한 음식을 입력해주세요
-          </Text>
-        </View>
+        <Text style={styles.textTitle}>
+          오늘 하루 섭취한 음식을 입력해주세요
+        </Text>
 
-        <View style={styles.searchBar}>
-          <SearchBar
-            width={width}
-            onChangeSearch={(searchFood) => this.updateSearch(searchFood)}
-          />
-        </View>
+        <SearchBar
+          width={width}
+          onChangeSearch={(searchFood) => this.updateSearch(searchFood)}
+        />
 
-        <View style={{flex:1, width: width, flexDirection: 'column', justifyContent: 'center'}}>
+        <View style={{flex:9, width: width, flexDirection: 'column', justifyContent: 'space-between', borderWidth: 1, borderColor: 'red'}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1}}>
             <Text style={styles.text}>
               음식명
@@ -60,7 +56,7 @@ export default class WhatFood extends Component {
             </Text>
           </View>
 
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'blue'}}>
             <ProcessButton
               navigation={this.props.navigation}
               previous='PersonalInfo'
@@ -83,21 +79,30 @@ export default class WhatFood extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
+  },
+  searchBar: {
+    borderWidth: 2,
+    borderColor: 'grey'
   },
   textTitle: {
     fontSize: 20,
     textAlign: 'center',
     marginTop: 10,
   },
-  button: {
-    marginLeft: 30,
-    marginRight: 30,
-    padding: 10,
-    backgroundColor: "#841584",
-    borderRadius: 5
+  text: {
+    flex: 1,
+    textAlign: 'center',
   },
+  textInput: {
+    textAlign: 'center',
+    width: 30,
+    height: 37,
+  },
+  icon: {
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center'}
 });

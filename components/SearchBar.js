@@ -15,16 +15,27 @@ export default class SearchBar extends Component {
   render() {
     let { searchWorkout } = this.state;
     const { width, onChangeSearch } = this.props;
-    onChangeSearch(searchWorkout);
 
     return (
-      <TextInput
-        style={{width: width}}
-        onChangeText={(searchWorkout) => this.setState({searchWorkout})}
-        value={searchWorkout}
-        placeholder='검색: 운동명'
-        underlineColorAndroid='transparent'
-      />
+      <View style={{flex:1, minHeight: 18, flexDirection: 'row', borderWidth: 1, borderColor: 'grey'}}>
+        <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+          <Icon
+            name='search'
+            type='font-awesome'
+            color='#517fa4'
+            size={14}
+          />
+        </View>
+        <View style={{flex:9, justifyContent: 'center'}}>
+          <TextInput
+            style={{borderWidth:1, borderColor: 'blue'}}
+            onChangeText={(searchWorkout) => this.setState({searchWorkout})}
+            value={searchWorkout}
+            placeholder='검색: 운동명'
+            underlineColorAndroid='transparent'
+          />
+        </View>
+      </View>
     );
   }
 }
