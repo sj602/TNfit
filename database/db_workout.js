@@ -1,128 +1,142 @@
-export const workoutList = {
-  slowwalking: {
+export const workoutList = [
+  {
     name: '가벼운 걷기',
-    calories: 180,    // consuming kcal per hour
+    eng_name: 'slow walking',
+    calories_spent_per_hour: 180,
     done: false,
     minutes: 0,
   },
-  fastwalking: {
+  {
     name: '빠른 걷기',
-    calories: 300,
+    eng_name: 'fast walking',
+    calories_spent_per_hour: 300,
     done: false,
     minutes: 0,
   },
-  golf: {
+  {
     name: '골프',
-    calories: 270,
+    eng_name: 'golf',
+    calories_spent_per_hour: 270,
     done: false,
     minutes: 0,
   },
-  badminton: {
+  {
     name: '배드민턴',
-    calories: 340,
+    eng_name: 'badminton',
+    calories_spent_per_hour: 340,
     done: false,
     minutes: 0,
   },
-  slowrunning: {
+  {
     name: '가벼운 달리기',
-    calories: 480,
+    eng_name: 'slow running',
+    calories_spent_per_hour: 480,
     done: false,
     minutes: 0,
   },
-  fastrunning: {
+  {
     name: '격렬한 달리기',
-    calories: 630,
+    eng_name: 'fast running',
+    calories_spent_per_hour: 630,
     done: false,
     minutes: 0,
   },
-  weighttraining: {
+  {
     name: '헬스',
-    calories: 500,
+    eng_name: 'weight training',
+    calories_spent_per_hour: 500,
     done: false,
     minutes: 0,
   },
-  climbing: {
+  {
     name: '등산',
-    calories: 196,
+    eng_name: 'climbing',
+    calories_spent_per_hour: 196,
     done: false,
     minutes: 0,
   },
-  jogging: {
+  {
     name: '조깅',
-    calories: 196,
+    eng_name: 'jogging',
+    calories_spent_per_hour: 196,
     done: false,
     minutes: 0,
   },
-  swimming: {
+  {
     name: '수영',
-    calories: 273,
+    eng_name: 'swimming',
+    calories_spent_per_hour: 273,
     done: false,
     minutes: 0,
   },
-  aerobic: {
+  {
     name: '에어로빅',
-    calories: 126,
+    eng_name: 'aerobic',
+    calories_spent_per_hour: 126,
     done: false,
     minutes: 0,
   },
-  skiing: {
+  {
     name: '스키',
-    calories: 186,
+    eng_name: 'skiing',
+    calories_spent_per_hour: 186,
     done: false,
     minutes: 0,
   },
-  balling: {
+  {
     name: '볼링',
-    calories: 90,
+    eng_name: 'bowling',
+    calories_spent_per_hour: 90,
     done: false,
     minutes: 0,
   },
-  volleyball: {
+  {
     name: '배구',
-    calories: 200,
+    eng_name: 'volleyball',
+    calories_spent_per_hour: 200,
     done: false,
     minutes: 0,
   },
-  baseball: {
+  {
     name: '야구',
-    calories: 180,
+    eng_name: 'baseball',
+    calories_spent_per_hour: 180,
     done: false,
     minutes: 0,
   },
-  skiingonthewater: {
-    name: '수상스키',
-    calories: 200,
-    done: false,
-    minutes: 0,
-  },
-  julumki: {
+  {
     name: '줄넘기',
-    calories: 224,
+    eng_name: 'julumki',
+    calories_spent_per_hour: 224,
     done: false,
     minutes: 0,
   },
-  tennis: {
+  {
     name: '테니스',
-    calories: 176,
+    eng_name: 'tennis',
+    calories_spent_per_hour: 176,
     done: false,
     minutes: 0,
   },
-  basketball: {
+  {
     name: '농구',
-    calories: 200,
+    eng_name: 'basketball',
+    calories_spent_per_hour: 200,
     done: false,
     minutes: 0,
   },
-  tabletennis: {
+  {
     name: '탁구',
-    calories: 200,
+    eng_name: 'table tennis',
+    calories_spent_per_hour: 200,
     done: false,
     minutes: 0,
   },
-  bicycling: {
+  {
     name: '자전거타기',
-    calories: 111,
+    eng_name: 'bicycling',
+    calories_spent_per_hour: 111,
     done: false,
     minutes: 0,
   },
-};
+];

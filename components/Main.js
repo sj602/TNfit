@@ -21,7 +21,7 @@ export default class Main extends Component {
               source={require('../images/TN_logo.png')}
             />
             <Text style={styles.text}>
-              The Natural Fit과 함께 다이어트를 시작해보세요
+              The Natural Fit과 함께 건강한 삶을 유지해보세요
             </Text>
             <Text style={styles.text}>
               여러분의 다이어트를 응원합니다!

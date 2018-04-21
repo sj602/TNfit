@@ -81,6 +81,11 @@ export default class Result extends Component {
             </View>
             <View style={{flex:1, padding: 10, flexDirection: 'column'}}>
               <View style={{flex:1, flexDirection: 'row'}}>
+                <Text>
+                  오늘의 결과 : GOOD(TN 먹고 칼로리 충족) BAD(TN OR 칼로리 미달) SO-SO(TN안먹었을때)
+                </Text>
+              </View>
+              <View style={{flex:1, flexDirection: 'row'}}>
                 <Text>오늘 소비한 칼로리: {caloriesSpent} kcal</Text>
                 <View style={{width: 15, height: 15, borderRadius: 7.5, backgroundColor: '#343434', marginLeft: 5}}>
                 </View>
