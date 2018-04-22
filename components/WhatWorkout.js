@@ -23,15 +23,13 @@ export default class WhatWorkout extends Component {
   }
 
   handleSearch(searchWorkout) {
-    console.log('handle search12345')
     let copiedWorkoutList = this.state.workoutList;
 
-    copiedWorkoutList.filter(workout => {
-      return workout['eng_name'].includes(searchWorkout);
+    let searchedWorkoutList = copiedWorkoutList.filter(workout => {
+      return workout['name'].includes(searchWorkout);
     });
-    let searchedWorkoutList = copiedWorkoutList;
 
-    this.setState({ searchedWorkoutList });
+    this.setState({ searchWorkout, searchedWorkoutList });
   }
 
   setMinutesAndDone(index, minutes) {
@@ -53,7 +51,6 @@ export default class WhatWorkout extends Component {
     let { personalInfo, whatFood } = this.props.navigation.state.params;
     let { workoutList, searchWorkout, searchedWorkoutList } = this.state;
 
-
     return (
       <View style={styles.container}>
         <Text style={styles.textTitle}>
@@ -63,6 +60,7 @@ export default class WhatWorkout extends Component {
         <SearchBar
           width={width}
           onChangeSearch={(searchWorkout) => this.handleSearch(searchWorkout)}
+          value={searchWorkout}
         />
 
         <View style={{flex: 9, width: width, flexDirection: 'column', justifyContent: 'space-between'}}>

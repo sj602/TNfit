@@ -13,7 +13,7 @@ export default class SearchBar extends Component {
   }
 
   render() {
-    let { searchWorkout } = this.state;
+    // let { searchWorkout } = this.state;
     const { width, onChangeSearch } = this.props;
 
     return (
@@ -29,8 +29,8 @@ export default class SearchBar extends Component {
         <View style={{flex:9, justifyContent: 'center'}}>
           <TextInput
             style={{borderWidth:1, borderColor: 'blue'}}
-            onChangeText={(searchWorkout) => this.setState({searchWorkout})}
-            value={searchWorkout}
+            onChangeText={(searchWorkout) => onChangeSearch(searchWorkout)}
+            value={this.props.searchWorkout}
             placeholder='검색: 운동명'
             underlineColorAndroid='transparent'
           />
