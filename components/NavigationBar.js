@@ -114,7 +114,7 @@ export default class NavigationBar extends Component {
         component={undefined}
         selectedIndex={selectedIndex}
         buttons={buttons}
-        containerStyle={{width: width, marginBottom: 0}}
+        containerStyle={{width: width, height: 50, marginBottom: 0}}
       />
     )
   }

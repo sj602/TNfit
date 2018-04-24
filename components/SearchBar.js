@@ -8,12 +8,7 @@ import { width } from '../utils/helpers';
 import { Icon } from 'react-native-elements';
 
 export default class SearchBar extends Component {
-  state = {
-    searchWorkout: '',
-  }
-
   render() {
-    // let { searchWorkout } = this.state;
     const { width, onChangeSearch } = this.props;
 
     return (
@@ -31,7 +26,7 @@ export default class SearchBar extends Component {
             style={{borderWidth:1, borderColor: 'blue'}}
             onChangeText={(searchWorkout) => onChangeSearch(searchWorkout)}
             value={this.props.searchWorkout}
-            placeholder='검색: 운동명'
+            placeholder='검색'
             underlineColorAndroid='transparent'
           />
         </View>

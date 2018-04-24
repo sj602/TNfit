@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   Platform, StyleSheet, Text,
   View, TextInput, TouchableOpacity,
-  Button, Alert, ScrollView
+  Button, Alert, ScrollView,
+  Picker
 } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { width } from '../utils/helpers';
@@ -18,6 +19,8 @@ export default class PersonalInfo extends Component {
     height: '',
     weight: '',
     targetWeight: '',
+    currentlyEatingProduct: '',
+    wannaEatProduct: '',
   }
 
   render() {
@@ -82,7 +85,7 @@ export default class PersonalInfo extends Component {
               >
                 <CheckBox
                   containerStyle={{width: 70, height: 40, marginTop: 12}}
-                  size={16}
+                  size={14}
                   title='남성'
                   onPress={() => this.setState({
                     manChecked: !this.state.manChecked,
@@ -92,7 +95,7 @@ export default class PersonalInfo extends Component {
                 />
                 <CheckBox
                   containerStyle={{width: 70, height: 40, marginTop: 12}}
-                  size={16}
+                  size={14}
                   title='여성'
                   onPress={() => this.setState({
                     womanChecked: !this.state.womanChecked,
@@ -162,6 +165,45 @@ export default class PersonalInfo extends Component {
                 />
               </View>
             </View>
+
+            <View style={{flex:1, flexDirection: 'row'}}>
+              <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={{textAlign: 'center'}}>
+                  현재 섭취 중인 제품
+                </Text>
+              </View>
+              <View
+                style={styles.inputBox}
+              >
+                <Picker
+                  selectedValue={this.state.currentlyEatingProduct}
+                  style={{ height: 30, width: 50 }}
+                  onValueChange={(itemValue, itemIndex) => this.setState({currentlyEatingProduct: itemValue})}>
+                  <Picker.Item label="탄수화물형" value="carbohydrate" />
+                  <Picker.Item label="단백질형" value="protein" />
+                </Picker>
+              </View>
+            </View>
+
+            <View style={{flex:1, flexDirection: 'row'}}>
+              <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={{textAlign: 'center'}}>
+                  향후 섭취 희망 제품
+                </Text>
+              </View>
+              <View
+                style={styles.inputBox}
+              >
+                <Picker
+                  selectedValue={this.state.wannaEatProduct}
+                  style={{ height: 30, width: 50 }}
+                  onValueChange={(itemValue, itemIndex) => this.setState({wannaEatProduct: itemValue})}>
+                  <Picker.Item label="탄수화물형" value="carbohydrate" />
+                  <Picker.Item label="단백질형" value="protein" />
+                </Picker>
+              </View>
+            </View>
+
           </ScrollView>
 
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
