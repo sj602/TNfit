@@ -11,42 +11,52 @@ import { Slider } from 'react-native-elements';
 export default class Result extends Component {
   state = {
     metabolism: 0,
+    caloriesByFood: 0,
     caloriesByWorkout: 0,
   }
 
   componentDidMount() {
-    const { personalInfo, whatFood, whatWorkout } = this.props.navigation.state.params;
+    const { personalInfo, whatWorkout, whatFood } = this.props.navigation.state.params;
+    const { manChecked, age, weight, height } = personalInfo;
 
-    const { manChecked, womanChecked, age, weight, height } = personalInfo;
-    this.calculateMetabolism(manChecked, womanChecked, age, weight, height);
+    this.calculateMetabolism(manChecked, age, weight, height);
+    this.calculateCaloriesByFood(whatFood);
     this.calculateCaloriesByWorkout(whatWorkout);
+  }
+
+  calculateCaloriesByFood(whatFood) {
+    let caloriesByFood = 0;
+    whatFood.map(food => {
+      caloriesByFood += food['섭취량'] / food['1회제공량 (g)'] * food['열량 (kcal)'];
+    })
+
+    this.setState({caloriesByFood : Math.floor(caloriesByFood)});
   }
 
   calculateCaloriesByWorkout(whatWorkout) {
     let caloriesByWorkout = 0;
-    Object.keys(whatWorkout).map(workout => {
-      if(whatWorkout[workout].minutes > 0) {
-        caloriesByWorkout += (whatWorkout[workout].minutes / 60) * whatWorkout[workout].calories;
+    whatWorkout.map(workout => {
+      if(workout['done']) {
+        caloriesByWorkout += (workout['minutes'] / 60 ) * workout['calories_spent_per_hour'];
       }
     })
 
-    this.setState({caloriesByWorkout});
+    this.setState({caloriesByWorkout: Math.floor(caloriesByWorkout)});
   }
 
-  calculateMetabolism(manChecked, womanChecked, age, weight, height) {
+  calculateMetabolism(manChecked, age, weight, height) {
     let metabolism = 0;
     if(manChecked) {
       metabolism = 66.47 + (13.75 * weight) + (5 * height) - (6.76 - age);
     } else {
       metabolism = 655.1 + (9.56 * weight) + (1.85 * height) - (4.68 - age);
     }
-
-    this.setState({metabolism});
+    this.setState({metabolism: Math.floor(metabolism)});
   }
 
   render() {
     const { personalInfo, whatFood, whatWorkout } = this.props.navigation.state.params;
-    const { metabolism, caloriesByWorkout } = this.state;
+    const { metabolism, caloriesByFood, caloriesByWorkout } = this.state;
     const caloriesSpent = (metabolism + caloriesByWorkout);
 
     return (
@@ -60,20 +70,18 @@ export default class Result extends Component {
             <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
               <Slider
                 value={caloriesSpent}
-                onValueChange={value => this.setState({value})}
                 disabled={true}
-                minimumValue={1000}
-                maximumValue={3000}
+                minimumValue={0}
+                maximumValue={4000}
                 style={{margin: 10}}
                 minimumTrackTintColor='#b3b3b3'
                 thumbTintColor='#343434'
               />
               <Slider
-                value={2700}
-                onValueChange={value => this.setState({value})}
+                value={caloriesByFood}
                 disabled={true}
-                minimumValue={1000}
-                maximumValue={3000}
+                minimumValue={0}
+                maximumValue={4000}
                 style={{position: 'absolute', margin: 10, top:95, left:0, right:0, bottom:0}}
                 minimumTrackTintColor='#b3b3b3'
                 thumbTintColor='#42f4aa'
@@ -91,7 +99,7 @@ export default class Result extends Component {
                 </View>
               </View>
               <View style={{flex:1, flexDirection: 'row'}}>
-                <Text>오늘 섭취한 칼로리: kcal</Text>
+                <Text>오늘 섭취한 칼로리: {caloriesByFood} kcal</Text>
                 <View style={{width: 15, height: 15, borderRadius: 7.5, backgroundColor: '#42f4aa',marginLeft: 5}}>
                 </View>
               </View>

@@ -65,7 +65,7 @@ export default class PersonalInfo extends Component {
               >
                 <TextInput
                   style={styles.textInput}
-                  onChangeText={(age) => this.setState({age})}
+                  onChangeText={(age) => this.setState({age: Number(age)})}
                   value={this.state.age}
                   maxLength={2}
                   placeholder='25'
@@ -109,7 +109,7 @@ export default class PersonalInfo extends Component {
             <View style={{flex:1, flexDirection: 'row'}}>
               <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={{textAlign: 'center'}}>
-                  키
+                  키(cm)
                 </Text>
               </View>
               <View
@@ -117,7 +117,7 @@ export default class PersonalInfo extends Component {
               >
                 <TextInput
                   style={styles.textInput}
-                  onChangeText={(height) => this.setState({height})}
+                  onChangeText={(height) => this.setState({height: Number(height)})}
                   value={this.state.height}
                   maxLength={3}
                   placeholder='175'
@@ -129,7 +129,7 @@ export default class PersonalInfo extends Component {
             <View style={{flex:1, flexDirection: 'row'}}>
               <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={{textAlign: 'center'}}>
-                  몸무게
+                  몸무게(kg)
                 </Text>
               </View>
               <View
@@ -137,7 +137,7 @@ export default class PersonalInfo extends Component {
               >
                 <TextInput
                   style={styles.textInput}
-                  onChangeText={(weight) => this.setState({weight})}
+                  onChangeText={(weight) => this.setState({weight: Number(weight)})}
                   value={this.state.weight}
                   maxLength={3}
                   placeholder='80'
@@ -149,7 +149,7 @@ export default class PersonalInfo extends Component {
             <View style={{flex:1, flexDirection: 'row'}}>
               <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={{textAlign: 'center'}}>
-                  목표 몸무게
+                  목표 몸무게(kg)
                 </Text>
               </View>
               <View
@@ -157,7 +157,7 @@ export default class PersonalInfo extends Component {
               >
                 <TextInput
                   style={styles.textInput}
-                  onChangeText={(targetWeight) => this.setState({targetWeight})}
+                  onChangeText={(targetWeight) => this.setState({targetWeight: Number(targetWeight)})}
                   value={this.state.targetWeight}
                   maxLength={2}
                   placeholder='65'
@@ -177,8 +177,12 @@ export default class PersonalInfo extends Component {
               >
                 <Picker
                   selectedValue={this.state.currentlyEatingProduct}
-                  style={{ height: 30, width: 50 }}
-                  onValueChange={(itemValue, itemIndex) => this.setState({currentlyEatingProduct: itemValue})}>
+                  style={{ height: 30, width: 150 }}
+                  onValueChange={(itemValue, itemIndex) => {
+                    console.log('itemValue:', itemValue)
+                    console.log('itemIndex:', itemIndex)
+                    this.setState({currentlyEatingProduct: itemValue}
+                    )}}>
                   <Picker.Item label="탄수화물형" value="carbohydrate" />
                   <Picker.Item label="단백질형" value="protein" />
                 </Picker>
@@ -196,7 +200,7 @@ export default class PersonalInfo extends Component {
               >
                 <Picker
                   selectedValue={this.state.wannaEatProduct}
-                  style={{ height: 30, width: 50 }}
+                  style={{ height: 30, width: 150 }}
                   onValueChange={(itemValue, itemIndex) => this.setState({wannaEatProduct: itemValue})}>
                   <Picker.Item label="탄수화물형" value="carbohydrate" />
                   <Picker.Item label="단백질형" value="protein" />

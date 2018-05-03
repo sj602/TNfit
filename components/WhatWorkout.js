@@ -19,7 +19,6 @@ export default class WhatWorkout extends Component {
       searchWorkout: '',
       searchedWorkoutList: [],
     }
-    this.handleSearch = this.handleSearch.bind(this);
   }
 
   handleSearch(searchWorkout) {
@@ -33,10 +32,11 @@ export default class WhatWorkout extends Component {
   }
 
   setMinutesAndDone(index, minutes) {
+    minutes = Number(minutes);
     let copiedWorkoutList = this.state.workoutList;
     let tempWorkoutObj = {
       ...copiedWorkoutList[index],
-      minutes: minutes.replace(/[^0-9]/g, ''), // prevent from string input, not numeric input
+      minutes,
       done: !this.state.workoutList[index].done,
     };
     copiedWorkoutList[index] = tempWorkoutObj;
@@ -79,7 +79,7 @@ export default class WhatWorkout extends Component {
             </Text>
           </View>
 
-          <ScrollView style={{flex:7, flexDirection: 'column', borderWidth: 1 }}>
+          <ScrollView style={{flex:7, flexDirection: 'column', borderBottomWidth: 1}}>
             { workoutList &&
               searchWorkout
               ?
@@ -87,7 +87,7 @@ export default class WhatWorkout extends Component {
                 searchedWorkoutList.map((workout, index) => {
                   return (
                     <View
-                      style={{flex:1, flexDirection: 'row', justifyContent: 'space-between'}}
+                      style={{flex:1, height: 40, marginLeft: 3, marginRight: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: StyleSheet.hairlineWidth}}
                       key={workout['name']}
                     >
                       <Text style={styles.text}>
@@ -96,12 +96,11 @@ export default class WhatWorkout extends Component {
                       <Text style={styles.text}>
                         {workout['calories_spent_per_hour']}
                       </Text>
-                      <View style={{flex:1,justifyContent: 'center', alignItems: 'center'}}>
+                      <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                         <TextInput
                           onChangeText={(minutes) => this.setMinutesAndDone(index, minutes)}
                           value={this.state.workoutList[index].minutes}
-                          maxLength={2}
-                          placeholder='0'
+                          maxLength={3}
                           keyboardType={'numeric'}
                           style={styles.textInput}
                         />
@@ -132,16 +131,16 @@ export default class WhatWorkout extends Component {
                 workoutList.map((workout, index) => {
                   return (
                     <View
-                      style={{flex:1, flexDirection: 'row', justifyContent: 'space-between'}}
+                      style={{flex:1, height: 40, marginLeft: 3, marginRight: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: StyleSheet.hairlineWidth}}
                       key={workout['name']}
                     >
-                      <Text style={styles.text}>
+                      <Text style={styles.textWorkout}>
                         {workout['name']}
                       </Text>
-                      <Text style={styles.text}>
+                      <Text style={styles.textWorkout}>
                         {workout['calories_spent_per_hour']}
                       </Text>
-                      <View style={{flex:1,justifyContent: 'center', alignItems: 'center'}}>
+                      <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
                         <TextInput
                           onChangeText={(minutes) => this.setMinutesAndDone(index, minutes)}
                           value={this.state.workoutList[index].minutes}
@@ -180,8 +179,8 @@ export default class WhatWorkout extends Component {
               previous='WhatFood'
               next='Result'
               personalInfo={personalInfo}
-              whatFood={whatFood}
               whatWorkout={workoutList}
+              whatFood={whatFood}
             />
           </View>
         </View>
@@ -213,6 +212,12 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  textWorkout: {
+    flex: 1,
+    fontSize: 14,
     textAlign: 'center',
   },
   textInput: {

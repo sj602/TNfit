@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "342503083020",
+    "firebase_url": "https://tnfit-392f6.firebaseio.com",
+    "project_id": "tnfit-392f6",
+    "storage_bucket": "tnfit-392f6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342503083020:android:e699a93ca39abd85",
+        "android_client_info": {
+          "package_name": "com.tnfit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "342503083020-usqq7h8sha8vgjd2s6qn8ark5029nuv9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmglr8ZR86N_fgc6jPb5G4t0n_u7h3Zzk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
