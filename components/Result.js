@@ -103,7 +103,6 @@ export default class Result extends Component {
                 <View style={{width: 15, height: 15, borderRadius: 7.5, backgroundColor: '#42f4aa',marginLeft: 5}}>
                 </View>
               </View>
-              <Text>오늘 살이 ()g 만큼 빠졌습니다 or 쪘습니다</Text>
             </View>
           </View>
           <ProcessButton

@@ -98,13 +98,14 @@ export default class WhatFood extends Component {
     const { personalInfo } = this.props.navigation.state.params;
 
     let whatFood = this.state.eatenFoodList;
-    let { foodList, loading, searchFood, isModalVisible, selectedFood } = this.state;
+    let { foodList, loading, searchFood, searchedFoodList, isModalVisible, selectedFood } = this.state;
 
     return (
       <View style={styles.container}>
 
         <Modal
           isVisible={isModalVisible}
+          avoidKeyboard={false}
           style={styles.modalContainer}
         >
           <View style={{flex: 1}}>
@@ -115,7 +116,7 @@ export default class WhatFood extends Component {
                 </Text>
               </View>
               <View style={{flex: 1, flexDirection: 'row'}}>
-                <View style={{flex: 2}}>
+                <View style={{flex: 2, flexDirection: 'row', justifyContent: 'flex-end'}}>
                   <TextInput
                     style={{width: 78}}
                     onChangeText={(grams) => this.setState({selectedFood: {

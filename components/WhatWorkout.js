@@ -41,6 +41,17 @@ export default class WhatWorkout extends Component {
     };
     copiedWorkoutList[index] = tempWorkoutObj;
 
+    if(this.state.searchWorkout) {
+      let copiedSearchedWorkoutList = this.state.searchedWorkoutList;
+      copiedSearchedWorkoutList[index]['done'] = !copiedSearchedWorkoutList[index]['done'];
+
+      this.setState({
+        ...(this.state),
+        workoutList: copiedWorkoutList,
+        searchedWorkoutList: copiedSearchedWorkoutList
+      })
+    }
+
     this.setState({
       ...(this.state),
       workoutList: copiedWorkoutList,
@@ -222,7 +233,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     textAlign: 'center',
-    width: 30,
+    width: 35,
     height: 37,
   },
   icon: {

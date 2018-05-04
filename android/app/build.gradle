@@ -96,17 +96,12 @@ def enableProguardInReleaseBuilds = false
 android {
     compileSdkVersion 27
 
-    dexOptions {
-      preDexLibraries false
-      javaMaxHeapSize "8g"
-    }
-
     defaultConfig {
         applicationId "com.tnfit"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 3
-        versionName "1.2"
+        versionCode 7
+        versionName "1.6"
     }
 
     signingConfigs {
