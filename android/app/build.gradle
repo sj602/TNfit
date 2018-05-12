@@ -105,6 +105,13 @@ android {
     }
 
     signingConfigs {
+      debug {
+          storeFile file(MYAPP_RELEASE_STORE_FILE)
+          storePassword MYAPP_RELEASE_STORE_PASSWORD
+          keyAlias MYAPP_RELEASE_KEY_ALIAS
+          keyPassword MYAPP_RELEASE_KEY_PASSWORD
+      }
+
       release {
           storeFile file(MYAPP_RELEASE_STORE_FILE)
           storePassword MYAPP_RELEASE_STORE_PASSWORD
@@ -144,6 +151,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-google-signin')
+    implementation project(':react-native-fbsdk')
     implementation(project(':react-native-firebase')) {
       transitive = false
     }
@@ -152,10 +161,14 @@ dependencies {
     implementation "com.android.support:appcompat-v7:23.0.1"
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
-
+    implementation(project(":react-native-google-signin")){
+      exclude group: "com.google.android.gms" // very important
+    }
     implementation "com.google.android.gms:play-services-base:15.0.0"
+    implementation "com.google.android.gms:play-services-auth:15.0.0"
     implementation "com.google.firebase:firebase-core:15.0.0"
     implementation "com.google.firebase:firebase-database:15.0.0"
+    implementation "com.google.firebase:firebase-auth:15.0.0"
 }
 
 // Run this once to be able to run the application with BUCK

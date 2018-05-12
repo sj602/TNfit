@@ -17,7 +17,7 @@ export default class SearchBar extends Component {
     const { isFocused } = this.state;
 
     return (
-      <View style={{flex: 1, minHeight: 20, flexDirection: 'row', borderBottomWidth: 2}}>
+      <View style={{flex: 9, minHeight: 20, flexDirection: 'row', borderBottomWidth: 2}}>
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Icon
             name='search'
@@ -26,7 +26,7 @@ export default class SearchBar extends Component {
             size={14}
           />
         </View>
-        <View style={{flex: 8, justifyContent: 'center'}}>
+        <View style={{flex: 7, justifyContent: 'center'}}>
           <TextInput
             ref={(searchBar) => this.searchBar = searchBar}
             onChangeText={(searchWord) => onChangeSearch(searchWord)}

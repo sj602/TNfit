@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "342503083020-p9plskm78pclur9q95uakfhku8q0nv1j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tnfit",
+            "certificate_hash": "d803322aee0464f59fc3df7320bef8b6d4f76652"
+          }
+        },
+        {
           "client_id": "342503083020-usqq7h8sha8vgjd2s6qn8ark5029nuv9.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "342503083020-usqq7h8sha8vgjd2s6qn8ark5029nuv9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

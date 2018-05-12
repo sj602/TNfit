@@ -10,24 +10,23 @@ import ProcessButton from './ProcessButton';
 
 export default class Main extends Component {
   render() {
+    const { userName } = this.props.navigation.state.params;
     const { navigation } = this.props;
 
     return (
       <View style={styles.container}>
-        <View style={{flex:9, width: width}}>
-          <View style={{flex:2, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{flex: 9, width: width}}>
+          <View style={{flex: 2, justifyContent: 'center', alignItems: 'center'}}>
             <Image
               style={styles.image}
               source={require('../images/TN_logo.png')}
             />
             <Text style={styles.text}>
-              The Natural Fit과 함께 건강한 삶을 유지해보세요
+              { userName }님, 안녕하세요!
             </Text>
-            <Text style={styles.text}>
-              여러분의 다이어트를 응원합니다!
-            </Text>
+
           </View>
-          <View style={{flex:1, flexDirection: 'column', alignItems: 'center'}}>
+          <View style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
             <ProcessButton
               navigation={navigation}
               next='PersonalInfo'
@@ -48,7 +47,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: '#F5FCFF',
     backgroundColor: 'white',
   },
   image: {

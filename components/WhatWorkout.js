@@ -67,12 +67,13 @@ export default class WhatWorkout extends Component {
         <Text style={styles.textTitle}>
           오늘 하루 운동한 정보를 입력해주세요!
         </Text>
-
-        <SearchBar
-          width={width}
-          onChangeSearch={(searchWorkout) => this.handleSearch(searchWorkout)}
-          value={searchWorkout}
-        />
+        <View style={{flex: 1, maxHeight: 40, flexDirection: 'row'}}>
+          <SearchBar
+            width={width}
+            onChangeSearch={(searchWorkout) => this.handleSearch(searchWorkout)}
+            value={searchWorkout}
+          />
+        </View>
 
         <View style={{flex: 9, width: width, flexDirection: 'column', justifyContent: 'space-between'}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1}}>
@@ -80,7 +81,7 @@ export default class WhatWorkout extends Component {
               운동
             </Text>
             <Text style={styles.text}>
-              소모 칼로리
+              칼로리(시간)
             </Text>
             <Text style={styles.text}>
               운동시간(분)
@@ -90,7 +91,7 @@ export default class WhatWorkout extends Component {
             </Text>
           </View>
 
-          <ScrollView style={{flex:7, flexDirection: 'column', borderBottomWidth: 1}}>
+          <ScrollView style={{flex: 7, flexDirection: 'column', borderBottomWidth: 1}}>
             { workoutList &&
               searchWorkout
               ?
@@ -98,7 +99,7 @@ export default class WhatWorkout extends Component {
                 searchedWorkoutList.map((workout, index) => {
                   return (
                     <View
-                      style={{flex:1, height: 40, marginLeft: 3, marginRight: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: StyleSheet.hairlineWidth}}
+                      style={{flex: 1, height: 60, marginLeft: 3, marginRight: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: StyleSheet.hairlineWidth}}
                       key={workout['name']}
                     >
                       <Text style={styles.text}>
@@ -107,7 +108,7 @@ export default class WhatWorkout extends Component {
                       <Text style={styles.text}>
                         {workout['calories_spent_per_hour']}
                       </Text>
-                      <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <TextInput
                           onChangeText={(minutes) => this.setMinutesAndDone(index, minutes)}
                           value={this.state.workoutList[index].minutes}
@@ -142,7 +143,7 @@ export default class WhatWorkout extends Component {
                 workoutList.map((workout, index) => {
                   return (
                     <View
-                      style={{flex:1, height: 40, marginLeft: 3, marginRight: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: StyleSheet.hairlineWidth}}
+                      style={{flex: 1, height: 60, marginLeft: 3, marginRight: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: StyleSheet.hairlineWidth}}
                       key={workout['name']}
                     >
                       <Text style={styles.textWorkout}>
@@ -151,7 +152,7 @@ export default class WhatWorkout extends Component {
                       <Text style={styles.textWorkout}>
                         {workout['calories_spent_per_hour']}
                       </Text>
-                      <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <TextInput
                           onChangeText={(minutes) => this.setMinutesAndDone(index, minutes)}
                           value={this.state.workoutList[index].minutes}
@@ -233,7 +234,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     textAlign: 'center',
-    width: 35,
+    width: 60,
     height: 37,
   },
   icon: {

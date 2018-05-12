@@ -87,19 +87,32 @@ export default class Result extends Component {
                 thumbTintColor='#42f4aa'
               />
             </View>
-            <View style={{flex:1, padding: 10, flexDirection: 'column'}}>
-              <View style={{flex:1, flexDirection: 'row'}}>
+            <View style={{flex: 1, padding: 10, flexDirection: 'column', backgroundColor: 'lightgrey', margin: 10, padding: 10, borderRadius: 7}}>
+              <View style={{flex: 1, flexDirection: 'row'}}>
                 <Text>
                   오늘의 결과 : GOOD(TN 먹고 칼로리 충족) BAD(TN OR 칼로리 미달) SO-SO(TN안먹었을때)
                 </Text>
               </View>
-              <View style={{flex:1, flexDirection: 'row'}}>
-                <Text>오늘 소비한 칼로리: {caloriesSpent} kcal</Text>
-                <View style={{width: 15, height: 15, borderRadius: 7.5, backgroundColor: '#343434', marginLeft: 5}}>
-                </View>
+              <View style={{flex: 1, flexDirection: 'row', alignItems: 'stretch'}}>
+                <Text style={styles.textResult}>목표</Text>
+                <Text style={styles.textMath}>─</Text>
+                <Text style={styles.textResult}>{metabolism}</Text>
+                <Text style={styles.textMath}>─</Text>
+                <Text style={styles.textResult}>{caloriesByWorkout}</Text>
+                <Text style={styles.textMath}>＋</Text>
+                <Text style={styles.textResult}>{caloriesByFood}</Text>
+                <Text style={styles.textMath}>＝</Text>
+                <Text style={styles.textResult}>{caloriesSpent + caloriesByFood}</Text>
               </View>
-              <View style={{flex:1, flexDirection: 'row'}}>
-                <Text>오늘 섭취한 칼로리: {caloriesByFood} kcal</Text>
+              <View style={{flex: 1, flexDirection: 'row'}}>
+                <Text style={{fontSize: 14, textAlign: 'center', marginLeft: 5, marginRight: 23}}>목표</Text>
+                <Text style={{fontSize: 14, textAlign: 'center', marginRight: 29}}>기초대사량</Text>
+                <Text style={{fontSize: 14, textAlign: 'center', marginRight: 44}}>운동</Text>
+                <Text style={{fontSize: 14, textAlign: 'center'}}>음식</Text>
+              </View>
+              <View style={{flex: 1, flexDirection: 'row'}}>
+                <View style={{width: 15, height: 15, borderRadius: 7.5, backgroundColor: '#343434', marginLeft: 8}}>
+                </View>
                 <View style={{width: 15, height: 15, borderRadius: 7.5, backgroundColor: '#42f4aa',marginLeft: 5}}>
                 </View>
               </View>
@@ -134,5 +147,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     marginTop: 10,
+  },
+  textResult: {
+    flex: 1,
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  textMath: {
+    flex: 1,
+    fontSize: 14,
+    marginTop: 3,
+    textAlign: 'center'
   },
 });

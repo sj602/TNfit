@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {
-  Platform,
-  StyleSheet,
-  Text,
+  Platform, StyleSheet, Text,
   View
 } from 'react-native';
 import { ButtonGroup, Icon } from 'react-native-elements';
@@ -23,6 +21,7 @@ const component1 = () => {
     </View>
   )
 };
+
 const component2 = () => {
   return (
     <View>
@@ -32,11 +31,12 @@ const component2 = () => {
         color='#517fa4'
       />
       <Text>
-        음식정보
+        음식
       </Text>
     </View>
   )
-}
+};
+
 const component3 = () => {
   return (
     <View>
@@ -46,11 +46,12 @@ const component3 = () => {
         color='#517fa4'
       />
       <Text>
-        운동정보
+        운동
       </Text>
     </View>
   )
-}
+};
+
 const component4 = () => {
   return (
     <View>
@@ -64,20 +65,15 @@ const component4 = () => {
       </Text>
     </View>
   )
-}
+};
 
 export default class NavigationBar extends Component {
-  constructor () {
-    super()
-    this.state = {
-      selectedIndex: undefined,
-    }
-
-    this.updateIndex = this.updateIndex.bind(this);
+  state = {
+    selectedIndex: undefined,
   }
 
   componentWillMount() {
-    const {selectedIndex} = this.props;
+    const { selectedIndex } = this.props;
     this.setState({selectedIndex})
   }
 
@@ -122,7 +118,7 @@ export default class NavigationBar extends Component {
 
 const styles = StyleSheet.create({
   textView: {
-    flex:1,
+    flex: 1,
     borderWidth: 1,
     justifyContent: 'center',
     backgroundColor: 'green'

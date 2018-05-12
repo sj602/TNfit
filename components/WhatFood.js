@@ -3,10 +3,12 @@ import {
   Platform, StyleSheet, Text,
   View, TouchableOpacity, Button,
   FlatList, ActivityIndicator,
-  TextInput,
+  TextInput, Alert, Keyboard, ScrollView
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import Modal from 'react-native-modal';
 import SearchBar from './SearchBar';
+import EatenFoodList from './EatenFoodList';
 import ProcessButton from './ProcessButton';
 import NavigationBar from './NavigationBar';
 import { width } from '../utils/helpers';
@@ -76,7 +78,7 @@ export default class WhatFood extends Component {
   refreshingLoader() {
       return (
         <View
-          style={{ paddingVertical: 35 }}
+          style={{ paddingVertical: 45 }}
         >
           { this.state.searchFood  // prevent loader showing when there is no result for searched word
             ?
@@ -98,89 +100,115 @@ export default class WhatFood extends Component {
     const { personalInfo } = this.props.navigation.state.params;
 
     let whatFood = this.state.eatenFoodList;
-    let { foodList, loading, searchFood, searchedFoodList, isModalVisible, selectedFood } = this.state;
+    let {
+      foodList, loading, searchFood,
+      searchedFoodList, isModalVisible, selectedFood,
+      eatenFoodList
+    } = this.state;
 
     return (
       <View style={styles.container}>
 
         <Modal
           isVisible={isModalVisible}
-          avoidKeyboard={false}
+          onBackdropPress={() => this.setState({isModalVisible: false})}
           style={styles.modalContainer}
         >
-          <View style={{flex: 1}}>
-            <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
-              <View style={{flex: 1}}>
-                <Text style={styles.foodName}>
-                  {selectedFood['식품이름']}
-                </Text>
-              </View>
-              <View style={{flex: 1, flexDirection: 'row'}}>
-                <View style={{flex: 2, flexDirection: 'row', justifyContent: 'flex-end'}}>
-                  <TextInput
-                    style={{width: 78}}
-                    onChangeText={(grams) => this.setState({selectedFood: {
-                                                                ...this.state.selectedFood,
-                                                                '섭취량': Number(grams)
-                                                              }})}
-                    value={this.state.grams}
-                    maxLength={4}
-                    placeholder='섭취량 입력'
-                    keyboardType={'numeric'}
-                  />
-                </View>
-                <View style={{flex: 1, justifyContent: 'center'}}>
-                  <Text style={{marginLeft: 20}}>
-                    g
+          <ScrollView>
+            <View style={{flex: 1}}>
+              <View style={{flex: 1, flexDirection: 'column', justifyContent: 'center'}}>
+                <View style={{flex: 1}}>
+                  <Text style={styles.foodName}>
+                    {selectedFood['식품이름']}
                   </Text>
                 </View>
+                <View style={{flex: 1, flexDirection: 'row', marginTop: 20}}>
+                  <View style={{flex: 2, flexDirection: 'row', justifyContent: 'flex-end'}}>
+                    <TextInput
+                      style={styles.textInput}
+                      onChangeText={(grams) => this.setState({selectedFood: {
+                                                                  ...this.state.selectedFood,
+                                                                  '섭취량': Number(grams)
+                                                                }})}
+                      value={this.state.grams}
+                      maxLength={4}
+                      placeholder='섭취량 입력'
+                      keyboardType={'numeric'}
+                    />
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{fontSize: 12}}>
+                      그램
+                    </Text>
+                  </View>
+                </View>
               </View>
+              <View style={{flex: 2, flexDirection: 'column', marginTop: 30, marginBottom: 70}}>
+                <Text style={styles.textModal}>
+                  1회 제공량 {selectedFood['1회제공량 (g)']} g
+                </Text>
+                <Text style={styles.textModal}>
+                  열량 {selectedFood['열량 (kcal)']} kcal
+                </Text>
+                <Text style={styles.textModal}>
+                  탄수화물 {selectedFood['탄수화물 (g)']} g
+                </Text>
+                <Text style={styles.textModal}>
+                  단백질 {selectedFood['단백질 (g)']} g
+                </Text>
+                <Text style={styles.textModal}>
+                  지방 {selectedFood['지방 (g)']} g
+                </Text>
+                <Text style={styles.textModal}>
+                  나트륨 {selectedFood['나트륨 (mg)']} g
+                </Text>
+                <Text style={styles.textModal}>
+                  콜레스테롤 {selectedFood['콜레스테롤 (mg)']} mg
+                </Text>
+              </View>
+              <Button
+                title={'확인'}
+                style={{width: 100, height: 40, backgroundColor: '#517fa4'}}
+                onPress={() => {
+                  if(this.state.selectedFood['섭취량']) {
+                    this.pushToEatenFoodList(selectedFood);
+                    this.setState({isModalVisible: false});
+                    return (
+                      Alert.alert(
+                        '섭취리스트에 추가 되었습니다.',
+                        '',
+                        [
+                          {text: '확인', onPress: () => console.log('음식 추가')}
+                        ]
+                      )
+                    )
+                  } else {
+                    this.setState({isModalVisible: false});
+                  }
+                }}
+              />
             </View>
-            <View style={{flex:2, flexDirection: 'column'}}>
-              <Text style={styles.textModal}>
-                1회 제공량 {selectedFood['1회제공량 (g)']} g
-              </Text>
-              <Text style={styles.textModal}>
-                열량 {selectedFood['열량 (kcal)']} kcal
-              </Text>
-              <Text style={styles.textModal}>
-                탄수화물 {selectedFood['탄수화물 (g)']} g
-              </Text>
-              <Text style={styles.textModal}>
-                단백질 {selectedFood['단백질 (g)']} g
-              </Text>
-              <Text style={styles.textModal}>
-                지방 {selectedFood['지방 (g)']} g
-              </Text>
-              <Text style={styles.textModal}>
-                나트륨 {selectedFood['나트륨 (mg)']} g
-              </Text>
-              <Text style={styles.textModal}>
-                콜레스테롤 {selectedFood['콜레스테롤 (mg)']} mg
-              </Text>
-            </View>
-            <Button
-              title={'확인'}
-              style={{width: 100, height: 40, backgroundColor: '#517fa4'}}
-              onPress={() => {
-                this.pushToEatenFoodList(selectedFood);
-                this.setState({isModalVisible: false});
-              }}
-            />
-          </View>
+          </ScrollView>
         </Modal>
+        <View style={{flex: 1, maxHeight: 30}}>
+          <Text style={styles.textTitle}>
+            오늘 하루 섭취한 음식을 선택해주세요
+          </Text>
+        </View>
 
-        <Text style={styles.textTitle}>
-          오늘 하루 섭취한 음식을 입력해주세요
-        </Text>
+        <View style={{flex: 1, maxHeight: 40, flexDirection: 'row'}}>
+          <SearchBar
+            width={width}
+            onChangeSearch={(searchFood) => this.handleSearch(searchFood)}
+            value={searchFood}
+          />
+          <Button
+            onPress={() => this.props.navigation.navigate('EatenFoodList', {eatenFoodList})}
+            title="달력"
+          />
+        </View>
 
-        <SearchBar
-          width={width}
-          onChangeSearch={(searchFood) => this.handleSearch(searchFood)}
-          value={searchFood}
-        />
-
-        <View style={{flex:9, width: width, flexDirection: 'column', justifyContent: 'space-between'}}>
+        <View style={{flex: 9, width: width, flexDirection: 'column', justifyContent: 'space-between'}}>
           <View style={{flex: 1, maxHeight: 20, flexDirection: 'row', borderBottomWidth: 1}}>
             <View style={{flex: 3}}>
               <Text style={styles.text}>
@@ -227,19 +255,34 @@ export default class WhatFood extends Component {
                     })}
                   >
                     <View
-                      style={{flex:1, height: 40, marginLeft: 3, marginRight: 3, flexDirection: 'row', alignItems: 'center', borderBottomWidth: StyleSheet.hairlineWidth}}
+                      style={{flex: 1, height: 60, marginLeft: 3, marginRight: 3, flexDirection: 'row', alignItems: 'center', borderBottomWidth: StyleSheet.hairlineWidth}}
                     >
-                      <View style={{flex:3, justifyContent: 'center'}}>
+                      <View style={{flex: 3, justifyContent: 'center'}}>
                         <Text>
                           {item['식품이름']}
                         </Text>
+                        {
+                          item['섭취량']
+                          ?
+                          (
+                            <View style={styles.eatenCheckIcon}>
+                              <Icon
+                                name='done'
+                                color='blue'
+                                size={10}
+                              />
+                            </View>
+                          )
+                          :
+                          null
+                        }
                       </View>
-                      <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <Text style={styles.textFood}>
                           {item['1회제공량 (g)']}
                         </Text>
                       </View>
-                      <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+                      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <Text style={styles.textFood}>
                           {item['열량 (kcal)']}
                         </Text>
@@ -295,16 +338,15 @@ const styles = StyleSheet.create({
   textFood: {
     flex: 1,
     fontSize: 13,
-    paddingTop: 11,
+    paddingTop: 20,
     textAlign: 'center',
   },
   textInput: {
     textAlign: 'center',
-    width: 30,
-    height: 37,
+    width: 80,
   },
   icon: {
-    flex:1,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -312,11 +354,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignSelf: 'center',
     backgroundColor: 'white',
-    marginLeft: 'auto',
-    marginRight: 'auto',
     marginTop: 60,
     marginBottom: 60,
-    padding: 30,
+    padding: 20,
   },
   foodName: {
     textAlign: 'center',
@@ -328,5 +368,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     color: '#517fa4'
-  }
+  },
+  eatenCheckIcon: {
+    position: 'absolute',
+    bottom: 3,
+    right: 5
+  },
 });
