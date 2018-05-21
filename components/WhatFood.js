@@ -12,7 +12,7 @@ import EatenFoodList from './EatenFoodList';
 import ProcessButton from './ProcessButton';
 import NavigationBar from './NavigationBar';
 import { width } from '../utils/helpers';
-import { handleDB } from '../database/handle_db';
+import { fetchDB } from '../database/handle_db';
 
 export default class WhatFood extends Component {
   constructor() {
@@ -33,7 +33,7 @@ export default class WhatFood extends Component {
   }
 
   componentDidMount() {
-    handleDB('food')
+    fetchDB('food')
       .then(foodList => this.setState({
         foodList,
         loading: false,
@@ -127,8 +127,9 @@ export default class WhatFood extends Component {
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(grams) => this.setState({selectedFood: {
-                                                                  ...this.state.selectedFood,
-                                                                  '섭취량': Number(grams)
+                                                                  ...selectedFood,
+                                                                  '섭취량': Number(grams),
+                                                                  '섭취열량': Number(grams) * selectedFood['열량 (kcal)'] / selectedFood['1회제공량 (g)']
                                                                 }})}
                       value={this.state.grams}
                       maxLength={4}

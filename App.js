@@ -4,10 +4,15 @@ import {
   Text,
   View
 } from 'react-native';
-import firebase from 'react-native-firebase';
 import { Stacks } from './utils/navigation';
+import { firebaseSetup } from './utils/firebase';
 
 export default class App extends Component {
+  constructor() {
+    super();
+    firebaseSetup();
+  }
+
   render() {
     return (
       <Stacks />

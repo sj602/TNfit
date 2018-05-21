@@ -20,11 +20,11 @@ export default class EatenFoodList extends Component {
 
   render() {
     const { eatenFoodList } = this.props.navigation.state.params;
-
+    console.log(eatenFoodList)
     return (
       <View style={styles.container}>
         <Text style={styles.textTitle}>
-          음식 섭취 리스트
+          오늘 음식 섭취 리스트
         </Text>
         <View style={{flex: 1, width: width, flexDirection: 'column', justifyContent: 'space-between'}}>
           <View style={{flex: 1, maxHeight: 20, flexDirection: 'row', borderBottomWidth: 1}}>
@@ -35,35 +35,35 @@ export default class EatenFoodList extends Component {
             </View>
             <View style={{flex: 1}}>
               <Text style={styles.text}>
-                1회 제공량(g)
+                섭취량(g)
               </Text>
             </View>
             <View style={{flex: 1}}>
               <Text style={styles.text}>
-                칼로리
+                섭취칼로리(kcal)
               </Text>
             </View>
           </View>
 
           {
-            eatenFoodList.map(fod => {
+            eatenFoodList.map(food => {
               return (
                 <View
                   style={{flex: 1, height: 40, marginLeft: 3, marginRight: 3, flexDirection: 'row', alignItems: 'center', borderBottomWidth: StyleSheet.hairlineWidth}}
                 >
-                  <View style={{flex: 3, justifyContent: 'center'}}>
-                    <Text>
+                  <View style={{flex: 3, justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={styles.textFood}>
                       {food['식품이름']}
                     </Text>
                   </View>
                   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <Text style={styles.textFood}>
-                      {food['1회제공량 (g)']}
+                      {food['섭취량']}
                     </Text>
                   </View>
                   <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                     <Text style={styles.textFood}>
-                      {food['열량 (kcal)']}
+                      {food['섭취열량']}
                     </Text>
                   </View>
                 </View>
@@ -89,10 +89,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
-  searchBar: {
-    borderWidth: 2,
-    borderColor: 'grey'
-  },
   textTitle: {
     fontSize: 20,
     textAlign: 'center',
@@ -108,11 +104,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     paddingTop: 11,
     textAlign: 'center',
-  },
-  textInput: {
-    textAlign: 'center',
-    width: 30,
-    height: 37,
   },
   icon: {
     flex:1,

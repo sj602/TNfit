@@ -1,20 +1,10 @@
-import firebase from 'react-native-firebase';
 import { foodList } from '../database/db_food_json';
+import firebase from 'react-native-firebase';
+
 // params
 // category: choose which DB to handle(food, workout)
-export const handleDB = (category) => {
+export const fetchDB = (category) => {
   // firebase database setting
-  var config = {
-    apiKey: "AIzaSyA3ZrMnT8zDG1pIeqvUFR3OF3fSabrM0ss",
-    authDomain: "tnfit-392f6.firebaseapp.com",
-    databaseURL: "https://tnfit-392f6.firebaseio.com",
-    projectId: "tnfit-392f6",
-    storageBucket: "tnfit-392f6.appspot.com",
-    messagingSenderId: "342503083020"
-  };
-  if(!firebase.apps.length) {
-    firebase.initializeApp(config);
-  }
   let database = firebase.database();
 
   // write data to database 1

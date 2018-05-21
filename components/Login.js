@@ -76,6 +76,7 @@ export default class Login extends Component {
       });
 
       const user = await GoogleSignin.currentUserAsync();
+      if(user) this.googleAuth();
     }
     catch (err) {
       console.log("Google signin error", err.code, err.message);
