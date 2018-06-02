@@ -79,8 +79,8 @@ export default class NavigationBar extends Component {
             <TouchableOpacity
               style={{flex:1, flexDirection: 'row',justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}
               onPress={() => {
-                let { eatenFoodList, type } = this.props;
-                this.props.saveFoodInfo(eatenFoodList, type);
+                let { eatenFoodList, category } = this.props;
+                this.props.saveFoodInfo(eatenFoodList, category);
                 return (
                   Alert.alert(
                     '리스트에 추가 되었습니다.',

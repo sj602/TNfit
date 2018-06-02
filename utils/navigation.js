@@ -36,7 +36,7 @@ export const Stacks = StackNavigator({
   FoodDetail: { screen : FoodDetail},
   WhatWorkout: { screen : WhatWorkout}
 }, {
-  initialRouteName: 'Agreement',
+  initialRouteName: 'Diary',
   navigationOptions: {
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},

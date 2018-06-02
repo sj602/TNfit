@@ -43,7 +43,6 @@ const initialState = {
     }
   },
   foodInfo: {
-    foodList: [],
     breakfast: {
       calories: 0,
       list: [],
@@ -84,12 +83,19 @@ export default function reducer(state = initialState, action) {
       }
 
     case SAVE_FOOD_INFO:
+      let addedFoodCalories = 0;
+      action.eatenFoodList.map(food => addedFoodCalories += food['열량 (kcal)']);
+      addedFoodCalories.toFixed(0);
+
       if(action.category === '아침') {
         return {
           ...state,
           foodInfo: {
             ...state.foodInfo,
-            breakfast: action.eatenFoodList
+            breakfast: {
+              calories: state.foodInfo.breakfast.calories + addedFoodCalories,
+              list: action.eatenFoodList
+            }
           }
         }
       } else if (action.category === '점심') {
@@ -97,7 +103,10 @@ export default function reducer(state = initialState, action) {
           ...state,
           foodInfo: {
             ...state.foodInfo,
-            lunch: action.eatenFoodList
+            lunch: {
+              calories: state.foodInfo.lunch.calories + addedFoodCalories,
+              list: action.eatenFoodList
+            }
           }
         }
       } else if (action.category === '저녁') {
@@ -105,30 +114,34 @@ export default function reducer(state = initialState, action) {
           ...state,
           foodInfo: {
             ...state.foodInfo,
-            dinner: action.eatenFoodList
+            dinner: {
+              calories: state.foodInfo.dinner.calories + addedFoodCalories,
+              list: action.eatenFoodList
+            }
           }
         }
-      } else {
+      } else if (action.category === '간식') {
         return {
           ...state,
           foodInfo: {
             ...state.foodInfo,
-            dessert: action.eatenFoodList
+            dessert: {
+              calories: state.foodInfo.dessert.calories + addedFoodCalories,
+              list: action.eatenFoodList
+            }
           }
         }
       }
 
     case SAVE_WORKOUT_INFO:
-      const addedCalories = 0;
-      action.data.map((item) => addedCalories += item['calories_spent_per_hour'] * item['minutes'] / 60);
-
-      // let copiedDoneWorkoutList = Array.prototype.slice.call(this.state.userInfo.today.doneWorkoutList);
-      // copiedDoneWorkoutList.push(action.data);
+      const addedWorkoutCalories = 0;
+      action.data.map((item) => addedWorkoutCalories += item['calories_spent_per_hour'] * item['minutes'] / 60);
+      addedWorkoutCalories.toFixed(0);
 
       return {
         ...state,
         workoutInfo: {
-          calories: state.workoutInfo.calories + addedCalories,
+          calories: state.workoutInfo.calories + addedWorkoutCalories,
           list: action.data
         }
       }

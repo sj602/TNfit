@@ -53,7 +53,6 @@ class DiaryDetail extends Component {
   }
 
   render() {
-    console.log(this.props)
     const { navigate } = this.props.navigation;
     const { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
     const { workoutInfo, result, foodInfo } = this.props;
@@ -71,9 +70,6 @@ class DiaryDetail extends Component {
     return (
       <View style={styles.container}>
         <View style={{flex:2, marginTop: 10}}>
-          <Text onPress={() => console.log(this.props)}>
-            콘솔보기
-          </Text>
           <PieChart
             chart_wh={190}
             series={series}
@@ -87,7 +83,7 @@ class DiaryDetail extends Component {
                 운동
               </Text>
               <Text style={{color: '#87b242', fontSize: 16, textAlign: 'center'}}>
-                kcal
+                {workoutInfo.calories ? workoutInfo.calories : null} kcal
               </Text>
             </View>
             <View>
@@ -95,7 +91,7 @@ class DiaryDetail extends Component {
                 음식
               </Text>
               <Text style={{color: '#f05222', fontSize: 16, textAlign: 'center'}}>
-                kcal
+                {foodCalories !== 0 ? foodCalories : null} kcal
               </Text>
             </View>
           </View>

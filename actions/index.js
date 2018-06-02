@@ -14,8 +14,8 @@ export const saveUserInfo = (data) => dispatch => {
 	return dispatch({type: SAVE_USER_INFO, data})
 }
 
-export const saveFoodInfo = (data, when) => dispatch => {
-	return dispatch({type: SAVE_FOOD_INFO, when})
+export const saveFoodInfo = (eatenFoodList, category) => dispatch => {
+	return dispatch({type: SAVE_FOOD_INFO, eatenFoodList, category})
 }
 
 export const saveWorkoutInfo = (data) => dispatch => {

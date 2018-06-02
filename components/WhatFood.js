@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
-import { saveDB } from '../actions';
+import { saveFoodInfo, saveDB } from '../actions';
 import SearchBar from './SearchBar';
 import EatenFoodList from './EatenFoodList';
 import NavigationBar from './NavigationBar';
@@ -47,8 +47,9 @@ class WhatFood extends Component {
 
   componentDidMount() {
     const { category } = this.props.navigation.state.params;
+    let { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
+
     if(category === '현재 섭취 중인 제품' || category === '향후 섭취 희망 제품') {
-      console.log(1)
       fetchDB('food')
         .then(foodList => this.setState({
           foodList,
@@ -56,33 +57,42 @@ class WhatFood extends Component {
         }))
     }
     else {
-      if(this.props.foodInfo.foodList !== []) {
-        console.log(1)
-        console.log(this.props)
-        // fetchDB('food_check')
-        //   .then(foodList => { 
-        //     this.props.saveDB(foodList)})
-        //   .then(() => this.setState({loading: false}));
-        fetchDB('food_check')
-          .then(foodList => this.setState({foodList, loading: false}));
-      }
+      // (category === '아침' && breakfast.list === []) 
+      // ?
+      fetchDB('food_check').then(foodList => this.setState({foodList, loading: false}))
+      // :
+      // (category === '점심' && lunch.list === [])
+      // ?
+      // fetchDB('food_check').then(foodList => this.setState({foodList, loading: false}))
+      // :
+      // (category === '저녁' && dinner.list === [])
+      // ?
+      // fetchDB('food_check').then(foodList => this.setState({foodList, loading: false}))
+      // :
+      // (category === '간식' && dessert.list === [])
+      // ?
+      // fetchDB('food_check').then(foodList => this.setState({foodList, loading: false}))
+      // :
+      // console.log(category, dessert.list)
+      // console.log('cant fetch food')
     }
   }
 
   pushToEatenFoodList(selectedFood) {
     let { eatenFoodList } = this.state;
-    let copiedEatenFoodList = eatenFoodList;
-
-    const checkAddedFood = copiedEatenFoodList.find(food => food['식품이름'] === selectedFood['식품이름']);
-    if(checkAddedFood) {
-      let index = copiedEatenFoodList.indexOf(checkAddedFood);
-      copiedEatenFoodList.splice(index, 1);
+    let copiedEatenFoodList = Array.prototype.slice.call(eatenFoodList);
+    console.log('selectedFood', selectedFood)
+    // const checkAddedFood = copiedEatenFoodList.find(food => food['식품이름'] === selectedFood['식품이름']);
+    // if(checkAddedFood) {
+    //   let index = copiedEatenFoodList.indexOf(checkAddedFood);
+    //   copiedEatenFoodList.splice(index, 1);
       copiedEatenFoodList.push(selectedFood);
-    } else {
-      copiedEatenFoodList.push(selectedFood);
-    }
+    // } else {
+    //   copiedEatenFoodList.push(selectedFood);
+    // }
 
     this.setState({eatenFoodList: copiedEatenFoodList});
+    console.log('eatenFoodList', this.state.eatenFoodList)
   }
 
   handleSearch(searchFood) {
@@ -119,7 +129,6 @@ class WhatFood extends Component {
   }
 
   render() {
-    console.log(this.props)
     let {
       loading, searchFood, foodList,
       searchedFoodList, isModalVisible, selectedFood,
@@ -186,7 +195,7 @@ class WhatFood extends Component {
                     style={{flex: 1, height: 60, marginLeft: 30, marginRight: 30, flexDirection: 'row', alignItems: 'center'}}
                   >
                     <TouchableOpacity
-                      onPress={(item) => {
+                      onPress={() => {
                         this.pushToEatenFoodList(item);
                         let newItem = _.cloneDeep(item);
                         newItem.check = true;
@@ -253,6 +262,7 @@ class WhatFood extends Component {
           navigation={this.props.navigation}
           menu='WhatFood'
           eatenFoodList={this.state.eatenFoodList}
+          saveFoodInfo={this.props.saveFoodInfo}
           category={category}
         />
       </View>
@@ -266,13 +276,7 @@ const mapStateToProps = (state) => {
   }
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    saveDB: (data) => dispatch(saveDB(data))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(WhatFood);
+export default connect(mapStateToProps, {saveFoodInfo})(WhatFood);
 
 const styles = StyleSheet.create({
   container: {
