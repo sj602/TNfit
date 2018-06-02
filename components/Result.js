@@ -5,7 +5,6 @@ import {
 } from 'react-native';
 import NavigationBar from './NavigationBar';
 import { width } from '../utils/helpers';
-import ProcessButton from './ProcessButton';
 import { Slider } from 'react-native-elements';
 
 export default class Result extends Component {

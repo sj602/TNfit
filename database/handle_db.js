@@ -1,4 +1,3 @@
-import { foodList } from '../database/db_food_json';
 import firebase from 'react-native-firebase';
 
 // params
@@ -15,10 +14,12 @@ export const fetchDB = (category) => {
 
   // var result = {};
 
-  // let ref = database.ref().child(category);
-
+  let ref = database.ref().child(category);
+  // if(category === 'food') {
   return database.ref().child(category).once('value', (snap) => snap.val()).then(result => result.val());
-
+  // } else {
+  //   return database.ref().child(category).once('value', (snap) => snap.val()).then(result => result.val());
+  // }
   // write data to database 2
   // firebase.database().ref('workout/20').set(
   //   {
@@ -33,12 +34,4 @@ export const fetchDB = (category) => {
   // }).catch((error) => {
   //   console.log(error);
   // })
-};
-
-export const foodDataAPIURL = "http://openapi.foodsafetykorea.go.kr/api/ae8be43206c148c59e2f/I0750/json/1/1000";
-
-export function fetchFoodData(url) {
-  return fetch(url)
-    .then(res => res.json())
-    .then(data => data.I0750.row)
 };

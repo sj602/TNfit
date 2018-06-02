@@ -4,14 +4,15 @@ import {
   View, ScrollView, TouchableOpacity,
   TextInput,
 } from 'react-native';
+import { connect } from 'react-redux';
+import { saveWorkoutInfo } from '../actions';
 import SearchBar from './SearchBar';
-import ProcessButton from './ProcessButton';
 import NavigationBar from './NavigationBar';
 import { width } from '../utils/helpers';
 import { workoutList } from '../database/db_workout';
 import { Icon } from 'react-native-elements';
 
-export default class WhatWorkout extends Component {
+class WhatWorkout extends Component {
   constructor() {
     super();
     this.state = {
@@ -21,60 +22,96 @@ export default class WhatWorkout extends Component {
     }
   }
 
-  handleSearch(searchWorkout) {
-    let copiedWorkoutList = this.state.workoutList;
-
-    let searchedWorkoutList = copiedWorkoutList.filter(workout => {
-      return workout['name'].includes(searchWorkout);
-    });
-
-    this.setState({ searchWorkout, searchedWorkoutList });
-  }
+  static navigationOptions = ({navigation}) => ({
+    title: '운동',
+    headerTitleStyle: {flex:1, alignSelf: 'center'},
+    headerTintColor: 'white',
+    headerStyle: {backgroundColor: 'rgb(240,82,34)'},
+    headerRight: <Icon
+                  iconStyle={{marginRight: 10}}
+                  name="menu" color="white" size={35} onPress={() => {
+                                                        navigation.navigate('DrawerToggle')
+                                                      }}
+                />
+  })
 
   setMinutesAndDone(index, minutes) {
     minutes = Number(minutes);
-    let copiedWorkoutList = this.state.workoutList;
-    let tempWorkoutObj = {
-      ...copiedWorkoutList[index],
-      minutes,
-      done: !this.state.workoutList[index].done,
-    };
-    copiedWorkoutList[index] = tempWorkoutObj;
+    if(minutes > 0) {
+      let copiedWorkoutList = this.state.workoutList;
+      let tempWorkoutObj = {
+        ...copiedWorkoutList[index],
+        minutes,
+        done: true,
+      };
+      copiedWorkoutList[index] = tempWorkoutObj;
 
-    if(this.state.searchWorkout) {
-      let copiedSearchedWorkoutList = this.state.searchedWorkoutList;
-      copiedSearchedWorkoutList[index]['done'] = !copiedSearchedWorkoutList[index]['done'];
+      if(this.state.searchWorkout) {
+        let copiedSearchedWorkoutList = this.state.searchedWorkoutList;
+        copiedSearchedWorkoutList[index]['done'] = true;
+
+        this.setState({
+          ...(this.state),
+          workoutList: copiedWorkoutList,
+          searchedWorkoutList: copiedSearchedWorkoutList
+        })
+      }
 
       this.setState({
         ...(this.state),
         workoutList: copiedWorkoutList,
-        searchedWorkoutList: copiedSearchedWorkoutList
       })
-    }
+    } else {
+        let copiedWorkoutList = this.state.workoutList;
+        let tempWorkoutObj = {
+          ...copiedWorkoutList[index],
+          minutes,
+          done: false,
+        };
+        copiedWorkoutList[index] = tempWorkoutObj;
 
-    this.setState({
-      ...(this.state),
-      workoutList: copiedWorkoutList,
-    })
+        if(this.state.searchWorkout) {
+          let copiedSearchedWorkoutList = this.state.searchedWorkoutList;
+          copiedSearchedWorkoutList[index]['done'] = false;
+
+          this.setState({
+            ...(this.state),
+            workoutList: copiedWorkoutList,
+            searchedWorkoutList: copiedSearchedWorkoutList
+          })
+        }
+
+        this.setState({
+          ...(this.state),
+          workoutList: copiedWorkoutList,
+        })
+    }
   }
 
   render() {
-    let { personalInfo, whatFood } = this.props.navigation.state.params;
-    let { workoutList, searchWorkout, searchedWorkoutList } = this.state;
+    let { workoutList } = this.state;
 
     return (
       <View style={styles.container}>
-        <Text style={styles.textTitle}>
-          오늘 하루 운동한 정보를 입력해주세요!
-        </Text>
         <View style={{flex: 1, maxHeight: 40, flexDirection: 'row'}}>
-          <SearchBar
-            width={width}
-            onChangeSearch={(searchWorkout) => this.handleSearch(searchWorkout)}
-            value={searchWorkout}
+          <TextInput
+            style={{flex:9}}
+            onChangeText={(searchFood) => this.setState({searchFood})}
+            value={this.state.searchFood}
+            placeholder='검색어를 입력하세요'
           />
+          <TouchableOpacity
+            style={{flex:1, paddingTop: 10}}
+            onPress={() => console.log('')}
+          >
+            <Icon
+              name='search'
+              type='font-awesome'
+              color='rgb(240,82,34)'
+              size={18}
+            />
+          </TouchableOpacity>
         </View>
-
         <View style={{flex: 9, width: width, flexDirection: 'column', justifyContent: 'space-between'}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1}}>
             <Text style={styles.text}>
@@ -92,53 +129,7 @@ export default class WhatWorkout extends Component {
           </View>
 
           <ScrollView style={{flex: 7, flexDirection: 'column', borderBottomWidth: 1}}>
-            { workoutList &&
-              searchWorkout
-              ?
-              (
-                searchedWorkoutList.map((workout, index) => {
-                  return (
-                    <View
-                      style={{flex: 1, height: 60, marginLeft: 3, marginRight: 3, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: StyleSheet.hairlineWidth}}
-                      key={workout['name']}
-                    >
-                      <Text style={styles.text}>
-                        {workout['name']}
-                      </Text>
-                      <Text style={styles.text}>
-                        {workout['calories_spent_per_hour']}
-                      </Text>
-                      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <TextInput
-                          onChangeText={(minutes) => this.setMinutesAndDone(index, minutes)}
-                          value={this.state.workoutList[index].minutes}
-                          maxLength={3}
-                          keyboardType={'numeric'}
-                          style={styles.textInput}
-                        />
-                      </View>
-                      { workout['minutes'] ?
-                        (
-                          <View style={styles.icon}>
-                            <Icon
-                              name='done'
-                              color='blue'
-                              size={18}
-                            />
-                          </View>
-                        )
-                        :
-                        (
-                          <Text style={styles.text}>
-                          { }
-                          </Text>
-                        ) // fake text to fill 4 flexes
-                      }
-                    </View>
-                  )
-                })
-              )
-              :
+            {
               (
                 workoutList.map((workout, index) => {
                   return (
@@ -155,7 +146,7 @@ export default class WhatWorkout extends Component {
                       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <TextInput
                           onChangeText={(minutes) => this.setMinutesAndDone(index, minutes)}
-                          value={this.state.workoutList[index].minutes}
+                          value={(this.state.workoutList[index].minutes).toString()}
                           maxLength={2}
                           placeholder='0'
                           keyboardType={'numeric'}
@@ -166,9 +157,10 @@ export default class WhatWorkout extends Component {
                         (
                           <View style={styles.icon}>
                             <Icon
-                              name='done'
-                              color='blue'
-                              size={18}
+                              name='check-square'
+                              type='font-awesome'
+                              color='rgb(240,82,34)'
+                              size={20}
                             />
                           </View>
                         )
@@ -185,26 +177,26 @@ export default class WhatWorkout extends Component {
               )
             }
           </ScrollView>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <ProcessButton
-              navigation={this.props.navigation}
-              previous='WhatFood'
-              next='Result'
-              personalInfo={personalInfo}
-              whatWorkout={workoutList}
-              whatFood={whatFood}
-            />
-          </View>
         </View>
 
-        <NavigationBar
+        <NavigationBar 
           navigation={this.props.navigation}
-          selectedIndex={2}
+          menu='WhatWorkout'
+          workout={this.state.workoutList}
+          saveWorkoutInfo={this.props.saveWorkoutInfo}
         />
       </View>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    ...state
+  }
+};
+
+export default connect(mapStateToProps, {saveWorkoutInfo})(WhatWorkout);
 
 const styles = StyleSheet.create({
   container: {
@@ -229,7 +221,7 @@ const styles = StyleSheet.create({
   },
   textWorkout: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 18,
     textAlign: 'center',
   },
   textInput: {

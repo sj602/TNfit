@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 import { width } from '../utils/helpers';
 import NavigationBar from './NavigationBar';
-import ProcessButton from './ProcessButton';
 
 export default class Main extends Component {
   render() {

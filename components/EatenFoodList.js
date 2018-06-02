@@ -5,7 +5,6 @@ import {
   FlatList, ActivityIndicator,
   TextInput, Alert
 } from 'react-native';
-import ProcessButton from './ProcessButton';
 import NavigationBar from './NavigationBar';
 import { width } from '../utils/helpers';
 

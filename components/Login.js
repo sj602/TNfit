@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Platform, StyleSheet, Text,
   View, TouchableOpacity, Image,
+  Button, TextInput
 } from 'react-native';
 import { SocialIcon } from 'react-native-elements';
 import { width } from '../utils/helpers';
@@ -10,6 +11,15 @@ import { AccessToken, LoginManager } from 'react-native-fbsdk';
 import { GoogleSignin } from 'react-native-google-signin';
 
 export default class Login extends Component {
+  state = {
+    email: '',
+    pw: '',
+  }
+
+  static navigationOptions = ({navigation}) => ({
+    header: null
+  })
+
   componentDidMount() {
     // Google Login
     this.setupGoogleSignin();
@@ -93,30 +103,51 @@ export default class Login extends Component {
               source={require('../images/TN_logo.png')}
             />
           </View>
-          <View>
-            <Text style={styles.text}>
-              The Natural Fit과 함께
-            </Text>
-            <Text style={styles.text}>
-              건강한 삶을 유지해보세요
-            </Text>
-            <Text style={styles.text}>
-              여러분의 다이어트를 응원합니다!
-            </Text>
-          </View>
-          <View style={{marginTop: 10}}>
+          <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 10, marginBottom: 10}}>
             <SocialIcon
-              title='페이스북으로 로그인'
-              button
-              onPress={() => this.fbAuth()}
-              type='facebook'
-            />
-            <SocialIcon
-              title='구글로 로그인'
-              button
               onPress={() => this.googleAuth()}
               type='google-plus-official'
             />
+            <SocialIcon
+              onPress={() => this.fbAuth()}
+              type='facebook'
+            />
+          </View>
+          <View>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={(email) => this.setState({email})}
+              value={this.state.email}
+              placeholder='Email Address'
+            />
+          </View>
+          <View style={{marginBottom: 30}}>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={(pw) => this.setState({pw})}
+              value={this.state.pw}
+              placeholder='Password'
+            />
+          </View>
+
+          <TouchableOpacity
+            style={{justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)', height: 50}}
+            onPress={() => console.log('SIGN IN CLICKED')}
+          >
+            <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>SIGN IN</Text>
+          </TouchableOpacity>   
+
+          <View style={{flex:1, maxHeight: 50, flexDirection: 'row', marginTop: 10}}>
+            <View style={{flex:1}}>
+              <Text>
+                Sign Up
+              </Text>
+            </View>
+            <View style={{flex:1}}>
+              <Text style={{textAlign: 'right'}}>
+                Forgot Password?
+              </Text>
+            </View>
           </View>
         </View>
       </View>
@@ -141,5 +172,8 @@ const styles = StyleSheet.create({
     fontSize: 25,
     textAlign: 'center',
     marginTop: 5,
+  },
+  textInput: {
+    width: width * 0.8
   }
 });

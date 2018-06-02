@@ -4,6 +4,8 @@ import {
   Text,
   View
 } from 'react-native';
+import { Provider } from 'react-redux';
+import { store } from './store';
 import { Stacks } from './utils/navigation';
 import { firebaseSetup } from './utils/firebase';
 
@@ -15,7 +17,9 @@ export default class App extends Component {
 
   render() {
     return (
-      <Stacks />
+      <Provider store={store}>
+        <Stacks />
+      </Provider>
     );
   }
 }

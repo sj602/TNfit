@@ -1,118 +1,185 @@
 import React, { Component } from 'react';
 import {
   Platform, StyleSheet, Text,
-  View
+  View, TouchableOpacity, Alert
 } from 'react-native';
-import { ButtonGroup, Icon } from 'react-native-elements';
 import { width } from '../utils/helpers';
 
-//Process buttons
-const component1 = () => {
-  return (
-    <View>
-      <Icon
-        name='ios-body'
-        type='ionicon'
-        color='#517fa4'
-      />
-      <Text>
-        개인정보
-      </Text>
-    </View>
-  )
-};
-
-const component2 = () => {
-  return (
-    <View>
-      <Icon
-        name='food'
-        type='material-community'
-        color='#517fa4'
-      />
-      <Text>
-        음식
-      </Text>
-    </View>
-  )
-};
-
-const component3 = () => {
-  return (
-    <View>
-      <Icon
-        name='weight-kilogram'
-        type='material-community'
-        color='#517fa4'
-      />
-      <Text>
-        운동
-      </Text>
-    </View>
-  )
-};
-
-const component4 = () => {
-  return (
-    <View>
-      <Icon
-        name='results'
-        type='foundation'
-        color='#517fa4'
-      />
-      <Text>
-        결과
-      </Text>
-    </View>
-  )
-};
-
 export default class NavigationBar extends Component {
-  state = {
-    selectedIndex: undefined,
-  }
-
-  componentWillMount() {
-    const { selectedIndex } = this.props;
-    this.setState({selectedIndex})
-  }
-
-  updateIndex(selectedIndex) {
-    const { navigate } = this.props.navigation;
-
-    switch(selectedIndex) {
-      case 0:
-        this.setState({selectedIndex});
-        navigate('PersonalInfo');
-        break;
-      case 1:
-        this.setState({selectedIndex});
-        navigate('WhatFood');
-        break;
-      case 2:
-        this.setState({selectedIndex});
-        navigate('WhatWorkout');
-        break;
-      case 3:
-        this.setState({selectedIndex});
-        navigate('Result');
-        break;
-    }
-  }
-
   render() {
-    const buttons = [{element: component1}, {element: component2}, {element: component3}, {element: component4}];
-    const { selectedIndex } = this.state;
-    const { previous, next } = this.props;
+    const { menu, navigation } = this.props;
 
-    return (
-      <ButtonGroup
-        component={undefined}
-        selectedIndex={selectedIndex}
-        buttons={buttons}
-        containerStyle={{width: width, height: 50, marginBottom: 0}}
-      />
-    )
+    switch (menu) {
+      case 'Agreement': {
+        return (
+          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
+            <TouchableOpacity
+              style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}
+              onPress={() => {
+                this.props.saveAgreementInfo(this.props.agreement);
+                navigation.navigate('PersonalInfo');
+              }}
+            >
+              <View>
+                <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
+                  가입하기
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+
+      case 'PersonalInfo': {
+        return (
+          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
+            <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'grey'}}>
+              <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
+                로그아웃
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}
+              onPress={() => {
+                this.props.saveUserInfo(this.props.userInfo);
+                this.props.saveMetabolism(this.props.userInfo);
+                navigation.navigate('Diary');
+              }}
+            >
+              <View>
+                <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
+                  저장하기
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+
+      case 'DiaryDetail': {
+        return (
+          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Recommendation')}
+              style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}
+            >
+              <View>
+                <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
+                  추천제품
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+
+      case 'WhatFood': {
+        return (
+          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
+            <TouchableOpacity
+              style={{flex:1, flexDirection: 'row',justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}
+              onPress={() => {
+                let { eatenFoodList, type } = this.props;
+                this.props.saveFoodInfo(eatenFoodList, type);
+                return (
+                  Alert.alert(
+                    '리스트에 추가 되었습니다.',
+                    '',
+                    [
+                      {text: '확인', onPress: () => navigation.goBack()}
+                    ]
+                  )
+                )
+              }}
+            >
+              <View>
+                <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
+                  추가하기
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+
+      case 'DayDetail': {
+        const { category } = this.props;
+
+        return (
+          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
+            <TouchableOpacity
+              style={{flex:1}}
+              onPress={() => {
+                if(category === '운동') navigation.navigate('WhatWorkout');
+                navigation.navigate('WhatFood', { category });
+              }}
+            >
+              <View style={{flex:1, flexDirection: 'row',justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}>
+                <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
+                  추가하기
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+
+      case 'WhatWorkout': {
+        return (
+          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
+            <TouchableOpacity
+              style={{flex:1}}
+              onPress={() => {
+                let workout = this.props.workout.filter((item) => item.done === true)
+                this.props.saveWorkoutInfo(workout);
+                return (
+                  Alert.alert(
+                    '리스트에 추가 되었습니다.',
+                    '',
+                    [
+                      {text: '확인', onPress: () => navigation.goBack()}
+                    ]
+                  )
+                )
+              }}
+            >
+              <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}>
+                <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
+                  추가하기
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+
+      case 'Recommendation': {
+        return (
+          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
+            <TouchableOpacity
+              style={{flex:1}}
+              onPress={() => {
+                return (
+                  Alert.alert(
+                    '구매 링크를 추가중입니다.',
+                    '',
+                    [
+                      {text: '확인', onPress: () => console.log('')}
+                    ]
+                  )
+                )
+              }}
+            >
+              <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}>
+                <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
+                  구매하기
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+    }
   }
 }
 

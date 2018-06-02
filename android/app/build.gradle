@@ -151,6 +151,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-svg')
     implementation project(':react-native-google-signin')
     implementation project(':react-native-fbsdk')
     implementation(project(':react-native-firebase')) {
