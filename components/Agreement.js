@@ -49,7 +49,7 @@ class Agreement extends Component {
 
   render() {
     const { checkAll, personalInfo, receiveEmail, receiveSMS } = this.state;
-    console.log('aggrement.js',this.state)
+
     return (
       <View style={styles.container}>
         <View style={{flex: 1, marginTop: 10}}>

@@ -7,9 +7,9 @@ import {
   Keyboard
 } from 'react-native';
 import { connect } from 'react-redux';
+import firebase from 'react-native-firebase';
 import { width } from '../utils/helpers';
 import { Icon } from 'react-native-elements';
-import SmartPicker from 'react-native-smart-picker';
 import NavigationBar from './NavigationBar';
 import { saveUserInfo, saveMetabolism } from '../actions';
 

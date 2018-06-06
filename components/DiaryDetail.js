@@ -54,9 +54,9 @@ class DiaryDetail extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
-    const { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
-    const { workoutInfo, result, foodInfo } = this.props;
-    const foodCalories = breakfast.calories || 0 + lunch.calories || 0 + dinner.calories || 0 + dessert.calories || 0;
+    let { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
+    let { workoutInfo, result, foodInfo } = this.props;
+    let foodCalories = breakfast.calories || 0 + lunch.calories || 0 + dinner.calories || 0 + dessert.calories || 0;
 
     if(foodCalories === 0 || workoutInfo.calories === 0) {
       var series = [1];

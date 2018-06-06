@@ -11,9 +11,13 @@ import { AccessToken, LoginManager } from 'react-native-fbsdk';
 import { GoogleSignin } from 'react-native-google-signin';
 
 export default class Login extends Component {
-  state = {
-    email: '',
-    pw: '',
+  constructor() {
+    super();
+    this.state = {
+      user: '',
+      email: '',
+      password: '',
+    }
   }
 
   static navigationOptions = ({navigation}) => ({
@@ -21,8 +25,16 @@ export default class Login extends Component {
   })
 
   componentDidMount() {
+    this.authSubscription = firebase.auth().onAuthStateChanged((user) => {
+      user ? this.props.navigation.navigate('Diary') : null
+    });
+
     // Google Login
     this.setupGoogleSignin();
+  }
+
+  componentWillUnmount() {
+    this.authSubscription();
   }
 
   handleFirebaseLogin(accessToken) {
@@ -57,7 +69,7 @@ export default class Login extends Component {
             .then(accessToken => {
               const credential = firebase.auth.FacebookAuthProvider.credential(accessToken);
               return firebase.auth().signInAndRetrieveDataWithCredential(credential)
-                      .then(user => navigate('Main', {userName: user.additionalUserInfo.profile.name}));
+                      .then(user => navigate('Agreement', {userName: user.additionalUserInfo.profile.name}));
             });
         }
       }, (error) => console.log(error));
@@ -68,9 +80,10 @@ export default class Login extends Component {
 
     GoogleSignin.signIn()
       .then((user) => {
+        console.log(user)
         const credential = firebase.auth.GoogleAuthProvider.credential(user.idToken);
         return firebase.auth().signInAndRetrieveDataWithCredential(credential)
-                .then(user => navigate('Main', {userName: user.additionalUserInfo.profile.name}));
+                .then(user => navigate('Agreement', {userName: user.additionalUserInfo.profile.name}));
       })
       .catch((err) => {
         console.log('WRONG SIGNIN', err);
@@ -94,6 +107,9 @@ export default class Login extends Component {
   }
 
   render() {
+    const { navigate } = this.props.navigation;
+    const { email, password } = this.state;
+
     return (
       <View style={styles.container}>
         <View style={{flex: 1, justifyContent: 'center'}}>
@@ -118,36 +134,52 @@ export default class Login extends Component {
               style={styles.textInput}
               onChangeText={(email) => this.setState({email})}
               value={this.state.email}
-              placeholder='Email Address'
+              placeholder='이메일 주소'
             />
           </View>
           <View style={{marginBottom: 30}}>
             <TextInput
               style={styles.textInput}
-              onChangeText={(pw) => this.setState({pw})}
-              value={this.state.pw}
-              placeholder='Password'
+              onChangeText={(password) => this.setState({password})}
+              value={this.state.password}
+              placeholder='비밀번호'
+              secureTextEntry={true}  
+              maxLength={16}            
             />
           </View>
 
           <TouchableOpacity
             style={{justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)', height: 50}}
-            onPress={() => console.log('SIGN IN CLICKED')}
+            onPress={() => {
+              firebase
+                .auth()
+                .signInAndRetrieveDataWithEmailAndPassword(email, password)
+              }}
           >
-            <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>SIGN IN</Text>
+            <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>로그인</Text>
           </TouchableOpacity>   
 
           <View style={{flex:1, maxHeight: 50, flexDirection: 'row', marginTop: 10}}>
-            <View style={{flex:1}}>
-              <Text>
-                Sign Up
-              </Text>
-            </View>
-            <View style={{flex:1}}>
-              <Text style={{textAlign: 'right'}}>
-                Forgot Password?
-              </Text>
-            </View>
+            <TouchableOpacity
+              onPress={() => navigate('Agreement')}
+              style={{flex:1}}
+            >
+              <View>
+                <Text>
+                  회원가입
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => console.log('')}
+              style={{flex:1}}
+            >
+              <View>
+                <Text style={{textAlign: 'right'}}>
+                  비밀번호 분실
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

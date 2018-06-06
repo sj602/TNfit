@@ -26,8 +26,8 @@ export const calculateResult = () => dispatch => {
 	return dispatch({type: CALCULATE_RESULT})
 }
 
-export const saveDB = (data) => dispatch => {
-	return dispatch({type: SAVE_DB, foodList: data})
+export const saveDB = (foodList) => dispatch => {
+	return dispatch({type: SAVE_DB, foodList})
 }
 
 export const saveMetabolism = (userInfo) => dispatch => {

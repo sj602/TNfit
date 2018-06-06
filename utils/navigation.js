@@ -1,6 +1,7 @@
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import React from 'react';
 import Login from '../components/Login';
+import SignUp from '../components/SignUp';
 import Agreement from '../components/Agreement';
 import PersonalInfo from '../components/PersonalInfo';
 import Diary from '../components/Diary';
@@ -13,32 +14,33 @@ import WhatWorkout from '../components/WhatWorkout';
 import Result from '../components/Result';
 
 const Drawer = DrawerNavigator({
-  PersonalInfo: { 
-    screen: PersonalInfo,
-    title: '개인정보'
-  },
-  Diary: { screen: Diary},
-  DiaryDetail: { screen: DiaryDetail}
+    PersonalInfo: {
+        screen: PersonalInfo,
+        title: '개인정보'
+    },
+    Diary: { screen: Diary },
+    DiaryDetail: { screen: DiaryDetail }
 }, {
-  drawerPosition: 'right'
+    drawerPosition: 'right'
 });
 
 export const Stacks = StackNavigator({
-  Login: { screen: Login },
-  Agreement: { screen: Agreement },
-  PersonalInfo: { screen: PersonalInfo },
-  // Drawer: { screen: Drawer },
-  Diary: { screen: Diary },
-  DiaryDetail: { screen: DiaryDetail },
-  Recommendation: { screen: Recommendation },
-  WhatFood: { screen : WhatFood},
-  DayDetail: { screen : DayDetail},
-  FoodDetail: { screen : FoodDetail},
-  WhatWorkout: { screen : WhatWorkout}
+    Login: { screen: Login },
+    SignUp: { screen: SignUp },
+    Agreement: { screen: Agreement },
+    PersonalInfo: { screen: PersonalInfo },
+    Drawer: { screen: Drawer },
+    Diary: { screen: Diary },
+    DiaryDetail: { screen: DiaryDetail },
+    Recommendation: { screen: Recommendation },
+    WhatFood: { screen: WhatFood },
+    DayDetail: { screen: DayDetail },
+    FoodDetail: { screen: FoodDetail },
+    WhatWorkout: { screen: WhatWorkout }
 }, {
-  initialRouteName: 'Diary',
-  navigationOptions: {
-    headerTintColor: 'white',
-    headerStyle: {backgroundColor: 'rgb(240,82,34)'},
-  }
+    initialRouteName: 'Login',
+    navigationOptions: {
+        headerTintColor: 'white',
+        headerStyle: { backgroundColor: 'rgb(240,82,34)' },
+    }
 });

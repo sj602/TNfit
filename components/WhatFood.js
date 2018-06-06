@@ -26,10 +26,6 @@ class WhatFood extends Component {
       loading: true,
       refreshing: false,
     };
-
-    console.ignoreYellowBox = [
-      'Setting a timer'
-    ];
   }
 
   static navigationOptions = ({navigation}) => ({
@@ -57,46 +53,32 @@ class WhatFood extends Component {
         }))
     }
     else {
-      // (category === '아침' && breakfast.list === []) 
-      // ?
-      fetchDB('food_check').then(foodList => this.setState({foodList, loading: false}))
-      // :
-      // (category === '점심' && lunch.list === [])
-      // ?
-      // fetchDB('food_check').then(foodList => this.setState({foodList, loading: false}))
-      // :
-      // (category === '저녁' && dinner.list === [])
-      // ?
-      // fetchDB('food_check').then(foodList => this.setState({foodList, loading: false}))
-      // :
-      // (category === '간식' && dessert.list === [])
-      // ?
-      // fetchDB('food_check').then(foodList => this.setState({foodList, loading: false}))
-      // :
-      // console.log(category, dessert.list)
-      // console.log('cant fetch food')
+      if(this.props.foodInfo.foodList.length === 0) {
+        console.log('foodlist dont exist')
+        fetchDB('food_check').then(foodList => this.props.saveDB(foodList)).then(() => this.setState({loading: false}))
+      } else {
+        this.setState({loading: false})
+      }
     }
   }
 
   pushToEatenFoodList(selectedFood) {
     let { eatenFoodList } = this.state;
     let copiedEatenFoodList = Array.prototype.slice.call(eatenFoodList);
-    console.log('selectedFood', selectedFood)
     // const checkAddedFood = copiedEatenFoodList.find(food => food['식품이름'] === selectedFood['식품이름']);
     // if(checkAddedFood) {
     //   let index = copiedEatenFoodList.indexOf(checkAddedFood);
     //   copiedEatenFoodList.splice(index, 1);
-      copiedEatenFoodList.push(selectedFood);
+    copiedEatenFoodList.push(selectedFood);
     // } else {
     //   copiedEatenFoodList.push(selectedFood);
     // }
 
     this.setState({eatenFoodList: copiedEatenFoodList});
-    console.log('eatenFoodList', this.state.eatenFoodList)
   }
 
   handleSearch(searchFood) {
-    let copiedFoodList = this.state.foodList;
+    let copiedFoodList = Array.prototype.slice.call(this.props.foodInfo.foodList);
 
     let searchedFoodList = copiedFoodList.filter(food => {
       if(food) { // check if food is not null
@@ -130,11 +112,11 @@ class WhatFood extends Component {
 
   render() {
     let {
-      loading, searchFood, foodList,
+      loading, searchFood,
       searchedFoodList, isModalVisible, selectedFood,
       eatenFoodList
     } = this.state;
-    // const { foodList } = this.props.foodInfo;
+    const { foodList } = this.props.foodInfo;
     const { navigate } = this.props.navigation;
     const { category } = this.props.navigation.state.params;
 
@@ -181,80 +163,88 @@ class WhatFood extends Component {
               </View>
             )
           }
+          {
+            foodList
+            ?
+            (
+              <FlatList
+                refreshing={this.state.refreshing}
+                ListFooterComponent={() => this.refreshingLoader()}
+                data={searchFood ? searchedFoodList : foodList}
+                keyExtractor={(item, index) => index.toString()}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  if(item) {
+                    return (
+                      <View
+                        style={{flex: 1, height: 60, marginLeft: 30, marginRight: 30, flexDirection: 'row', alignItems: 'center'}}
+                      >
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.pushToEatenFoodList(item);
+                            let newItem = _.cloneDeep(item);
+                            newItem.check = true;
+                            
+                            let copiedFoodList = _.cloneDeep(foodList);
+                            copiedFoodList[index] = newItem;
 
-          <FlatList
-            refreshing={this.state.refreshing}
-            ListFooterComponent={() => this.refreshingLoader()}
-            data={searchFood ? searchedFoodList : foodList}
-            keyExtractor={(item, index) => index.toString()}
-            showsVerticalScrollIndicator={false}
-            renderItem={({item, index}) => {
-              if(item) {
-                return (
-                  <View
-                    style={{flex: 1, height: 60, marginLeft: 30, marginRight: 30, flexDirection: 'row', alignItems: 'center'}}
-                  >
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.pushToEatenFoodList(item);
-                        let newItem = _.cloneDeep(item);
-                        newItem.check = true;
-                        
-                        let copiedFoodList = _.cloneDeep(foodList);
-                        copiedFoodList[index] = newItem;
-
-                        this.setState({foodList: copiedFoodList})
-                      }}
-                      style={{flex:3, height: 60, flexDirection: 'row'}}
-                    >
-                    {
-                      item.check === true
-                      ?
-                      (
-                        <Icon
-                          name='check-square'
-                          type='font-awesome'
-                          color='rgb(240,82,34)'
-                          size={20}
-                        />
-                      )
-                      :
-                      (
-                        <Icon
-                          name='check-square'
-                          type='font-awesome'
-                          color='grey'
-                          size={20}
-                        />
-                      )
-                    }
-                    </TouchableOpacity>
-                      <View style={{justifyContent: 'center'}}>
-                        <Text style={{fontSize: 18}}>
-                          {item['식품이름']}
-                        </Text>
+                            this.setState({foodList: copiedFoodList})
+                          }}
+                          style={{flex:3, height: 60, flexDirection: 'row'}}
+                        >
+                        {
+                          item.check === true
+                          ?
+                          (
+                            <Icon
+                              name='check-square'
+                              type='font-awesome'
+                              color='rgb(240,82,34)'
+                              size={20}
+                            />
+                          )
+                          :
+                          (
+                            <Icon
+                              name='check-square'
+                              type='font-awesome'
+                              color='grey'
+                              size={20}
+                            />
+                          )
+                        }
+                        </TouchableOpacity>
+                          <View style={{justifyContent: 'center'}}>
+                            <Text style={{fontSize: 18}}>
+                              {item['식품이름']}
+                            </Text>
+                          </View>
+                          <View style={{flex: 1, justifyContent: 'center'}}>
+                            <Text style={{fontSize: 18, textAlign: 'right', alignSelf: 'stretch'}}>
+                              {item['열량 (kcal)']}
+                            </Text>
+                          </View>
+                        <TouchableOpacity
+                          onPress={() => navigate('FoodDetail', {selectedFood: item, eatenFoodList: this.state.eatenFoodList, saveFoodInfo: this.props.saveFoodInfo, category})}
+                          style={{marginLeft: 8}}
+                        >
+                          <Icon
+                            name='angle-double-right'
+                            type='font-awesome'
+                            color='rgb(240,82,34)'
+                            size={20}
+                          />
+                        </TouchableOpacity>
                       </View>
-                      <View style={{flex: 1, justifyContent: 'center'}}>
-                        <Text style={{fontSize: 18, textAlign: 'right', alignSelf: 'stretch'}}>
-                          {item['열량 (kcal)']}
-                        </Text>
-                      </View>
-                    <TouchableOpacity
-                      onPress={() => navigate('FoodDetail', {selectedFood: item})}
-                      style={{marginLeft: 8}}
-                    >
-                      <Icon
-                        name='angle-double-right'
-                        type='font-awesome'
-                        color='rgb(240,82,34)'
-                        size={20}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                )
-              }
-            }}
-          />
+                    )
+                  }
+                }}
+              />            
+            )
+            :
+            null
+          }
+          
 
         </View>
 
@@ -276,7 +266,7 @@ const mapStateToProps = (state) => {
   }
 };
 
-export default connect(mapStateToProps, {saveFoodInfo})(WhatFood);
+export default connect(mapStateToProps, {saveFoodInfo, saveDB})(WhatFood);
 
 const styles = StyleSheet.create({
   container: {

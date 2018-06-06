@@ -6,6 +6,7 @@ import {
   Picker
 } from 'react-native';
 import { connect } from 'react-redux';
+import firebase from 'react-native-firebase';
 import { width } from '../utils/helpers';
 import { Icon } from 'react-native-elements';
 import { Calendar } from 'react-native-calendars';
@@ -25,7 +26,23 @@ class Diary extends Component {
                 />
   })
 
+  componentDidMount() {
+    this.props.userInfo.name.length === 0
+    ?
+    Alert.alert(
+      '칼로리 계산을 위한 기본 정보를 입력해주세요.',
+      '',
+      [
+        {text: '입력', onPress: () => this.props.navigation.navigate('PersonalInfo')}
+      ]
+    )
+    :
+    null
+  }
+
   render() {
+    console.log('this.props:', this.props)
+    console.log('user:',firebase.auth().currentUser)
     const { navigate } = this.props.navigation;
 
     return (

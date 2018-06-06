@@ -5,11 +5,13 @@ import {
   FlatList, ActivityIndicator,
   TextInput, Alert, Keyboard, ScrollView
 } from 'react-native';
+import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
+import { saveFoodInfo, saveDB } from '../actions';
 import { width } from '../utils/helpers';
 import NavigationBar from './NavigationBar';
 
-export default class FoodDetail extends Component {
+class FoodDetail extends Component {
   constructor() {
     super();
     this.state = {
@@ -35,7 +37,11 @@ export default class FoodDetail extends Component {
   })
 
   render() {
-    const { selectedFood } = this.props.navigation.state.params;
+    const { selectedFood, saveFoodInfo, category } = this.props.navigation.state.params;
+    const { navigation } = this.props;
+    let { eatenFoodList } = this.props.navigation.state.params;
+
+    eatenFoodList.push(selectedFood);
 
     return (
       <View style={styles.container}>
@@ -100,11 +106,26 @@ export default class FoodDetail extends Component {
           </View>
         </View>
 
-        <NavigationBar menu='WhatFood' />
+
+        <NavigationBar 
+          menu='FoodDetail' 
+          category={category}
+          eatenFoodList={eatenFoodList}
+          saveFoodInfo={saveFoodInfo}
+          navigation={navigation}
+        />
       </View>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    ...state
+  }
+};
+
+export default connect(mapStateToProps, {saveFoodInfo})(FoodDetail);
 
 const styles = StyleSheet.create({
   container: {
