@@ -64,8 +64,8 @@ export default class SignUp extends Component {
   }
 
   render() {
-    const { email, password, passwordChk } = this.state;
-    const { navigation } = this.props;
+    const { email, password, passwordChk, gender } = this.state;
+    const { navigation, saveUserInfo } = this.props;
 
     return (
       <View style={styles.container}>
@@ -113,7 +113,7 @@ export default class SignUp extends Component {
             >
               <View style={{flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}>
                 <Text style={{flex: 9}}>
-                  { this.state.gender ? this.state.gender : '  성별'}
+                  { gender ? gender : '  성별'}
                 </Text>
                 <Icon
                   name='sort-down'
@@ -156,7 +156,7 @@ export default class SignUp extends Component {
             navigation={navigation}
             menu='SignUp'
             userInfo={this.state}
-            saveUserInfo={this.props.saveUserInfo}
+            saveUserInfo={saveUserInfo}
             email={email}
             password={password}
             passwordChk={passwordChk}

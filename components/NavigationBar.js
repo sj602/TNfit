@@ -25,9 +25,9 @@ export default class NavigationBar extends Component {
         const { saveAgreementInfo, agreement } = this.props;
 
         return (
-          <View style={{flex: 1, flexDirection: 'row', maxHeight: 50}}>
+          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
             <TouchableOpacity
-              style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}
+              style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}
               onPress={() => {
                 saveAgreementInfo(agreement);
                 navigation.navigate('SignUp');
@@ -73,7 +73,7 @@ export default class NavigationBar extends Component {
                         [
                           {text: '확인', onPress: () => navigation.navigate('Login')}
                         ]
-                      );
+                      )
                     })
                     .catch(err => {
                       Alert.alert(
@@ -99,7 +99,7 @@ export default class NavigationBar extends Component {
                       [
                         {text: '확인', onPress: () => console.log('')}
                       ]
-                    );
+                    )
                 }
               }}
             >
