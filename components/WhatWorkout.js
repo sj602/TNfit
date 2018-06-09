@@ -23,12 +23,13 @@ class WhatWorkout extends Component {
   }
 
   static navigationOptions = ({navigation}) => ({
-    title: '운동',
+    title: '운동 입력',
     headerTitleStyle: {flex:1, alignSelf: 'center'},
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
     headerRight: <Icon
-                  iconStyle={{marginRight: 10}}
+                  iconStyle={{marginRight: 15}}
+                  underlayColor="rgba(255,255,255,0)"
                   name="menu" color="white" size={35} onPress={() => {
                                                         navigation.navigate('DrawerToggle')
                                                       }}

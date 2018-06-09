@@ -13,34 +13,49 @@ import FoodDetail from '../components/FoodDetail';
 import WhatWorkout from '../components/WhatWorkout';
 import Result from '../components/Result';
 
-const Drawer = DrawerNavigator({
-    PersonalInfo: {
-        screen: PersonalInfo,
-        title: '개인정보'
-    },
+const DiaryStacks = StackNavigator({
     Diary: { screen: Diary },
-    DiaryDetail: { screen: DiaryDetail }
-}, {
-    drawerPosition: 'right'
 });
 
-export const Stacks = StackNavigator({
-    Login: { screen: Login },
-    SignUp: { screen: SignUp },
-    Agreement: { screen: Agreement },
+const PersonalInfoStacks = StackNavigator({
     PersonalInfo: { screen: PersonalInfo },
-    Drawer: { screen: Drawer },
-    Diary: { screen: Diary },
+});
+
+const DiaryDetailStacks = StackNavigator({
     DiaryDetail: { screen: DiaryDetail },
-    Recommendation: { screen: Recommendation },
     WhatFood: { screen: WhatFood },
     DayDetail: { screen: DayDetail },
     FoodDetail: { screen: FoodDetail },
-    WhatWorkout: { screen: WhatWorkout }
+    WhatWorkout: { screen: WhatWorkout },
+    Recommendation: { screen: Recommendation }
+});
+
+const LoginStacks = StackNavigator({
+    Login: { screen: Login },
+    SignUp: { screen: SignUp },
+    Agreement: { screen: Agreement },
+});
+
+const Drawer = DrawerNavigator({
+    DiaryDetail: { 
+        screen: DiaryDetailStacks,
+    },
+    Diary: { 
+        screen: DiaryStacks,
+    },
+    PersonalInfo: {
+        screen: PersonalInfoStacks,
+    },    
 }, {
-    initialRouteName: 'Login',
     navigationOptions: {
         headerTintColor: 'white',
         headerStyle: { backgroundColor: 'rgb(240,82,34)' },
     }
+});
+
+export const Stacks = StackNavigator({
+    LoginStacks: { screen: LoginStacks },
+    Drawer: { screen: Drawer }
+}, {
+    headerMode: 'none'
 });

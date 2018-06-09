@@ -35,7 +35,8 @@ class PersonalInfo extends Component {
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
     headerRight: <Icon
-                  iconStyle={{marginLeft: 10}}
+                  iconStyle={{marginRight: 15}}
+                  underlayColor="rgba(255,255,255,0)"
                   name="menu" color="white" size={35} onPress={() => {
                                                         navigation.navigate('DrawerToggle')
                                                       }}
@@ -44,7 +45,7 @@ class PersonalInfo extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
-    const {currentlyEatingProduct, wannaEatProduct} = this.state;
+    const { currentlyEatingProduct, wannaEatProduct } = this.state;
 
     return (
       <View style={styles.container}>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Platform, StyleSheet, Text,
   View, TouchableOpacity, Image,
-  Button, TextInput
+  Button, TextInput, Alert
 } from 'react-native';
 import { SocialIcon } from 'react-native-elements';
 import { width } from '../utils/helpers';
@@ -26,15 +26,40 @@ export default class Login extends Component {
 
   componentDidMount() {
     this.authSubscription = firebase.auth().onAuthStateChanged((user) => {
-      user ? this.props.navigation.navigate('Diary') : null
+      user ? this.props.navigation.navigate('Drawer') : null
     });
 
-    // Google Login
     this.setupGoogleSignin();
   }
 
   componentWillUnmount() {
     this.authSubscription();
+  }
+
+  onLogin() {
+    const { email, password } = this.state;
+
+    if(!email || !password) {
+      return Alert.alert('이메일 또는 비밀번호를 입력해주세요', '', [{text: '확인', onPress: () => console.log('')}])
+    } else {
+      return firebase
+        .auth()
+        .signInAndRetrieveDataWithEmailAndPassword(email, password)
+        .catch(err => {
+          if(err.code === 'auth/invalid-email') {
+            return Alert.alert(
+                                '이메일이 존재하지 않습니다.',
+                                '',
+                                [{text: '확인', onPress: () => console.log('')}])
+              
+          } else {
+            return Alert.alert(
+                                '비밀번호가 틀립니다.',
+                                '',
+                                [{text: '확인', onPress: () => console.log('')}])
+          }
+      })
+    }
   }
 
   handleFirebaseLogin(accessToken) {
@@ -69,7 +94,6 @@ export default class Login extends Component {
             .then(accessToken => {
               const credential = firebase.auth.FacebookAuthProvider.credential(accessToken);
               return firebase.auth().signInAndRetrieveDataWithCredential(credential)
-                      .then(user => navigate('Agreement', {userName: user.additionalUserInfo.profile.name}));
             });
         }
       }, (error) => console.log(error));
@@ -80,10 +104,8 @@ export default class Login extends Component {
 
     GoogleSignin.signIn()
       .then((user) => {
-        console.log(user)
         const credential = firebase.auth.GoogleAuthProvider.credential(user.idToken);
         return firebase.auth().signInAndRetrieveDataWithCredential(credential)
-                .then(user => navigate('Agreement', {userName: user.additionalUserInfo.profile.name}));
       })
       .catch((err) => {
         console.log('WRONG SIGNIN', err);
@@ -150,11 +172,7 @@ export default class Login extends Component {
 
           <TouchableOpacity
             style={{justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)', height: 50}}
-            onPress={() => {
-              firebase
-                .auth()
-                .signInAndRetrieveDataWithEmailAndPassword(email, password)
-              }}
+            onPress={() => this.onLogin()}
           >
             <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>로그인</Text>
           </TouchableOpacity>   

@@ -52,19 +52,19 @@ export default class SignUp extends Component {
 
   sendSignInLinkToEmail(email, actionCodeSettings) {
     firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
-      .then(function() {
+      .then(() => {
         // The link was successfully sent. Inform the user.
         // Save the email locally so you don't need to ask the user for it again
         // if they open the link on the same device.
         window.localStorage.setItem('emailForSignIn', email);
       })
-      .catch(function(error) {
+      .catch(error => {
         // Some error occurred, you can inspect the code: error.code
     });
   }
 
   render() {
-    const { email, password, passwordChk, gender } = this.state;
+    const { email, password, passwordChk } = this.state;
     const { navigation, saveUserInfo } = this.props;
 
     return (
@@ -113,7 +113,7 @@ export default class SignUp extends Component {
             >
               <View style={{flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}>
                 <Text style={{flex: 9}}>
-                  { gender ? gender : '  성별'}
+                  { this.state.gender ? this.state.gender : '  성별'}
                 </Text>
                 <Icon
                   name='sort-down'

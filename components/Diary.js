@@ -19,30 +19,15 @@ class Diary extends Component {
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
     headerRight: <Icon
-                  iconStyle={{marginRight: 10}}
+                  iconStyle={{marginRight: 15}}
+                  underlayColor="rgba(255,255,255,0)"
                   name="menu" color="white" size={35} onPress={() => {
                                                         navigation.navigate('DrawerToggle')
                                                       }}
                 />
   })
 
-  componentDidMount() {
-    this.props.userInfo.name.length === 0
-    ?
-    Alert.alert(
-      '칼로리 계산을 위한 기본 정보를 입력해주세요.',
-      '',
-      [
-        {text: '입력', onPress: () => this.props.navigation.navigate('PersonalInfo')}
-      ]
-    )
-    :
-    null
-  }
-
   render() {
-    console.log('this.props:', this.props)
-    console.log('user:',firebase.auth().currentUser)
     const { navigate } = this.props.navigation;
 
     return (

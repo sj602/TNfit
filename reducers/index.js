@@ -5,6 +5,7 @@ import {
     SAVE_WORKOUT_INFO,
     CALCULATE_RESULT,
     SAVE_DB,
+    CHECK_FOOD,
     SAVE_METABOLISM,
 } from '../actions';
 
@@ -70,6 +71,7 @@ const initialState = {
         calories: 0,
         list: [],
     },
+    productList: [],
     result: {
         scores: '',
     },
@@ -78,7 +80,7 @@ const initialState = {
     }
 };
 
-export default function reducer(state = initialState, action) {
+export default function appReducer(state = initialState, action) {
     switch (action.type) {
         case SAVE_USER_INFO:
             return {
@@ -157,7 +159,6 @@ export default function reducer(state = initialState, action) {
             }
 
         case SAVE_DB:
-            console.log('action dispatched')
             return {
                 ...state,
                 foodInfo: {
@@ -166,6 +167,17 @@ export default function reducer(state = initialState, action) {
                 }
             }
 
+        case CHECK_FOOD:
+            const newFoodLIst = Array.prototype.slice.call(state.foodInfo.foodList);
+            newFoodLIst[action.index] = action.food;
+
+            return {
+              ...state,
+              foodInfo: {
+                ...state.foodInfo,
+                foodList: newFoodLIst
+              }
+            }
         case SAVE_METABOLISM:
             return {
                 ...state,

@@ -17,19 +17,16 @@ class FoodDetail extends Component {
     this.state = {
       selectedFood: {},
     };
-
-    console.ignoreYellowBox = [
-      'Setting a timer'
-    ];
   }
 
   static navigationOptions = ({navigation}) => ({
-    title: navigation.state.params.selectedFood['식품이름'],
+    title: navigation.state.params.selectedFood['상품명'],
     headerTitleStyle: {flex:1, alignSelf: 'center'},
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
     headerRight: <Icon
-                  iconStyle={{marginRight: 10}}
+                  iconStyle={{marginRight: 15}}
+                  underlayColor="rgba(255,255,255,0)"
                   name="menu" color="white" size={35} onPress={() => {
                                                         navigation.navigate('DrawerToggle')
                                                       }}
@@ -37,11 +34,8 @@ class FoodDetail extends Component {
   })
 
   render() {
-    const { selectedFood, saveFoodInfo, category } = this.props.navigation.state.params;
+    const { selectedFood, saveFoodInfo, category, eatenFoodList } = this.props.navigation.state.params;
     const { navigation } = this.props;
-    let { eatenFoodList } = this.props.navigation.state.params;
-
-    eatenFoodList.push(selectedFood);
 
     return (
       <View style={styles.container}>
@@ -56,52 +50,32 @@ class FoodDetail extends Component {
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              열량 (kcal) : {selectedFood['열량 (kcal)']}
+              브랜드 : {selectedFood['브랜드']}
             </Text>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              1회제공량 (g) : {selectedFood['1회제공량 (g)']}
+              열량 (kcal) : {selectedFood['열량(kcal)']}
             </Text>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              탄수화물 (g) : {selectedFood['탄수화물 (g)']}
+              1회제공량 (g) : {selectedFood['1회제공량(g)']}
             </Text>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              단백질 (g) : {selectedFood['단백질 (g)']}
+              탄수화물 (g) : {selectedFood['탄수화물(g)']}
             </Text>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              지방 (g) : {selectedFood['지방 (g)']}
+              단백질 (g) : {selectedFood['단백질(g)']}
             </Text>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              나트륨 (g) : {selectedFood['나트륨 (g)']}
-            </Text>
-          </View>
-          <View style={{flex: 1, justifyContent: 'center'}}>
-            <Text style={{fontSize: 18}}>
-              콜레스테롤 (g) : {selectedFood['콜레스테롤 (g)']}
-            </Text>
-          </View>
-          <View style={{flex: 1, justifyContent: 'center'}}>
-            <Text style={{fontSize: 18}}>
-              트랜스지방산 (g) : {selectedFood['트랜스지방산 (g)']}
-            </Text>
-          </View>
-          <View style={{flex: 1, justifyContent: 'center'}}>
-            <Text style={{fontSize: 18}}>
-              포화지방산 (g) : {selectedFood['포화지방산 (g)']}
-            </Text>
-          </View>
-          <View style={{flex: 1, justifyContent: 'center'}}>
-            <Text style={{fontSize: 18}}>
-              당류 (g) : {selectedFood['당류 (g)']}
+              지방 (g) : {selectedFood['지방(g)']}
             </Text>
           </View>
         </View>

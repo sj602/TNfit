@@ -4,6 +4,7 @@ export const SAVE_FOOD_INFO = 'SAVE_FOOD_INFO';
 export const SAVE_WORKOUT_INFO = 'SAVE_WORKOUT_INFO';
 export const CALCULATE_RESULT = 'CALCULATE_RESULT';
 export const SAVE_DB = 'SAVE_DB';
+export const CHECK_FOOD= 'CHECK_FOOD';
 export const SAVE_METABOLISM = 'SAVE_METABOLISM';
 
 export const saveAgreementInfo = (data) => dispatch => {
@@ -28,6 +29,10 @@ export const calculateResult = () => dispatch => {
 
 export const saveDB = (foodList) => dispatch => {
 	return dispatch({type: SAVE_DB, foodList})
+}
+
+export const checkFood = (food, index) => dispatch => {
+	return dispatch({type: CHECK_FOOD, food, index})
 }
 
 export const saveMetabolism = (userInfo) => dispatch => {

@@ -13,12 +13,13 @@ import NavigationBar from './NavigationBar';
 
 class DiaryDetail extends Component {
   static navigationOptions = ({navigation}) => ({
-    title: navigation.state.params.day.dateString,
+    title: '오늘의 FITNESS',
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
-    headerLeft: <Icon
-                  name="chevron-left" type="font-awesome" 
-                  iconStyle={{marginRight: 10}}
+    headerRight: <Icon
+                  name="menu"
+                  iconStyle={{marginRight: 15}}
+                  underlayColor="rgba(255,255,255,0)"
                   color="white" size={35} onPress={() => {
                                                     navigation.navigate('DrawerToggle')
                                                   }}
@@ -26,6 +27,19 @@ class DiaryDetail extends Component {
   })
 
   componentDidMount() {
+    const { userInfo, navigation } = this.props;
+
+    userInfo.name.length === 0
+    ?
+    Alert.alert(
+      '칼로리 계산을 위한 기본 정보를 입력해주세요.',
+      '',
+      [
+        {text: '입력', onPress: () => navigation.navigate('PersonalInfo')}
+      ]
+    )
+    :
+    null
   }
 
   isAdded(category) {
@@ -56,7 +70,7 @@ class DiaryDetail extends Component {
     const { navigate } = this.props.navigation;
     let { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
     let { workoutInfo, result, foodInfo } = this.props;
-    let foodCalories = breakfast.calories || 0 + lunch.calories || 0 + dinner.calories || 0 + dessert.calories || 0;
+    let foodCalories = breakfast.calories + lunch.calories + dinner.calories + dessert.calories;
 
     if(foodCalories === 0 || workoutInfo.calories === 0) {
       var series = [1];
@@ -101,7 +115,7 @@ class DiaryDetail extends Component {
             <TouchableOpacity
               onPress={() => {
                 if(this.props.foodInfo.breakfast.calories > 0) {
-                    navigate('MealDetail', {category: '아침'});
+                    navigate('DayDetail', {category: '아침'});
                 } else {
                     navigate('WhatFood', {category: '아침'});
                 }}}

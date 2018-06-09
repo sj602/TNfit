@@ -222,7 +222,6 @@ export default class NavigationBar extends Component {
 
       case 'FoodDetail': {
         const { category, eatenFoodList, saveFoodInfo } = this.props;
-        console.log('fooddetail', eatenFoodList, category)
 
         return (
           <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
@@ -252,13 +251,15 @@ export default class NavigationBar extends Component {
       }
 
       case 'WhatWorkout': {
+        const { saveWorkoutInfo } = this.props;
+
         return (
           <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
             <TouchableOpacity
               style={{flex:1}}
               onPress={() => {
                 let workout = this.props.workout.filter((item) => item.done === true)
-                this.props.saveWorkoutInfo(workout);
+                saveWorkoutInfo(workout);
                 return (
                   Alert.alert(
                     '리스트에 추가 되었습니다.',
