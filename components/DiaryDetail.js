@@ -67,6 +67,7 @@ class DiaryDetail extends Component {
   }
 
   render() {
+    console.log(this.props.navigation.state.params)
     const { navigate } = this.props.navigation;
     let { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
     let { workoutInfo, result, foodInfo } = this.props;

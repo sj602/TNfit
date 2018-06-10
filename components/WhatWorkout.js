@@ -28,11 +28,11 @@ class WhatWorkout extends Component {
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
     headerRight: <Icon
-                  iconStyle={{marginRight: 15}}
-                  underlayColor="rgba(255,255,255,0)"
-                  name="menu" color="white" size={35} onPress={() => {
-                                                        navigation.navigate('DrawerToggle')
-                                                      }}
+                    iconStyle={{marginRight: 15}}
+                    underlayColor="rgba(255,255,255,0)"
+                    name="menu" color="white" size={35} onPress={() => {
+                                                          navigation.navigate('DrawerToggle')
+                                                        }}
                 />
   })
 

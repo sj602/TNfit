@@ -37,6 +37,10 @@ export const checkFood = (food, index) => dispatch => {
 
 export const saveMetabolism = (userInfo) => dispatch => {
 	let { gender, weight, height, age } = userInfo;
+	weight = Number(weight);
+	height = Number(height);
+	age = Number(age);
+	
     let metabolism = 0;
 
     if(gender === '남성') {

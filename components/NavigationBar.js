@@ -44,7 +44,6 @@ export default class NavigationBar extends Component {
       }
 
       case 'SignUp': {
-        // const { email, actionCodeSettings, sendSignInLinkToEmail } = this.props;
         const { userInfo, email, password, passwordChk, handleSignUp, navigation } = this.props;
 
         return (
@@ -114,6 +113,8 @@ export default class NavigationBar extends Component {
       }
 
       case 'PersonalInfo': {
+        const { saveUserInfo, saveMetabolism, userInfo } = this.props;
+
         return (
           <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
             <TouchableOpacity
@@ -137,8 +138,8 @@ export default class NavigationBar extends Component {
             <TouchableOpacity
               style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}
               onPress={() => {
-                this.props.saveUserInfo(this.props.userInfo);
-                this.props.saveMetabolism(this.props.userInfo);
+                saveUserInfo(userInfo);
+                saveMetabolism(userInfo);
                 navigation.navigate('Diary');
               }}
             >
@@ -220,35 +221,35 @@ export default class NavigationBar extends Component {
         )
       }
 
-      case 'FoodDetail': {
-        const { category, eatenFoodList, saveFoodInfo } = this.props;
+      // case 'FoodDetail': {
+      //   const { category, eatenFoodList, saveFoodInfo } = this.props;
 
-        return (
-          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
-            <TouchableOpacity
-              style={{flex:1}}
-              onPress={() => {
-                saveFoodInfo(eatenFoodList, category);
-                return (
-                  Alert.alert(
-                    '리스트에 추가 되었습니다.',
-                    '',
-                    [
-                      {text: '확인', onPress: () => navigation.goBack()}
-                    ]
-                  )
-                )
-              }}
-            >
-              <View style={{flex:1, flexDirection: 'row',justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}>
-                <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
-                  추가하기
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        )
-      }
+      //   return (
+      //     <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
+      //       <TouchableOpacity
+      //         style={{flex:1}}
+      //         onPress={() => {
+      //           saveFoodInfo(eatenFoodList, category);
+      //           return (
+      //             Alert.alert(
+      //               '리스트에 추가 되었습니다.',
+      //               '',
+      //               [
+      //                 {text: '확인', onPress: () => navigation.goBack()}
+      //               ]
+      //             )
+      //           )
+      //         }}
+      //       >
+      //         <View style={{flex:1, flexDirection: 'row',justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}>
+      //           <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
+      //             추가하기
+      //           </Text>
+      //         </View>
+      //       </TouchableOpacity>
+      //     </View>
+      //   )
+      // }
 
       case 'WhatWorkout': {
         const { saveWorkoutInfo } = this.props;

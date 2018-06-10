@@ -35,44 +35,34 @@ class WhatFood extends Component {
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
     headerRight: <Icon
-                  iconStyle={{marginRight: 15}}
-                  underlayColor="rgba(255,255,255,0)"
-                  name="menu" color="white" size={35} onPress={() => {
-                                                        navigation.navigate('DrawerToggle')
-                                                      }}
+                    iconStyle={{marginRight: 15}}
+                    underlayColor="rgba(255,255,255,0)"
+                    name="menu" color="white" size={35} onPress={() => {
+                                                          navigation.navigate('DrawerToggle')
+                                                        }}
                 />
   })
 
   componentDidMount() {
-    let { category } = this.props.navigation.state.params;
+    const { saveDB } = this.props;
     let { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
-    category === '아침' ? category = 'breakfast' : category === '점심' ? category = 'lunch' : category === '저녁' ? category = 'dinner' : category = 'dessert';
+    let { category } = this.props.navigation.state.params;
 
     if(category === '현재 섭취 중인 제품' || category === '향후 섭취 희망 제품') {
-        fetchDB('product').then(productList => this.props.saveDB(productList)).then(() => this.setState({loading: false}));
+        fetchDB('product').then(productList => saveDB(productList)).then(() => this.setState({loading: false}));
     }
     else {
       if(this.props.foodInfo.foodList.length === 0) {
-        fetchDB('food_new').then(foodList => this.props.saveDB(foodList)).then(() => this.setState({loading: false}));
+        fetchDB('food_new').then(foodList => saveDB(foodList)).then(() => this.setState({loading: false}));
       } else {
-        this.props.foodInfo[category].list.map(food => {
-            let newFood = _.cloneDeep(food);
-            newFood.check = true;
-            console.log('food', newFood);
-            this.props.foodInfo.foodList.indexOf(newFood) > -1
-            ?
-            food.check = false
-            :
-            null
-          });
-        // const defaultFoodList = Array.prototype.slice.call(this.props.foodInfo.foodlist);
-        // console.log('defaultFoodList', defaultFoodList)
-        // defaultFoodList = defaultFoodList.map(food => ({
-        //   ...food,
-        //   check: false
-        // }));
-        // console.log(defaultFoodList);
-        // this.props.saveDB(defaultFoodList);
+        let defaultFoodList = cloneDeep(this.props.foodInfo.foodList);
+
+        defaultFoodList = defaultFoodList.map(food => ({
+          ...food,
+          'check': false
+        }));
+
+        saveDB(defaultFoodList);
         this.setState({loading: false});
       }
     }
@@ -85,7 +75,7 @@ class WhatFood extends Component {
       console.log('food:', food, 'selectedFood:', selectedFood);
       food['식품이름'] === selectedFood['식품이름']
     });
-    console.log(checkAddedFood)
+
     if(checkAddedFood) {
       let index = copiedEatenFoodList.indexOf(checkAddedFood);
       copiedEatenFoodList.splice(index, 1);
@@ -164,7 +154,7 @@ class WhatFood extends Component {
         </View>
         <View style={{marginBottom: 20}}>
           <Text style={{color:'rgb(240,82,34)'}}>
-            { category === '현재 섭취 중인 제품' || category === '향후 구매 희망 제품' ? '제품 정보' : '칼로리 정보(kcal)' }
+            { category === '현재 섭취 중인 제품' || category === '향후 구매 희망 제품' ? '제품 정보' : '식품 정보' }
           </Text>
         </View>
 
@@ -206,7 +196,7 @@ class WhatFood extends Component {
                             checkFood(newItem, index);
                             this.checkAndPushToEatenFoodList(item);
                           }}
-                          style={{flex:3, height: 60, flexDirection: 'row'}}
+                          style={{flex: 1, height: 60, flexDirection: 'row'}}
                         >
                         {
                           item.check === true
@@ -230,18 +220,18 @@ class WhatFood extends Component {
                           )
                         }
                         </TouchableOpacity>
-                          <View style={{justifyContent: 'center'}}>
-                            <Text style={{fontSize: 18}}>
-                              {item['상품명']}
-                            </Text>
-                          </View>
-                          <View style={{flex: 1, justifyContent: 'center'}}>
-                            <Text style={{fontSize: 18, textAlign: 'right', alignSelf: 'stretch'}}>
-                              {item['열량(kcal)']}
-                            </Text>
-                          </View>
+                        <View style={{flex: 4, justifyContent: 'center'}}>
+                          <Text style={{fontSize: 18}}>
+                            {item['상품명']}
+                          </Text>
+                        </View>
+                        <View style={{flex: 2, justifyContent: 'center'}}>
+                          <Text style={{fontSize: 18, textAlign: 'right', alignSelf: 'stretch'}}>
+                            {item['열량(kcal)']}
+                          </Text>
+                        </View>
                         <TouchableOpacity
-                          onPress={() => navigate('FoodDetail', {selectedFood: item, eatenFoodList: this.state.eatenFoodList, saveFoodInfo: this.props.saveFoodInfo, category})}
+                          onPress={() => navigate('FoodDetail', {selectedFood: item })}
                           style={{marginLeft: 8}}
                         >
                           <Icon

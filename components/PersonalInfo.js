@@ -17,15 +17,15 @@ class PersonalInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: this.props.userInfo.name || '',
-      age: this.props.userInfo.age || '',
-      gender: this.props.userInfo.gender || '',
+      name: this.props.userInfo.name,
+      age: this.props.userInfo.age,
+      gender: this.props.userInfo.gender,
       genderModalVisible: false,
-      height: this.props.userInfo.height || '',
-      weight: this.props.userInfo.weight || '',
-      targetWeight: this.props.userInfo.targetWeight || '',
-      currentlyEatingProduct: this.props.userInfo.currentlyEatingProduct || '',
-      wannaEatProduct: this.props.userInfo.wannaEatProduct || '',
+      height: this.props.userInfo.height,
+      weight: this.props.userInfo.weight,
+      targetWeight: this.props.userInfo.targetWeight,
+      currentlyEatingProduct: this.props.userInfo.currentlyEatingProduct,
+      wannaEatProduct: this.props.userInfo.wannaEatProduct,
     }
   }
 
@@ -35,11 +35,11 @@ class PersonalInfo extends Component {
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
     headerRight: <Icon
-                  iconStyle={{marginRight: 15}}
-                  underlayColor="rgba(255,255,255,0)"
-                  name="menu" color="white" size={35} onPress={() => {
-                                                        navigation.navigate('DrawerToggle')
-                                                      }}
+                    iconStyle={{marginRight: 15}}
+                    underlayColor="rgba(255,255,255,0)"
+                    name="menu" color="white" size={35} onPress={() => {
+                                                          navigation.navigate('DrawerToggle')
+                                                        }}
                 />
   })
 
@@ -76,7 +76,7 @@ class PersonalInfo extends Component {
               >
                 <TextInput
                   style={styles.textInput}
-                  onChangeText={(age) => this.setState({age: Number(age)})}
+                  onChangeText={(age) => this.setState({age})}
                   value={(this.state.age).toString()}
                   maxLength={2}
                   placeholder='나이'
@@ -136,7 +136,7 @@ class PersonalInfo extends Component {
               >
                 <TextInput
                   style={styles.textInput}
-                  onChangeText={(height) => this.setState({height: Number(height)})}
+                  onChangeText={(height) => this.setState({height})}
                   value={this.state.height}
                   maxLength={3}
                   placeholder='키(cm)'
@@ -151,7 +151,7 @@ class PersonalInfo extends Component {
               >
                 <TextInput
                   style={styles.textInput}
-                  onChangeText={(weight) => this.setState({weight: Number(weight)})}
+                  onChangeText={(weight) => this.setState({weight})}
                   value={this.state.weight}
                   maxLength={3}
                   placeholder='몸무게(kg)'
@@ -166,7 +166,7 @@ class PersonalInfo extends Component {
               >
                 <TextInput
                   style={styles.textInput}
-                  onChangeText={(targetWeight) => this.setState({targetWeight: Number(targetWeight)})}
+                  onChangeText={(targetWeight) => this.setState({targetWeight})}
                   value={this.state.targetWeight}
                   maxLength={2}
                   placeholder='목표몸무게(kg)'

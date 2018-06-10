@@ -89,8 +89,13 @@ export default function appReducer(state = initialState, action) {
             }
 
         case SAVE_FOOD_INFO:
-            let addedFoodCalories = 0;
-            action.eatenFoodList.map(food => addedFoodCalories += food['열량 (kcal)']);
+            let addedFoodCalories = 0, { eatenFoodList } = action;
+            eatenFoodList = eatenFoodList.map(food => ({
+                ...food,
+                "열량(kcal)": food["열량(kcal)"].replace(/[kcal]/g, '')
+            }));
+
+            eatenFoodList.map( food => addedFoodCalories += Number(food['열량(kcal)']) );
             addedFoodCalories.toFixed(0);
 
             if (action.category === '아침') {
@@ -100,7 +105,7 @@ export default function appReducer(state = initialState, action) {
                         ...state.foodInfo,
                         breakfast: {
                             calories: state.foodInfo.breakfast.calories + addedFoodCalories,
-                            list: action.eatenFoodList
+                            list: eatenFoodList
                         }
                     }
                 }
@@ -111,7 +116,7 @@ export default function appReducer(state = initialState, action) {
                         ...state.foodInfo,
                         lunch: {
                             calories: state.foodInfo.lunch.calories + addedFoodCalories,
-                            list: action.eatenFoodList
+                            list: eatenFoodList
                         }
                     }
                 }
@@ -122,7 +127,7 @@ export default function appReducer(state = initialState, action) {
                         ...state.foodInfo,
                         dinner: {
                             calories: state.foodInfo.dinner.calories + addedFoodCalories,
-                            list: action.eatenFoodList
+                            list: eatenFoodList
                         }
                     }
                 }
@@ -133,7 +138,7 @@ export default function appReducer(state = initialState, action) {
                         ...state.foodInfo,
                         dessert: {
                             calories: state.foodInfo.dessert.calories + addedFoodCalories,
-                            list: action.eatenFoodList
+                            list: eatenFoodList
                         }
                     }
                 }

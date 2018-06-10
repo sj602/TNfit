@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import { saveFoodInfo, saveDB } from '../actions';
 import { width } from '../utils/helpers';
-import NavigationBar from './NavigationBar';
 
 class FoodDetail extends Component {
   constructor() {
@@ -25,17 +24,16 @@ class FoodDetail extends Component {
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
     headerRight: <Icon
-                  iconStyle={{marginRight: 15}}
-                  underlayColor="rgba(255,255,255,0)"
-                  name="menu" color="white" size={35} onPress={() => {
-                                                        navigation.navigate('DrawerToggle')
-                                                      }}
+                    iconStyle={{marginRight: 15}}
+                    underlayColor="rgba(255,255,255,0)"
+                    name="menu" color="white" size={35} onPress={() => {
+                                                          navigation.navigate('DrawerToggle')
+                                                        }}
                   />
   })
 
   render() {
-    const { selectedFood, saveFoodInfo, category, eatenFoodList } = this.props.navigation.state.params;
-    const { navigation } = this.props;
+    const { selectedFood } = this.props.navigation.state.params;
 
     return (
       <View style={styles.container}>
@@ -79,15 +77,6 @@ class FoodDetail extends Component {
             </Text>
           </View>
         </View>
-
-
-        <NavigationBar 
-          menu='FoodDetail' 
-          category={category}
-          eatenFoodList={eatenFoodList}
-          saveFoodInfo={saveFoodInfo}
-          navigation={navigation}
-        />
       </View>
     );
   }
