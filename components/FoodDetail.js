@@ -48,32 +48,32 @@ class FoodDetail extends Component {
         >
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              브랜드 : {selectedFood['브랜드']}
+              브랜드 : {selectedFood['brand']}
             </Text>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              열량 (kcal) : {selectedFood['열량(kcal)']}
+              열량 (kcal) : {selectedFood['calorie']}
             </Text>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              1회제공량 (g) : {selectedFood['1회제공량(g)']}
+              1회제공량 (g) : {selectedFood['servce']}
             </Text>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              탄수화물 (g) : {selectedFood['탄수화물(g)']}
+              탄수화물 (g) : {selectedFood['carb']}
             </Text>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              단백질 (g) : {selectedFood['단백질(g)']}
+              단백질 (g) : {selectedFood['protein']}
             </Text>
           </View>
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text style={{fontSize: 18}}>
-              지방 (g) : {selectedFood['지방(g)']}
+              지방 (g) : {selectedFood['fat']}
             </Text>
           </View>
         </View>

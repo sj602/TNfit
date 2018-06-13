@@ -7,6 +7,7 @@ import {
     SAVE_DB,
     CHECK_FOOD,
     SAVE_METABOLISM,
+    SET_DAY,
 } from '../actions';
 
 const initialState = {
@@ -77,10 +78,11 @@ const initialState = {
     },
     database: {
 
-    }
+    },
+    day: '',
 };
 
-export default function appReducer(state = initialState, action) {
+export default function reducer(state = initialState, action) {
     switch (action.type) {
         case SAVE_USER_INFO:
             return {
@@ -92,10 +94,10 @@ export default function appReducer(state = initialState, action) {
             let addedFoodCalories = 0, { eatenFoodList } = action;
             eatenFoodList = eatenFoodList.map(food => ({
                 ...food,
-                "열량(kcal)": food["열량(kcal)"].replace(/[kcal]/g, '')
+                "calorie": food.calorie.replace(/[kcal]/g, '')
             }));
 
-            eatenFoodList.map( food => addedFoodCalories += Number(food['열량(kcal)']) );
+            eatenFoodList.map( food => addedFoodCalories += Number(food.calorie) )
             addedFoodCalories.toFixed(0);
 
             if (action.category === '아침') {
@@ -146,7 +148,19 @@ export default function appReducer(state = initialState, action) {
 
         case SAVE_WORKOUT_INFO:
             const addedWorkoutCalories = 0;
-            action.data.map((item) => addedWorkoutCalories += item['calories_spent_per_hour'] * item['minutes'] / 60);
+            action.data.map((item) => {
+                const doneWorkoutList = state.workoutInfo.list;
+                const donelWorkoutNameList = doneWorkoutList.map(workout => workout['name']);
+                const alreadyExistIndex = donelWorkoutNameList.indexOf(item['name']);
+
+                if( alreadyExistIndex > -1 && (doneWorkoutList[alreadyExistIndex]['minutes'] !== item['minutes']) ) {
+                    console.log(alreadyExistIndex, doneWorkoutList[alreadyExistIndex], item)
+                    addedWorkoutCalories += item['calories_spent_per_hour'] * item['minutes'] / 60;
+                } else if ( alreadyExistIndex === -1 ) {
+                    console.log(alreadyExistIndex, doneWorkoutList[alreadyExistIndex], item)
+                    addedWorkoutCalories += item['calories_spent_per_hour'] * item['minutes'] / 60;
+                }
+            });
             addedWorkoutCalories.toFixed(0);
 
             return {
@@ -160,7 +174,9 @@ export default function appReducer(state = initialState, action) {
         case CALCULATE_RESULT:
             return {
                 ...state,
-
+                result: {
+                    scores: action.result
+                }
             }
 
         case SAVE_DB:
@@ -183,6 +199,7 @@ export default function appReducer(state = initialState, action) {
                 foodList: newFoodLIst
               }
             }
+
         case SAVE_METABOLISM:
             return {
                 ...state,
@@ -190,6 +207,12 @@ export default function appReducer(state = initialState, action) {
                     ...state.userInfo,
                     metabolism: action.metabolism
                 }
+            }
+
+        case SET_DAY:
+            return {
+                ...state,
+                day: action.day
             }
 
         default:

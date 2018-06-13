@@ -50,13 +50,6 @@ class PersonalInfo extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.containerSub}>
-            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
-              <Image
-                style={styles.image}
-                source={require('../images/TN_logo.png')}
-              />
-            </View>
-
             <View style={{flex:1, flexDirection: 'row'}}>
               <View
                 style={styles.inputBox}
@@ -139,9 +132,14 @@ class PersonalInfo extends Component {
                   onChangeText={(height) => this.setState({height})}
                   value={this.state.height}
                   maxLength={3}
-                  placeholder='키(cm)'
+                  placeholder='키'
                   keyboardType={'numeric'}
                 />
+                <View style={{width: 50, height: 30, position: 'absolute', right: 100, top: 9}}>
+                  <Text style={{color: 'grey'}}>
+                    CM
+                  </Text>
+                </View>
               </View>
             </View>
 
@@ -154,9 +152,14 @@ class PersonalInfo extends Component {
                   onChangeText={(weight) => this.setState({weight})}
                   value={this.state.weight}
                   maxLength={3}
-                  placeholder='몸무게(kg)'
+                  placeholder='몸무게'
                   keyboardType={'numeric'}
                 />
+                <View style={{width: 50, height: 30, position: 'absolute', right: 100, top: 9}}>
+                  <Text style={{color: 'grey'}}>
+                    KG
+                  </Text>
+                </View>
               </View>
             </View>
 
@@ -169,9 +172,14 @@ class PersonalInfo extends Component {
                   onChangeText={(targetWeight) => this.setState({targetWeight})}
                   value={this.state.targetWeight}
                   maxLength={2}
-                  placeholder='목표몸무게(kg)'
+                  placeholder='목표몸무게'
                   keyboardType={'numeric'}
                 />
+                <View style={{width: 50, height: 30, position: 'absolute', right: 100, top: 9}}>
+                  <Text style={{color: 'grey'}}>
+                    KG
+                  </Text>
+                </View>
               </View>
             </View>
 
@@ -184,20 +192,23 @@ class PersonalInfo extends Component {
                   onChangeText={(currentlyEatingProduct) => this.setState({currentlyEatingProduct})}
                   value={this.state.currentlyEatingProduct}
                   placeholder='현재 섭취 중인 제품'
+                  maxLength={10}
                 />
-                <TouchableOpacity
-                  onPress={() => {
-                    Keyboard.dismiss();
-                    navigate('WhatFood', {category: '현재 섭취 중인 제품', product: this.state.currentlyEatingProduct})
-                  }}
-                >
-                  <Icon
-                    name='search'
-                    type='font-awesome'
-                    color='rgb(240,82,34)'
-                    size={14}
-                  />
-                </TouchableOpacity>
+                <View style={{width: 50, height: 30, position: 'absolute', right: 110, top: 10}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      Keyboard.dismiss();
+                      navigate('WhatFood', {category: '현재 섭취 중인 제품', product: this.state.currentlyEatingProduct})
+                    }}
+                  >
+                    <Icon
+                      name='search'
+                      type='font-awesome'
+                      color='rgb(240,82,34)'
+                      size={14}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
 
@@ -210,20 +221,23 @@ class PersonalInfo extends Component {
                   onChangeText={(wannaEatProduct) => this.setState({wannaEatProduct})}
                   value={this.state.wannaEatProduct}
                   placeholder='향후 섭취 희망 제품'
+                  maxLength={10}
                 />
-                <TouchableOpacity
-                  onPress={() => {
-                    Keyboard.dismiss();
-                    navigate('WhatFood', {category: '향후 섭취 희망 제품', product: this.state.wannaEatProduct})
-                  }}
-                >
-                  <Icon
-                    name='search'
-                    type='font-awesome'
-                    color='rgb(240,82,34)'
-                    size={14}
-                  />
-                </TouchableOpacity>
+                <View style={{width: 50, height: 30, position: 'absolute', right: 110, top: 10}}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      Keyboard.dismiss();
+                      navigate('WhatFood', {category: '향후 섭취 희망 제품', product: this.state.wannaEatProduct})
+                    }}
+                  >
+                    <Icon
+                      name='search'
+                      type='font-awesome'
+                      color='rgb(240,82,34)'
+                      size={14}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
 
@@ -287,7 +301,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   textInput: {
-    width: width * 0.4
+    width: width * 0.4,
+    textAlign: 'center'
   },
   textInputView: {
     flex:1,

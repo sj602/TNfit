@@ -112,6 +112,35 @@ export default class NavigationBar extends Component {
         )
       }
 
+      case 'ForgotPassword': {
+        const { email } = this.props;
+
+        return (
+          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
+            <TouchableOpacity
+              style={{flex:1}}
+              onPress={() => {
+                firebase.auth().sendPasswordResetEmail(email).then(user => {
+                    Alert.alert(
+                      '메일이 발송됬습니다. 이메일을 확인해주세요.',
+                      '',
+                      [
+                        {text: '확인', onPress: () => console.log('')}
+                      ]
+                    );
+                  }).catch(err => alert(err))
+              }}
+            >
+              <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}>
+                <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
+                  이메일 전송
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+
       case 'PersonalInfo': {
         const { saveUserInfo, saveMetabolism, userInfo } = this.props;
 
@@ -140,7 +169,7 @@ export default class NavigationBar extends Component {
               onPress={() => {
                 saveUserInfo(userInfo);
                 saveMetabolism(userInfo);
-                navigation.navigate('Diary');
+                navigation.navigate('DiaryDetail');
               }}
             >
               <View>
@@ -177,8 +206,10 @@ export default class NavigationBar extends Component {
               style={{flex:1, flexDirection: 'row',justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}
               onPress={() => {
                 let { eatenFoodList, category, saveFoodInfo } = this.props;
-                saveFoodInfo(eatenFoodList, category);
-                return (
+                eatenFoodList.length > 0
+                ?
+                (
+                  saveFoodInfo(eatenFoodList, category),
                   Alert.alert(
                     '리스트에 추가 되었습니다.',
                     '',
@@ -187,6 +218,14 @@ export default class NavigationBar extends Component {
                     ]
                   )
                 )
+                :
+                  Alert.alert(
+                    '추가할 음식을 체크하지 않았습니다.',
+                    '',
+                    [
+                      {text: '확인', onPress: () => console.log('')}
+                    ]
+                  )
               }}
             >
               <View>
@@ -220,36 +259,6 @@ export default class NavigationBar extends Component {
           </View>
         )
       }
-
-      // case 'FoodDetail': {
-      //   const { category, eatenFoodList, saveFoodInfo } = this.props;
-
-      //   return (
-      //     <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
-      //       <TouchableOpacity
-      //         style={{flex:1}}
-      //         onPress={() => {
-      //           saveFoodInfo(eatenFoodList, category);
-      //           return (
-      //             Alert.alert(
-      //               '리스트에 추가 되었습니다.',
-      //               '',
-      //               [
-      //                 {text: '확인', onPress: () => navigation.goBack()}
-      //               ]
-      //             )
-      //           )
-      //         }}
-      //       >
-      //         <View style={{flex:1, flexDirection: 'row',justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}>
-      //           <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
-      //             추가하기
-      //           </Text>
-      //         </View>
-      //       </TouchableOpacity>
-      //     </View>
-      //   )
-      // }
 
       case 'WhatWorkout': {
         const { saveWorkoutInfo } = this.props;

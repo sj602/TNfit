@@ -100,8 +100,8 @@ android {
         applicationId "com.tnfit"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 10
-        versionName "1.9"
+        versionCode 11
+        versionName "2.0"
     }
 
     signingConfigs {
@@ -110,10 +110,6 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
             storePassword 'android'
-            // keyAlias MYAPP_RELEASE_KEY_ALIAS
-            // keyPassword MYAPP_RELEASE_KEY_PASSWORD
-            // storeFile file(MYAPP_RELEASE_STORE_FILE)
-            // storePassword MYAPP_RELEASE_STORE_PASSWORD
         }
 
         release {
@@ -160,6 +156,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-sqlite-2')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-svg')
     implementation project(':react-native-google-signin')
@@ -175,6 +172,7 @@ dependencies {
     }
     implementation "com.google.firebase:firebase-auth:15.1.0"
     implementation "com.google.firebase:firebase-database:15.0.0"
+    implementation project(':react-native-sqlite-storage')
 
 
 }

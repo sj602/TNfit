@@ -189,7 +189,7 @@ export default class Login extends Component {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => console.log('')}
+              onPress={() => navigate('ForgotPassword')}
               style={{flex:1}}
             >
               <View>

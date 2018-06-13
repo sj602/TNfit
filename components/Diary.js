@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import firebase from 'react-native-firebase';
+import { setDay } from '../actions';
 import { width } from '../utils/helpers';
 import { Icon } from 'react-native-elements';
 import { Calendar } from 'react-native-calendars';
@@ -21,26 +22,39 @@ class Diary extends Component {
     headerRight: <Icon
                     iconStyle={{marginRight: 15}}
                     underlayColor="rgba(255,255,255,0)"
-                    name="menu" color="white" size={35} onPress={() => {
-                                                          navigation.navigate('DrawerToggle')
-                                                        }}
+                    name="menu" color="white" size={35} onPress={() => navigation.navigate('DrawerToggle')}
                 />
   })
 
+  markedDates() {
+
+    let dates = {
+      '2018-06-11': {disabled: true, startingDay: true, color: '#87b242', endingDay: true}
+    };
+
+    return dates;
+  }
+
   render() {
     const { navigate } = this.props.navigation;
+    const { setDay } = this.props;
 
     return (
       <View style={styles.container}>
         <View style={styles.containerSub}>
           <Calendar
             maxDate={new Date().toISOString().substring(0,10)}
-            onDayPress={day => navigate('DiaryDetail', {day})}
+            onDayPress={day => {
+              setDay(day.dateString);
+              navigate('DiaryDetail');
+            }}
             monthFormat={'yyyy MM'}
             onMonthChange={(month) => {console.log('month changed', month)}}
             hideExtraDays={true}
             onPressArrowLeft={substractMonth => substractMonth()}
             onPressArrowRight={addMonth => addMonth()}
+            markedDates={this.markedDates()}
+            markingType={'period'}
           />   
         </View>
       </View>
@@ -54,7 +68,7 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, null)(Diary);
+export default connect(mapStateToProps, {setDay})(Diary);
 
 const styles = StyleSheet.create({
   container: {

@@ -14,6 +14,7 @@ import NavigationBar from './NavigationBar';
 import { width } from '../utils/helpers';
 import { fetchDB } from '../database/handle_db';
 import cloneDeep from 'lodash/cloneDeep';
+import SQLite from 'react-native-sqlite-storage';
 
 class WhatFood extends Component {
   constructor(props) {
@@ -37,9 +38,7 @@ class WhatFood extends Component {
     headerRight: <Icon
                     iconStyle={{marginRight: 15}}
                     underlayColor="rgba(255,255,255,0)"
-                    name="menu" color="white" size={35} onPress={() => {
-                                                          navigation.navigate('DrawerToggle')
-                                                        }}
+                    name="menu" color="white" size={35} onPress={() => navigation.navigate('DrawerToggle')}
                 />
   })
 
@@ -49,11 +48,26 @@ class WhatFood extends Component {
     let { category } = this.props.navigation.state.params;
 
     if(category === '현재 섭취 중인 제품' || category === '향후 섭취 희망 제품') {
-        fetchDB('product').then(productList => saveDB(productList)).then(() => this.setState({loading: false}));
+        // fetchDB('product').then(productList => saveDB(productList)).then(() => this.setState({loading: false}));
     }
     else {
       if(this.props.foodInfo.foodList.length === 0) {
-        fetchDB('food_new').then(foodList => saveDB(foodList)).then(() => this.setState({loading: false}));
+        // fetchDB('food_new').then(foodList => saveDB(foodList)).then(() => this.setState({loading: false}));
+        let foodDB = SQLite.openDatabase({name : "db", createFromLocation : "~food.db", location: 'Library'}, () => console.log('success'), () => console.log('err'));
+
+        foodDB.transaction(txn => {
+          txn.executeSql('SELECT * FROM food', [], (tx, res) => {
+            let len = res.rows.length;
+            let list = [];
+            for (let i = 0; i < len; i++) {
+              let row = res.rows.item(i);
+              list.push(row);
+            }
+            saveDB(list);
+          });
+        });
+        
+        this.setState({loading: false});
       } else {
         let defaultFoodList = cloneDeep(this.props.foodInfo.foodList);
 
@@ -72,8 +86,7 @@ class WhatFood extends Component {
     let { eatenFoodList } = this.state;
     let copiedEatenFoodList = Array.prototype.slice.call(eatenFoodList);
     const checkAddedFood = copiedEatenFoodList.find(food => {
-      console.log('food:', food, 'selectedFood:', selectedFood);
-      food['식품이름'] === selectedFood['식품이름']
+      food['name'] === selectedFood['name']
     });
 
     if(checkAddedFood) {
@@ -89,34 +102,30 @@ class WhatFood extends Component {
   handleSearch(searchFood) {
     let copiedFoodList = Array.prototype.slice.call(this.props.foodInfo.foodList);
 
-    let searchedFoodList = copiedFoodList.filter(food => {
-      if(food) { // check if food is not null
-        return food['식품이름'].includes(searchFood);
-      }
-    });
+    let searchedFoodList = copiedFoodList.filter(food => food['name'].includes(searchFood));
 
     this.setState({ searchFood, searchedFoodList });
   }
 
   refreshingLoader() {
-      return (
-        <View
-          style={{ paddingVertical: 60 }}
-        >
-          { this.state.searchFood  // prevent loader showing category there is no result for searched word
-            ?
-            null
-            :
-            (
-              <ActivityIndicator
-                animating
-                size="large"
-                color='#517fa4'
-              />
-            )
-          }
-        </View>
-      )
+    return (
+      <View
+        style={{ paddingVertical: 60 }}
+      >
+        { this.state.searchFood  // prevent loader showing category there is no result for searched word
+          ?
+          null
+          :
+          (
+            <ActivityIndicator
+              animating
+              size="large"
+              color='#517fa4'
+            />
+          )
+        }
+      </View>
+    )
   }
 
   render() {
@@ -184,66 +193,65 @@ class WhatFood extends Component {
                 removeClippedSubviews
                 disableVirtualization
                 renderItem={({item, index}) => {
-                  if(item) {
-                    return (
-                      <View
-                        style={{flex: 1, height: 60, marginLeft: 30, marginRight: 30, flexDirection: 'row', alignItems: 'center'}}
+                  return (
+                    <View
+                      style={{flex: 1, height: 60, marginLeft: 30, marginRight: 30, flexDirection: 'row', alignItems: 'center'}}
+                    >
+                      <TouchableOpacity
+                        onPress={() => {
+                          let newItem = cloneDeep(item);
+                          newItem.check = (item.check === 'false') ? 'true' : 'false'
+                          console.log('newitem.check', newItem.check, 'item.check', item.check)
+                          checkFood(newItem, index);
+                          this.checkAndPushToEatenFoodList(item);
+                        }}
+                        style={{flex: 1, height: 60, flexDirection: 'row'}}
                       >
-                        <TouchableOpacity
-                          onPress={() => {
-                            let newItem = cloneDeep(item);
-                            newItem.check = item.check ? false : true
-                            checkFood(newItem, index);
-                            this.checkAndPushToEatenFoodList(item);
-                          }}
-                          style={{flex: 1, height: 60, flexDirection: 'row'}}
-                        >
-                        {
-                          item.check === true
-                          ?
-                          (
-                            <Icon
-                              name='check-square'
-                              type='font-awesome'
-                              color='rgb(240,82,34)'
-                              size={20}
-                            />
-                          )
-                          :
-                          (
-                            <Icon
-                              name='check-square'
-                              type='font-awesome'
-                              color='grey'
-                              size={20}
-                            />
-                          )
-                        }
-                        </TouchableOpacity>
-                        <View style={{flex: 4, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 18}}>
-                            {item['상품명']}
-                          </Text>
-                        </View>
-                        <View style={{flex: 2, justifyContent: 'center'}}>
-                          <Text style={{fontSize: 18, textAlign: 'right', alignSelf: 'stretch'}}>
-                            {item['열량(kcal)']}
-                          </Text>
-                        </View>
-                        <TouchableOpacity
-                          onPress={() => navigate('FoodDetail', {selectedFood: item })}
-                          style={{marginLeft: 8}}
-                        >
+                      {
+                        item.check === 'true'
+                        ?
+                        (
                           <Icon
-                            name='angle-double-right'
+                            name='check-square'
                             type='font-awesome'
                             color='rgb(240,82,34)'
                             size={20}
                           />
-                        </TouchableOpacity>
+                        )
+                        :
+                        (
+                          <Icon
+                            name='check-square'
+                            type='font-awesome'
+                            color='grey'
+                            size={20}
+                          />
+                        )
+                      }
+                      </TouchableOpacity>
+                      <View style={{flex: 4, justifyContent: 'center'}}>
+                        <Text style={{fontSize: 18}}>
+                          {item.name}
+                        </Text>
                       </View>
-                    )
-                  }
+                      <View style={{flex: 2, justifyContent: 'center'}}>
+                        <Text style={{fontSize: 18, textAlign: 'right', alignSelf: 'stretch'}}>
+                          {item.calorie}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        onPress={() => navigate('FoodDetail', {selectedFood: item })}
+                        style={{marginLeft: 8}}
+                      >
+                        <Icon
+                          name='angle-double-right'
+                          type='font-awesome'
+                          color='rgb(240,82,34)'
+                          size={20}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )
                 }}
               />            
             )

@@ -6,6 +6,7 @@ import {
   Picker
 } from 'react-native';
 import { width } from '../utils/helpers';
+import { Icon } from 'react-native-elements';
 import NavigationBar from './NavigationBar';
 
 export default class Recommendation extends Component {

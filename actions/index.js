@@ -6,6 +6,7 @@ export const CALCULATE_RESULT = 'CALCULATE_RESULT';
 export const SAVE_DB = 'SAVE_DB';
 export const CHECK_FOOD= 'CHECK_FOOD';
 export const SAVE_METABOLISM = 'SAVE_METABOLISM';
+export const SET_DAY = 'SET_DAY';
 
 export const saveAgreementInfo = (data) => dispatch => {
 	return dispatch({type: SAVE_AGREEEMENT_INFO, data})
@@ -23,8 +24,8 @@ export const saveWorkoutInfo = (data) => dispatch => {
 	return dispatch({type: SAVE_WORKOUT_INFO, data})
 }
 
-export const calculateResult = () => dispatch => {
-	return dispatch({type: CALCULATE_RESULT})
+export const calculateResult = (result) => dispatch => {
+	return dispatch({type: CALCULATE_RESULT, result})
 }
 
 export const saveDB = (foodList) => dispatch => {
@@ -40,7 +41,7 @@ export const saveMetabolism = (userInfo) => dispatch => {
 	weight = Number(weight);
 	height = Number(height);
 	age = Number(age);
-	
+
     let metabolism = 0;
 
     if(gender === '남성') {
@@ -51,5 +52,9 @@ export const saveMetabolism = (userInfo) => dispatch => {
     metabolism = Math.floor(metabolism);
 
 	return dispatch({type: SAVE_METABOLISM, metabolism})
+}
+
+export const setDay = (day) => dispatch => {
+	return dispatch({type: SET_DAY, day});
 }
 

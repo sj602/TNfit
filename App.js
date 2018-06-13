@@ -15,7 +15,9 @@ export default class App extends Component {
     super();
     firebaseSetup();
 
-    YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader', 'Setting a timer']);
+    YellowBox.ignoreWarnings([
+      'Warning: isMounted(...) is deprecated', 'Module RCTImageLoader', 'Setting a timer',
+      ]);
   }
 
   render() {

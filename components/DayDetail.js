@@ -5,20 +5,18 @@ import {
   FlatList, ActivityIndicator,
   TextInput, Alert, Keyboard, ScrollView
 } from 'react-native';
+import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import { width } from '../utils/helpers';
 import NavigationBar from './NavigationBar';
 
-export default class DayDetail extends Component {
+class DayDetail extends Component {
   constructor() {
-    super();
+    super(); 
+
     this.state = {
       eatenFoodList: {},
     };
-
-    console.ignoreYellowBox = [
-      'Setting a timer'
-    ];
   }
 
   static navigationOptions = ({navigation}) => ({
@@ -29,21 +27,35 @@ export default class DayDetail extends Component {
     headerRight: <Icon
                     iconStyle={{marginRight: 15}}
                     underlayColor="rgba(255,255,255,0)"
-                    name="menu" color="white" size={35} onPress={() => {
-                                                          navigation.navigate('DrawerToggle')
-                                                        }}
+                    name="menu" color="white" size={35} onPress={() => navigation.navigate('DrawerToggle')}
                   />
   })
 
   render() {
     let { category } = this.props.navigation.state.params;
-    category === '아침' ? category = 'breakfast' : category === '점심' ? category = 'lunch' : category === '저녁' ? category = 'dinner' : category = 'dessert';
+    switch(category) {
+      case '아침':
+        category = 'breakfast';
+        break;
+      case '점심':
+        category = 'lunch';
+        break;
+      case '저녁':
+        category = 'dinner';
+        break;
+      case '간식':
+        category = 'dessert';
+        break;
+      default:
+        category = 'workout';
+        break;
+    }
 
     return (
       <View style={styles.container}>
         <View style={{marginBottom: 20}}>
           <Text style={{color:'rgb(240,82,34)'}}>
-            음식 섭취 리스트
+            {category === 'workout' ? '운동 실천' : '음식 섭취'} 리스트
           </Text>
         </View>
 
@@ -51,49 +63,67 @@ export default class DayDetail extends Component {
           style={{flex: 1, height: 60, marginLeft: 30, marginRight: 30, flexDirection: 'column', alignItems: 'center'}}
         >
           { 
-            category === '운동'
+            category === 'workout'
             ?
-            this.props.workoutInfo.list.map((item) => {
+            this.props.workoutInfo.list.map((item, index) => {
+              console.log(item)
               return (
-                  <View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={{fontSize: 18}}>
-                        {item['식품이름']}
-                      </Text>
-                    </View>
-                    <View style={{flex: 1, justifyContent: 'center'}}>
-                      <Text style={{fontSize: 18, textAlign: 'right', alignSelf: 'stretch'}}>
-                        {item['열량 (kcal)']}
-                      </Text>
-                    </View>
+                <View style={styles.item} key={index}>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18}}>
+                      {item['name']}
+                    </Text>
                   </View>
-                )
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18, textAlign: 'right', alignSelf: 'stretch'}}>
+                      {item['calories_spent_per_hour'] * item['minutes'] / 60}kcal
+                    </Text>
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18, textAlign: 'right', alignSelf: 'stretch'}}>
+                      {item['minutes']}분
+                    </Text>
+                  </View>
+                </View>
+              )
             })
             :
-            this.props.foodInfo[category].list.map((item) => {
+            this.props.foodInfo[category].list.map((item, index) => {
               return (
-                  <View>
-                    <View style={{justifyContent: 'center'}}>
-                      <Text style={{fontSize: 18}}>
-                        {item['식품이름']}
-                      </Text>
-                    </View>
-                    <View style={{flex: 1, justifyContent: 'center'}}>
-                      <Text style={{fontSize: 18, textAlign: 'right', alignSelf: 'stretch'}}>
-                        {item['열량 (kcal)']}
-                      </Text>
-                    </View>
+                <View style={styles.item} key={index}>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18}}>
+                      {item['name']}
+                    </Text>
                   </View>
-                )
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                    <Text style={{fontSize: 18, textAlign: 'right', alignSelf: 'stretch'}}>
+                      {item['calorie']}kcal
+                    </Text>
+                  </View>
+                </View>
+              )
             })
           }
         </View>
 
-        <NavigationBar menu='DayDetail' navigation={this.props.navigation} category={category} />
+        <NavigationBar 
+          menu='DayDetail' 
+          navigation={this.props.navigation} 
+          category={category} 
+        />
       </View>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    ...state
+  }
+};
+
+export default connect(mapStateToProps, null)(DayDetail);
 
 const styles = StyleSheet.create({
   container: {
@@ -102,9 +132,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
-  text: {
-    flex: 1,
-    fontSize: 12,
-    textAlign: 'center',
+  item: {
+    maxHeight: 30,
+    flexDirection: 'row',
   },
 });

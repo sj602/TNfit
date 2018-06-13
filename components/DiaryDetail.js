@@ -6,23 +6,22 @@ import {
   Picker
 } from 'react-native';
 import { connect } from 'react-redux';
-import { width } from '../utils/helpers';
+import { calculateResult } from '../actions';
 import PieChart from 'react-native-pie-chart';
 import { Icon } from 'react-native-elements';
+import { width } from '../utils/helpers';
 import NavigationBar from './NavigationBar';
 
 class DiaryDetail extends Component {
   static navigationOptions = ({navigation}) => ({
-    title: '오늘의 FITNESS',
+    title: '홈',
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
     headerRight: <Icon
-                  name="menu"
-                  iconStyle={{marginRight: 15}}
-                  underlayColor="rgba(255,255,255,0)"
-                  color="white" size={35} onPress={() => {
-                                                    navigation.navigate('DrawerToggle')
-                                                  }}
+                    name="menu"
+                    iconStyle={{marginRight: 15}}
+                    underlayColor="rgba(255,255,255,0)"
+                    color="white" size={35} onPress={() => navigation.navigate('DrawerToggle')}
                 />
   })
 
@@ -66,8 +65,51 @@ class DiaryDetail extends Component {
     }
   }
 
+  isGoodOrBad() {
+    let { weight, targetWeight, metabolism } = this.props.userInfo;
+    weight = Number(weight);
+    targetWeight = Number(targetWeight);
+    let { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
+    let foodCalories = breakfast.calories + lunch.calories + dinner.calories + dessert.calories;
+    let workoutCalories = this.props.workoutInfo.calories;
+    let additionalCalories = (foodCalories - metabolism - workoutCalories);
+    const { calculateResult } = this.props;
+
+    console.log('weight', weight, 'targetWeight', targetWeight, 'additionalCalories', additionalCalories)
+
+    // for diet
+    // if(weight > targetWeight) {
+    //   (additionalCalories < 0)
+    //   ?
+    //   (
+    //     calculateResult('GOOD'),
+    //     console.log(1),
+    //     {backgroundColor: '#87b242'}
+    //   )
+    //   :
+    //   (
+    //     calculateResult('BAD'),
+    //     console.log(2),
+    //     {backgroundColor: 'lightgrey'}
+    //   )
+    // } else if(weight < targetWeight) { // for gaining weight
+    //   (additionalCalories > 0)
+    //   ?
+    //   (
+    //     calculateResult('GOOD'),
+    //     console.log(3),
+    //     {backgroundColor: '#87b242'}
+    //   )
+    //   :
+    //   (
+    //     calculateResult('BAD'),
+    //     console.log(4),
+    //     {backgroundColor: 'lightgrey'}
+    //   )
+    // }
+  }
+
   render() {
-    console.log(this.props.navigation.state.params)
     const { navigate } = this.props.navigation;
     let { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
     let { workoutInfo, result, foodInfo } = this.props;
@@ -138,7 +180,7 @@ class DiaryDetail extends Component {
             <TouchableOpacity
               onPress={() => {
                 if(this.props.foodInfo.lunch.calories > 0) {
-                    navigate('MealDetail', {category: '점심'});
+                    navigate('DayDetail', {category: '점심'});
                 } else {
                     navigate('WhatFood', {category: '점심'});
                 }}}
@@ -159,7 +201,7 @@ class DiaryDetail extends Component {
             <TouchableOpacity
               onPress={() => {
                 if(this.props.foodInfo.dinner.calories > 0) {
-                    navigate('MealDetail', {category: '저녁'});
+                    navigate('DayDetail', {category: '저녁'});
                 } else {
                     navigate('WhatFood', {category: '저녁'});
                 }}}
@@ -199,7 +241,7 @@ class DiaryDetail extends Component {
             <TouchableOpacity
               onPress={() => {
                 if(this.props.foodInfo.dessert.calories > 0) {
-                    navigate('MealDetail', {category: '간식'});
+                    navigate('DayDetail', {category: '간식'});
                 } else {
                     navigate('WhatFood', {category: '간식'});
                 }}}
@@ -218,7 +260,12 @@ class DiaryDetail extends Component {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigate('WhatWorkout')}
+              onPress={() => {
+                if(this.props.workoutInfo.calories > 0) {
+                    navigate('DayDetail', {category: '운동'});
+                } else {
+                    navigate('WhatWorkout');
+                }}}
             >
               <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.isAddedWorkout(workoutInfo)]}>
                 <Text
@@ -247,10 +294,10 @@ class DiaryDetail extends Component {
             </View>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-            <View style={{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, backgroundColor: 'lightgrey', margin: 5}}>
+            <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, backgroundColor: 'lightgrey', margin: 5}, this.isGoodOrBad()]}>
               <View style={{justifyContent: 'center', alignItems: 'center', width: 50, height: 50, borderRadius: 25, backgroundColor: 'white', margin: 5}}>
                 <Text
-                  style={{textAlign: 'center', color: 'rgb(240,82,34)', fontSize: 24}}
+                  style={{textAlign: 'center', color: 'rgb(240,82,34)', fontSize: 20}}
                 >
                   {result.scores ? result.scores : null}
                 </Text>
@@ -285,7 +332,7 @@ const mapStateToProps = (state) => {
   }
 };
 
-export default connect(mapStateToProps, null)(DiaryDetail);
+export default connect(mapStateToProps, { calculateResult })(DiaryDetail);
 
 const styles = StyleSheet.create({
   container: {
@@ -299,11 +346,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: width,
   },
-  image: {
-    width: width * 0.3,
-    height: width * 0.3,
-    marginBottom: 30,
-  },
   button: {
     padding: 10,
     backgroundColor: "#841584",
@@ -313,10 +355,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     marginTop: 10,
-  },
-  textInput: {
-    textAlign: 'center',
-    width: width * 0.4
   },
   inputBox: {
     flex:1,

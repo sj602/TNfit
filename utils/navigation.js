@@ -3,6 +3,7 @@ import React from 'react';
 import Login from '../components/Login';
 import SignUp from '../components/SignUp';
 import Agreement from '../components/Agreement';
+import ForgotPassword from '../components/ForgotPassword';
 import PersonalInfo from '../components/PersonalInfo';
 import Diary from '../components/Diary';
 import DiaryDetail from '../components/DiaryDetail';
@@ -22,7 +23,10 @@ const PersonalInfoStacks = StackNavigator({
 });
 
 const DiaryDetailStacks = StackNavigator({
-    DiaryDetail: { screen: DiaryDetail },
+    DiaryDetail: {
+        screen: DiaryDetail,
+        title: '홈'
+    },
     WhatFood: { screen: WhatFood },
     DayDetail: { screen: DayDetail },
     FoodDetail: { screen: FoodDetail },
@@ -32,8 +36,9 @@ const DiaryDetailStacks = StackNavigator({
 
 const LoginStacks = StackNavigator({
     Login: { screen: Login },
-    SignUp: { screen: SignUp },
+    ForgotPassword: { screen: ForgotPassword },
     Agreement: { screen: Agreement },
+    SignUp: { screen: SignUp },
 });
 
 const Drawer = DrawerNavigator({
