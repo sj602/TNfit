@@ -13,12 +13,12 @@ import {
 const initialState = {
     userInfo: {
         id: '',
-        name: '',
-        age: '',
-        gender: '',
-        height: '',
-        weight: '',
-        targetWeight: '',
+        name: '선진',
+        age: '26',
+        gender: '남성',
+        height: '175',
+        weight: '65',
+        targetWeight: '75',
         currentlyEatingProduct: '',
         wannaEatProduct: '',
         email: '',
@@ -189,14 +189,15 @@ export default function reducer(state = initialState, action) {
             }
 
         case CHECK_FOOD:
-            const newFoodLIst = Array.prototype.slice.call(state.foodInfo.foodList);
-            newFoodLIst[action.index] = action.food;
+            const newFoodList = Array.prototype.slice.call(state.foodInfo.foodList);
+            newFoodList[action.index] = action.food;
+            console.log('newfood', action.food)
 
             return {
               ...state,
               foodInfo: {
                 ...state.foodInfo,
-                foodList: newFoodLIst
+                foodList: newFoodList
               }
             }
 

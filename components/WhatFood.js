@@ -82,15 +82,13 @@ class WhatFood extends Component {
     }
   }
 
-  checkAndPushToEatenFoodList(selectedFood) {
+  handlePushToEatenFoodList(selectedFood) {
     let { eatenFoodList } = this.state;
     let copiedEatenFoodList = Array.prototype.slice.call(eatenFoodList);
-    const checkAddedFood = copiedEatenFoodList.find(food => {
-      food['name'] === selectedFood['name']
-    });
+    const foodWasAdded = copiedEatenFoodList.find(food => food['name'] === selectedFood['name']);
 
-    if(checkAddedFood) {
-      let index = copiedEatenFoodList.indexOf(checkAddedFood);
+    if(foodWasAdded) {
+      let index = copiedEatenFoodList.indexOf(foodWasAdded);
       copiedEatenFoodList.splice(index, 1);
     } else {
       copiedEatenFoodList.push(selectedFood);
@@ -129,6 +127,7 @@ class WhatFood extends Component {
   }
 
   render() {
+    console.log(this.state)
     const {
       loading, searchFood,
       searchedFoodList, isModalVisible, selectedFood,
@@ -200,15 +199,15 @@ class WhatFood extends Component {
                       <TouchableOpacity
                         onPress={() => {
                           let newItem = cloneDeep(item);
-                          newItem.check = (item.check === 'false') ? 'true' : 'false'
+                          newItem['check'] = (item['check'] === 'false') ? 'true' : 'false'
                           console.log('newitem.check', newItem.check, 'item.check', item.check)
                           checkFood(newItem, index);
-                          this.checkAndPushToEatenFoodList(item);
+                          this.handlePushToEatenFoodList(newItem);
                         }}
                         style={{flex: 1, height: 60, flexDirection: 'row'}}
                       >
                       {
-                        item.check === 'true'
+                        item['check'] === 'true'
                         ?
                         (
                           <Icon
@@ -219,6 +218,8 @@ class WhatFood extends Component {
                           />
                         )
                         :
+                        item['check'] === 'false'
+                        ?
                         (
                           <Icon
                             name='check-square'
@@ -227,6 +228,8 @@ class WhatFood extends Component {
                             size={20}
                           />
                         )
+                        :
+                        null
                       }
                       </TouchableOpacity>
                       <View style={{flex: 4, justifyContent: 'center'}}>
