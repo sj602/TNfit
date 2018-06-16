@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import {
-  Platform,
-  Text,
-  View
+  Platform, Text, View,
+  YellowBox, AppState,
 } from 'react-native';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
+import { PersistGate } from 'redux-persist/lib/integration/react';
 import { store } from './store';
 import { Stacks } from './utils/navigation';
 import { firebaseSetup } from './utils/firebase';
-import { YellowBox } from 'react-native';
 
 export default class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     firebaseSetup();
 
     YellowBox.ignoreWarnings([
@@ -27,4 +26,17 @@ export default class App extends Component {
       </Provider>
     );
   }
-}
+};
+
+//   render() {
+//     return (
+//       <Provider store={store}>
+//         <PersistGate
+//           loading={null} persistor={persistor}
+//         >
+//           <Stacks />
+//         </PersistGate>
+//       </Provider>
+//     );
+//   }
+// };

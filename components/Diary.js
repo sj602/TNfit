@@ -23,6 +23,10 @@ class Diary extends Component {
                     iconStyle={{marginRight: 15}}
                     underlayColor="rgba(255,255,255,0)"
                     name="menu" color="white" size={35} onPress={() => navigation.navigate('DrawerToggle')}
+                />,
+    drawerIcon: <Icon
+                    name="date-range"
+                    color='rgb(240,82,34)' size={25}
                 />
   })
 
@@ -46,7 +50,7 @@ class Diary extends Component {
             maxDate={new Date().toISOString().substring(0,10)}
             onDayPress={day => {
               setDay(day.dateString);
-              navigate('DiaryDetail');
+              navigate('DiaryDetail', {day});
             }}
             monthFormat={'yyyy MM'}
             onMonthChange={(month) => {console.log('month changed', month)}}

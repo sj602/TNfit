@@ -37,7 +37,7 @@ class FoodDetail extends Component {
 
     return (
       <View style={styles.container}>
-        <View style={{marginBottom: 20}}>
+        <View style={{marginTop: 20, marginBottom: 20}}>
           <Text style={{color:'rgb(240,82,34)'}}>
             세부 영양 정보
           </Text>

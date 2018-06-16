@@ -40,6 +40,10 @@ class PersonalInfo extends Component {
                     name="menu" color="white" size={35} onPress={() => {
                                                           navigation.navigate('DrawerToggle')
                                                         }}
+                />,
+    drawerIcon: <Icon
+                    name="accessibility"
+                    color='rgb(240,82,34)' size={25}
                 />
   })
 
@@ -88,7 +92,7 @@ class PersonalInfo extends Component {
                   onPress={() => this.setState({genderModalVisible: false, gender: '남성'})}
                   style={{flex:1, justifyContent: 'center', borderBottomWidth: 1}}
                 >
-                  <Text style={{fontSize: 20, textAlign: 'center'}}>
+                  <Text style={{fontSize: 20, textAlign: 'center', color: 'black'}}>
                     남성
                   </Text>
                 </TouchableOpacity>
@@ -96,7 +100,7 @@ class PersonalInfo extends Component {
                   onPress={() => this.setState({genderModalVisible: false, gender: '여성'})}
                   style={{flex:1, justifyContent: 'center'}}
                 >
-                  <Text style={{fontSize: 20, textAlign: 'center'}}>
+                  <Text style={{fontSize: 20, textAlign: 'center', color: 'black'}}>
                     여성
                   </Text>
                 </TouchableOpacity>
@@ -107,10 +111,9 @@ class PersonalInfo extends Component {
             > 
               <TouchableOpacity
                 onPress={() => this.setState({genderModalVisible: true})}
-                style={styles.textInput}
               >
-                <View style={{flexDirection: 'row', width: width * 0.4, borderBottomWidth: 1}}>
-                  <Text style={{flex: 9, textAlign: 'center'}}>
+                <View style={{flexDirection: 'row', width: width * 0.38, borderBottomWidth: 1, borderBottomColor: 'grey'}}>
+                  <Text style={{flex: 9, textAlign: 'center', color: 'black'}}>
                     { this.state.gender ? this.state.gender : '성별'}
                   </Text>
                   <Icon

@@ -168,30 +168,13 @@ export default class NavigationBar extends Component {
               style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}
               onPress={() => {
                 saveUserInfo(userInfo);
-                saveMetabolism(userInfo);
+                if(!userInfo.metabolism) saveMetabolism(userInfo);
                 navigation.navigate('DiaryDetail');
               }}
             >
               <View>
                 <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
                   저장하기
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        )
-      }
-
-      case 'DiaryDetail': {
-        return (
-          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Recommendation')}
-              style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}
-            >
-              <View>
-                <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
-                  추천제품
                 </Text>
               </View>
             </TouchableOpacity>

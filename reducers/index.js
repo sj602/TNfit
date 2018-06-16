@@ -8,17 +8,18 @@ import {
     CHECK_FOOD,
     SAVE_METABOLISM,
     SET_DAY,
+    LOAD_DATA,
 } from '../actions';
+import { REHYDRATE } from 'redux-persist';
 
 const initialState = {
     userInfo: {
-        id: '',
-        name: '선진',
-        age: '26',
-        gender: '남성',
-        height: '175',
-        weight: '65',
-        targetWeight: '75',
+        name: '',
+        age: '',
+        gender: '',
+        height: '',
+        weight: '',
+        targetWeight: '',
         currentlyEatingProduct: '',
         wannaEatProduct: '',
         email: '',
@@ -33,13 +34,13 @@ const initialState = {
             },
             doneWorkoutList: [],
             result: {
-                eatenCalories: '',
-                spentCalories: '',
+                foodCalories: '',
+                workoutCalories: '',
                 extraCalories: '',
                 carb: '',
                 protein: '',
                 fat: '',
-                score: '',
+                scores: '',
             }
         },
         agreement: {
@@ -82,8 +83,19 @@ const initialState = {
     day: '',
 };
 
+// const persistConfig = {
+//   key: 'root',
+//   storage: storage,
+//   whitelist: ['auth', 'notes']
+// };
+
 export default function reducer(state = initialState, action) {
     switch (action.type) {
+        case REHYDRATE: 
+            return {
+                ...state
+            }
+
         case SAVE_USER_INFO:
             return {
                 ...state,
@@ -174,6 +186,19 @@ export default function reducer(state = initialState, action) {
         case CALCULATE_RESULT:
             return {
                 ...state,
+                userInfo: {
+                    ...state.userInfo,
+                    today: {
+                        ...state.userInfo.today,
+                        result: {
+                            ...state.userInfo.today.result,
+                            foodCalories: action.foodCalories,
+                            workoutCalories: action.workoutCalories,
+                            extraCalories: action.extraCalories,
+                            scores: action.result
+                        }
+                    }
+                },
                 result: {
                     scores: action.result
                 }
@@ -190,8 +215,12 @@ export default function reducer(state = initialState, action) {
 
         case CHECK_FOOD:
             const newFoodList = Array.prototype.slice.call(state.foodInfo.foodList);
-            newFoodList[action.index] = action.food;
-            console.log('newfood', action.food)
+            if(!action.index) {
+                let index = newFoodList.findIndex(food => food['name'] === action.food['name']);
+                newFoodList[index] = action.food;
+            } else {
+                newFoodList[action.index] = action.food;
+            }
 
             return {
               ...state,
@@ -214,6 +243,23 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 day: action.day
+            }
+
+        case LOAD_DATA:
+            return {
+                ...state,
+                userInfo: {
+                    ...state.userInfo,
+                    name: action.userInfo.name,
+                    age: action.userInfo.age,
+                    gender: action.userInfo.gender,
+                    height: action.userInfo.height,
+                    weight: action.userInfo.weight,
+                    targetWeight: action.userInfo.targetWeight,
+                    currentlyEatingProduct: action.userInfo.currentlyEatingProduct,
+                    wannaEatProduct: action.userInfo.wannaEatProduct,
+                    email: action.userInfo.email
+                }
             }
 
         default:

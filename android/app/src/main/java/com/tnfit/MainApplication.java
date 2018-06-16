@@ -3,7 +3,6 @@ package com.tnfit;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import dog.craftz.sqlite_2.RNSqlite2Package;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.horcrux.svg.SvgPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
@@ -41,7 +40,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
         new SQLitePluginPackage(),
         new MainReactPackage(),
-        new RNSqlite2Package(),
         new VectorIconsPackage(),
         new SvgPackage(),
         new RNGoogleSigninPackage(),
@@ -49,7 +47,6 @@ public class MainApplication extends Application implements ReactApplication {
         new FBSDKPackage(mCallbackManager),
         new RNFirebaseAuthPackage(),
         new RNFirebaseDatabasePackage()
-        
       );
     }
 

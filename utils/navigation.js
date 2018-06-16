@@ -13,6 +13,7 @@ import DayDetail from '../components/DayDetail';
 import FoodDetail from '../components/FoodDetail';
 import WhatWorkout from '../components/WhatWorkout';
 import Result from '../components/Result';
+import CustomDrawer from '../components/CustomDrawer';
 
 const DiaryStacks = StackNavigator({
     Diary: { screen: Diary },
@@ -23,16 +24,18 @@ const PersonalInfoStacks = StackNavigator({
 });
 
 const DiaryDetailStacks = StackNavigator({
-    DiaryDetail: {
-        screen: DiaryDetail,
-        title: '홈'
-    },
+    DiaryDetail: { screen: DiaryDetail },
     WhatFood: { screen: WhatFood },
     DayDetail: { screen: DayDetail },
     FoodDetail: { screen: FoodDetail },
     WhatWorkout: { screen: WhatWorkout },
-    Recommendation: { screen: Recommendation }
 });
+
+const RecommendationStack = StackNavigator({
+    Recommendation: { 
+        screen: Recommendation,
+    }
+})
 
 const LoginStacks = StackNavigator({
     Login: { screen: Login },
@@ -51,11 +54,15 @@ const Drawer = DrawerNavigator({
     PersonalInfo: {
         screen: PersonalInfoStacks,
     },    
+    Recommendation: { 
+        screen: RecommendationStack,
+    }
 }, {
     navigationOptions: {
         headerTintColor: 'white',
         headerStyle: { backgroundColor: 'rgb(240,82,34)' },
-    }
+    },
+    // contentComponent: CustomDrawer
 });
 
 export const Stacks = StackNavigator({

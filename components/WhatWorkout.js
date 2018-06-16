@@ -36,14 +36,14 @@ class WhatWorkout extends Component {
                 />
   })
 
-  checkIfDone(selectedFood) {
+  checkIfDone(selectedWorkout) {
     let { list } = this.props.workoutInfo;
     let copiedWorkoutList = Array.prototype.slice.call(list);
-    const checkAddedWorkout = copiedWorkoutList.find(w => {
-      food['name'] === selectedFood['name']
+    const checkAddedWorkout = copiedWorkoutList.find(workout => {
+      workout['name'] === selectedWorkout['name']
     });
 
-    if(checkAddedFood) {
+    if(checkAddedWorkout) {
       let index = copiedEatenFoodList.indexOf(checkAddedFood);
       copiedEatenFoodList.splice(index, 1);
     } else {

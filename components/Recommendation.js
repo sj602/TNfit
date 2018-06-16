@@ -11,7 +11,7 @@ import NavigationBar from './NavigationBar';
 
 export default class Recommendation extends Component {
   static navigationOptions = ({navigation}) => ({
-    title: '추천제품',
+    title: '추천 제품',
     headerTitleStyle: {flex:1, alignSelf: 'center'},
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
@@ -21,6 +21,10 @@ export default class Recommendation extends Component {
                     name="menu" color="white" size={35} onPress={() => {
                                                           navigation.navigate('DrawerToggle')
                                                         }}
+                />,
+    drawerIcon: <Icon
+                    name="thumb-up"
+                    color='rgb(240,82,34)' size={25}
                 />
   })
 

@@ -3,18 +3,28 @@ import {
   Platform, StyleSheet, Text,
   View, TextInput, TouchableOpacity,
   Button, Alert, Image,
-  Picker
+  Picker, Animated
 } from 'react-native';
 import { connect } from 'react-redux';
-import { calculateResult } from '../actions';
+import firebase from 'react-native-firebase';
+import { 
+  calculateResult, saveMetabolism, setDay,
+  loadData,
+} from '../actions';
 import PieChart from 'react-native-pie-chart';
 import { Icon } from 'react-native-elements';
 import { width } from '../utils/helpers';
-import NavigationBar from './NavigationBar';
 
 class DiaryDetail extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      translateY: new Animated.Value(0)
+    }
+  }
+
   static navigationOptions = ({navigation}) => ({
-    title: '홈',
+    title: '대시보드',
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},
     headerRight: <Icon
@@ -22,13 +32,72 @@ class DiaryDetail extends Component {
                     iconStyle={{marginRight: 15}}
                     underlayColor="rgba(255,255,255,0)"
                     color="white" size={35} onPress={() => navigation.navigate('DrawerToggle')}
+                />,
+    drawerIcon: <Icon
+                    name="dashboard"
+                    color='rgb(240,82,34)' size={25}
                 />
   })
 
+  componentWillMount() {
+    const { setDay, loadData } = this.props;
+
+    if(!this.props.day) setDay(new Date().toISOString().substring(0,10));
+
+    let {email} = firebase.auth().currentUser._user;
+    loadData(email);
+  }
+
   componentDidMount() {
+    const { userInfo, saveMetabolism } = this.props;
+
+    // prevent from alerting check personal info after the info is already filled by loadData
+    setTimeout(() => this.checkPersonalInfo(), 1500);
+
+    if(!this.props.userInfo.metabolism) saveMetabolism(userInfo);
+
+    this.animation();
+  }
+
+  animation() {
+    Animated.spring(
+      this.state.translateY,
+      {
+        toValue: 10,
+        friction: 1
+      }
+    ).start();
+  }
+
+  checkResult() {
+    let { weight, targetWeight, metabolism } = this.props.userInfo;
+    weight = Number(weight);
+    targetWeight = Number(targetWeight);
+    let { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
+    let foodCalories = breakfast.calories + lunch.calories + dinner.calories + dessert.calories;
+    let workoutCalories = this.props.workoutInfo.calories;
+    let extraCalories = (foodCalories - metabolism - workoutCalories);
+    const { calculateResult } = this.props;
+
+    if(weight > targetWeight) {
+      extraCalories < 0
+      ?
+      calculateResult('GOOD', foodCalories, workoutCalories, extraCalories)
+      :
+      calculateResult('BAD', foodCalories, workoutCalories, extraCalories)
+    } else if(weight < targetWeight) { // for gaining weight
+      extraCalories > 0
+      ?
+      calculateResult('BAD', foodCalories, workoutCalories, extraCalories)
+      :
+      calculateResult('GOOD', foodCalories, workoutCalories, extraCalories)
+    }
+  }
+
+  checkPersonalInfo() {
     const { userInfo, navigation } = this.props;
 
-    userInfo.name.length === 0
+    !userInfo.name || !userInfo.age || !userInfo.gender || !userInfo.weight || !userInfo.height || !userInfo.targetWeight
     ?
     Alert.alert(
       '칼로리 계산을 위한 기본 정보를 입력해주세요.',
@@ -41,7 +110,7 @@ class DiaryDetail extends Component {
     null
   }
 
-  isAdded(category) {
+  handleColorByFood(category) {
     if(category['calories'] > 0) {
       return {
         backgroundColor: 'rgb(240,82,34)'
@@ -53,7 +122,7 @@ class DiaryDetail extends Component {
     }
   }
 
-  isAddedWorkout(category) {
+  handleColorByWorkout(category) {
     if(category['calories'] > 0) {
       return {
         backgroundColor: '#87b242'
@@ -65,48 +134,38 @@ class DiaryDetail extends Component {
     }
   }
 
-  isGoodOrBad() {
-    let { weight, targetWeight, metabolism } = this.props.userInfo;
+  handleColorByResult() {
+    let { weight, targetWeight} = this.props.userInfo;
+    let { extraCalories } = this.props.userInfo.today.result;
     weight = Number(weight);
     targetWeight = Number(targetWeight);
-    let { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
-    let foodCalories = breakfast.calories + lunch.calories + dinner.calories + dessert.calories;
-    let workoutCalories = this.props.workoutInfo.calories;
-    let additionalCalories = (foodCalories - metabolism - workoutCalories);
-    const { calculateResult } = this.props;
-
-    console.log('weight', weight, 'targetWeight', targetWeight, 'additionalCalories', additionalCalories)
 
     // for diet
-    // if(weight > targetWeight) {
-    //   (additionalCalories < 0)
-    //   ?
-    //   (
-    //     calculateResult('GOOD'),
-    //     console.log(1),
-    //     {backgroundColor: '#87b242'}
-    //   )
-    //   :
-    //   (
-    //     calculateResult('BAD'),
-    //     console.log(2),
-    //     {backgroundColor: 'lightgrey'}
-    //   )
-    // } else if(weight < targetWeight) { // for gaining weight
-    //   (additionalCalories > 0)
-    //   ?
-    //   (
-    //     calculateResult('GOOD'),
-    //     console.log(3),
-    //     {backgroundColor: '#87b242'}
-    //   )
-    //   :
-    //   (
-    //     calculateResult('BAD'),
-    //     console.log(4),
-    //     {backgroundColor: 'lightgrey'}
-    //   )
-    // }
+    if(weight > targetWeight) {
+      (extraCalories < 0)
+      ?
+      (
+        console.log(1),
+        {backgroundColor: '#87b242'}
+      )
+      :
+      (
+        console.log(2),
+        {backgroundColor: 'lightgrey'}
+      )
+    } else if(weight < targetWeight) { // for gaining weight
+      (extraCalories > 0)
+      ?
+      (
+        console.log(3),
+        {backgroundColor: '#87b242'}
+      )
+      :
+      (
+        console.log(4),
+        {backgroundColor: 'lightgrey'}
+      )
+    }
   }
 
   render() {
@@ -126,7 +185,14 @@ class DiaryDetail extends Component {
 
     return (
       <View style={styles.container}>
-        <View style={{flex:2, marginTop: 10}}>
+
+        <View style={{width: 80, height: 30, position: 'absolute', top: 5, right: 10}}>
+          <Text>
+            {this.props.day}
+          </Text>
+        </View>
+
+        <View style={{flex: 2, marginTop: 10}}>
           <PieChart
             chart_wh={190}
             series={series}
@@ -164,7 +230,7 @@ class DiaryDetail extends Component {
                 }}}
             >
               <View
-                style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.isAdded(breakfast)]}>
+                style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.handleColorByFood(breakfast)]}>
                 <Text
                   style={{textAlign: 'center', color: 'white'}}
                 >
@@ -185,7 +251,7 @@ class DiaryDetail extends Component {
                     navigate('WhatFood', {category: '점심'});
                 }}}
             >
-              <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.isAdded(lunch)]}>
+              <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.handleColorByFood(lunch)]}>
                 <Text
                   style={{textAlign: 'center', color: 'white'}}
                 >
@@ -206,7 +272,7 @@ class DiaryDetail extends Component {
                     navigate('WhatFood', {category: '저녁'});
                 }}}
             >
-              <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.isAdded(dinner)]}>
+              <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.handleColorByFood(dinner)]}>
                 <Text
                   style={{textAlign: 'center', color: 'white'}}
                 >
@@ -246,7 +312,7 @@ class DiaryDetail extends Component {
                     navigate('WhatFood', {category: '간식'});
                 }}}
             >
-              <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.isAdded(dessert)]}>
+              <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.handleColorByFood(dessert)]}>
                 <Text
                   style={{textAlign: 'center', color: 'white'}}
                 >
@@ -267,7 +333,7 @@ class DiaryDetail extends Component {
                     navigate('WhatWorkout');
                 }}}
             >
-              <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.isAddedWorkout(workoutInfo)]}>
+              <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.handleColorByWorkout(workoutInfo)]}>
                 <Text
                   style={{textAlign: 'center', color: 'white'}}
                 >
@@ -294,7 +360,7 @@ class DiaryDetail extends Component {
             </View>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-            <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, backgroundColor: 'lightgrey', margin: 5}, this.isGoodOrBad()]}>
+            <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, backgroundColor: 'lightgrey', margin: 5}, this.handleColorByResult()]}>
               <View style={{justifyContent: 'center', alignItems: 'center', width: 50, height: 50, borderRadius: 25, backgroundColor: 'white', margin: 5}}>
                 <Text
                   style={{textAlign: 'center', color: 'rgb(240,82,34)', fontSize: 20}}
@@ -312,15 +378,13 @@ class DiaryDetail extends Component {
             </View>
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => navigate('Recommendation')}
-        >
-        </TouchableOpacity>
 
-        <NavigationBar 
-          menu='DiaryDetail' 
-          navigation={this.props.navigation} 
-        />
+        <Animated.View style={[{width: 220, height: 50, justifyContent: 'center', alignItems: 'center'}, {transform: [{translateY: this.state.translateY}]}]}>
+          <Text>
+            아이콘을 클릭해 정보를 채워주세요!
+          </Text>
+        </Animated.View>
+
       </View>
     );
   }
@@ -332,7 +396,10 @@ const mapStateToProps = (state) => {
   }
 };
 
-export default connect(mapStateToProps, { calculateResult })(DiaryDetail);
+export default connect(mapStateToProps, { 
+  calculateResult, saveMetabolism, setDay,
+  loadData,
+})(DiaryDetail);
 
 const styles = StyleSheet.create({
   container: {

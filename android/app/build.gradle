@@ -156,7 +156,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-sqlite-2')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-svg')
     implementation project(':react-native-google-signin')

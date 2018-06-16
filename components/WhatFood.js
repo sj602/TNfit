@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import {
-  Platform, StyleSheet, Text,
-  View, TouchableOpacity, Button,
+  StyleSheet, Text,
+  View, TouchableOpacity,
   FlatList, ActivityIndicator,
   TextInput, Alert, Keyboard, ScrollView
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
-import { saveFoodInfo, saveDB, checkFood } from '../actions';
+import SQLite from 'react-native-sqlite-storage';
 import SearchBar from './SearchBar';
 import EatenFoodList from './EatenFoodList';
 import NavigationBar from './NavigationBar';
+import { saveFoodInfo, saveDB, checkFood } from '../actions';
 import { width } from '../utils/helpers';
 import { fetchDB } from '../database/handle_db';
 import cloneDeep from 'lodash/cloneDeep';
-import SQLite from 'react-native-sqlite-storage';
 
 class WhatFood extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class WhatFood extends Component {
     else {
       if(this.props.foodInfo.foodList.length === 0) {
         // fetchDB('food_new').then(foodList => saveDB(foodList)).then(() => this.setState({loading: false}));
-        let foodDB = SQLite.openDatabase({name : "db", createFromLocation : "~food.db", location: 'Library'}, () => console.log('success'), () => console.log('err'));
+        let foodDB = SQLite.openDatabase({name : "db", createFromLocation : "~database.db", location: 'Library'}, () => console.log('success'), () => console.log('err'));
 
         foodDB.transaction(txn => {
           txn.executeSql('SELECT * FROM food', [], (tx, res) => {
@@ -73,13 +73,19 @@ class WhatFood extends Component {
 
         defaultFoodList = defaultFoodList.map(food => ({
           ...food,
-          'check': false
+          'check': 'false'
         }));
 
         saveDB(defaultFoodList);
         this.setState({loading: false});
       }
     }
+  }
+
+  checkFoodForSearchedList(newItem, index) {
+    let newSearchedFoodList = Array.prototype.slice.call(this.state.searchedFoodList);
+    newSearchedFoodList[index] = newItem;
+    this.setState({searchedFoodList: newSearchedFoodList});
   }
 
   handlePushToEatenFoodList(selectedFood) {
@@ -102,7 +108,7 @@ class WhatFood extends Component {
 
     let searchedFoodList = copiedFoodList.filter(food => food['name'].includes(searchFood));
 
-    this.setState({ searchFood, searchedFoodList });
+    this.setState({ searchedFoodList });
   }
 
   refreshingLoader() {
@@ -127,9 +133,8 @@ class WhatFood extends Component {
   }
 
   render() {
-    console.log(this.state)
     const {
-      loading, searchFood,
+      loading, searchFood, refreshing,
       searchedFoodList, isModalVisible, selectedFood,
       eatenFoodList
     } = this.state;
@@ -144,21 +149,21 @@ class WhatFood extends Component {
         <View style={{flex: 1, maxHeight: 40, flexDirection: 'row'}}>
           <TextInput
             style={{flex:9}}
-            onChangeText={(searchFood) => this.setState({searchFood})}
+            onChangeText={(searchFood) => {
+              this.setState({searchFood})
+              this.handleSearch(searchFood)
+            }}
             value={this.state.searchFood}
             placeholder='검색어를 입력하세요'
           />
-          <TouchableOpacity
-            style={{flex:1, paddingTop: 10}}
-            onPress={() => console.log('')}
-          >
+          <View style={{flex: 1, paddingTop: 10}}>
             <Icon
               name='search'
               type='font-awesome'
               color='rgb(240,82,34)'
               size={18}
             />
-          </TouchableOpacity>
+          </View>
         </View>
         <View style={{marginBottom: 20}}>
           <Text style={{color:'rgb(240,82,34)'}}>
@@ -184,7 +189,7 @@ class WhatFood extends Component {
             ?
             (
               <FlatList
-                refreshing={this.state.refreshing}
+                refreshing={refreshing}
                 ListFooterComponent={() => this.refreshingLoader()}
                 data={searchFood ? searchedFoodList : foodList}
                 keyExtractor={(item, index) => index.toString()}
@@ -200,8 +205,12 @@ class WhatFood extends Component {
                         onPress={() => {
                           let newItem = cloneDeep(item);
                           newItem['check'] = (item['check'] === 'false') ? 'true' : 'false'
-                          console.log('newitem.check', newItem.check, 'item.check', item.check)
-                          checkFood(newItem, index);
+                          if(searchFood) {
+                            this.checkFoodForSearchedList(newItem, index);
+                            checkFood(newItem);
+                          } else {
+                            checkFood(newItem, index);
+                          }
                           this.handlePushToEatenFoodList(newItem);
                         }}
                         style={{flex: 1, height: 60, flexDirection: 'row'}}
@@ -218,8 +227,6 @@ class WhatFood extends Component {
                           />
                         )
                         :
-                        item['check'] === 'false'
-                        ?
                         (
                           <Icon
                             name='check-square'
@@ -228,8 +235,6 @@ class WhatFood extends Component {
                             size={20}
                           />
                         )
-                        :
-                        null
                       }
                       </TouchableOpacity>
                       <View style={{flex: 4, justifyContent: 'center'}}>

@@ -14,7 +14,7 @@ export const fetchDB = (category) => {
 
   // var result = {};
 
-  let ref = database.ref().child(category);
+  // let ref = database.ref().child(category);
   // if(category === 'food') {
   return database.ref().child(category).once('value', (snap) => snap.val()).then(result => result.val());
   // } else {
