@@ -9,11 +9,11 @@ import { connect } from 'react-redux';
 import firebase from 'react-native-firebase';
 import { 
   calculateResult, saveMetabolism, setDay,
-  loadData,
+  loadPersonalData, loadHistoryData,
 } from '../actions';
 import PieChart from 'react-native-pie-chart';
 import { Icon } from 'react-native-elements';
-import { width } from '../utils/helpers';
+import { width, emailDB } from '../utils/helpers';
 
 class DiaryDetail extends Component {
   constructor(props) {
@@ -39,24 +39,94 @@ class DiaryDetail extends Component {
                 />
   })
 
+  componentDidUpdate() {
+    const { day } = this.props;
+
+    if(!this.props.history[day]) {
+      this.checkResult();
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if(
+      nextProps.foodInfo === this.props.foodInfo 
+      && 
+      nextProps.workoutInfo === this.props.workoutInfo 
+      && 
+      nextProps.history === this.props.history
+      ) {
+      return false;
+    }
+    else return true;
+  }
+
   componentWillMount() {
-    const { setDay, loadData } = this.props;
+    const { setDay, loadPersonalData } = this.props;
 
     if(!this.props.day) setDay(new Date().toISOString().substring(0,10));
 
-    let {email} = firebase.auth().currentUser._user;
-    loadData(email);
+    let { email } = firebase.auth().currentUser._user;
+    loadPersonalData(email);
   }
 
   componentDidMount() {
-    const { userInfo, saveMetabolism } = this.props;
-
     // prevent from alerting check personal info after the info is already filled by loadData
-    setTimeout(() => this.checkPersonalInfo(), 1500);
+    setTimeout(() => {
+      const { userInfo, saveMetabolism, loadHistoryData, day } = this.props;
+      const { email } = this.props.userInfo;
 
-    if(!this.props.userInfo.metabolism) saveMetabolism(userInfo);
+      this.checkPersonalInfo()
+      if(!this.props.userInfo.metabolism) saveMetabolism(userInfo);
+
+      loadHistoryData(email, day);
+    }, 1500);
 
     this.animation();
+  }
+
+  saveData(email, day) {
+    let database = firebase.database();
+
+    database.ref(`/users/${email}/history/${day}`).set(
+      {
+        foodInfo: {
+            breakfast: {
+                calories: this.props.foodInfo.breakfast.calories,
+                list: this.props.foodInfo.breakfast.list
+            },
+            lunch: {
+                calories: this.props.foodInfo.lunch.calories,
+                list: this.props.foodInfo.lunch.list
+            },
+            dinner: {
+                calories: this.props.foodInfo.dinner.calories,
+                list: this.props.foodInfo.dinner.list
+            },
+            dessert: {
+                calories: this.props.foodInfo.dessert.calories,
+                list: this.props.foodInfo.dessert.list
+            }
+        },
+        workoutInfo: {
+            calories: this.props.workoutInfo.calories,
+            list: this.props.workoutInfo.list
+        },
+        result: {
+            foodCalories: this.props.userInfo.dayInfo.result.foodCalories,
+            workoutCalories: this.props.userInfo.dayInfo.result.workoutCalories,
+            extraCalories: this.props.userInfo.dayInfo.result.extraCalories,
+            carb: this.props.userInfo.dayInfo.result.carb,
+            protein: this.props.userInfo.dayInfo.result.protein,
+            fat: this.props.userInfo.dayInfo.result.fat,
+            scores: this.props.userInfo.dayInfo.result.scores,
+        }
+      }
+    ).then(() => {
+      console.log('INSERTED');
+    }).catch(err => {
+      console.log(err);
+    });
+
   }
 
   animation() {
@@ -88,9 +158,9 @@ class DiaryDetail extends Component {
     } else if(weight < targetWeight) { // for gaining weight
       extraCalories > 0
       ?
-      calculateResult('BAD', foodCalories, workoutCalories, extraCalories)
-      :
       calculateResult('GOOD', foodCalories, workoutCalories, extraCalories)
+      :
+      calculateResult('BAD', foodCalories, workoutCalories, extraCalories)
     }
   }
 
@@ -136,7 +206,7 @@ class DiaryDetail extends Component {
 
   handleColorByResult() {
     let { weight, targetWeight} = this.props.userInfo;
-    let { extraCalories } = this.props.userInfo.today.result;
+    let { extraCalories } = this.props.userInfo.dayInfo.result;
     weight = Number(weight);
     targetWeight = Number(targetWeight);
 
@@ -170,9 +240,25 @@ class DiaryDetail extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
-    let { breakfast, lunch, dinner, dessert } = this.props.foodInfo;
-    let { workoutInfo, result, foodInfo } = this.props;
-    let foodCalories = breakfast.calories + lunch.calories + dinner.calories + dessert.calories;
+
+    const { email } = this.props.userInfo;
+    const { day } = this.props;
+
+    let breakfast = {}, lunch = {}, dinner = {}, dessert = {};
+    let workoutInfo = {}, result = {}, foodInfo = {};
+    let foodCalories = 0;
+
+    if(this.props.history[day]) {
+      ({ breakfast, lunch, dinner, dessert } = this.props.history[day].foodInfo);
+      ({ workoutInfo, result, foodInfo } = this.props.history[day]);
+      foodCalories = breakfast.calories + lunch.calories + dinner.calories + dessert.calories;
+    }
+    else {
+      ({ breakfast, lunch, dinner, dessert } = this.props.foodInfo);
+      ({ workoutInfo, foodInfo } = this.props);
+      ({ result } = this.props.userInfo.dayInfo);
+      foodCalories = breakfast.calories + lunch.calories + dinner.calories + dessert.calories;
+    }
 
     if(foodCalories === 0 || workoutInfo.calories === 0) {
       var series = [1];
@@ -223,11 +309,19 @@ class DiaryDetail extends Component {
           <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
               onPress={() => {
-                if(this.props.foodInfo.breakfast.calories > 0) {
-                    navigate('DayDetail', {category: '아침'});
-                } else {
-                    navigate('WhatFood', {category: '아침'});
-                }}}
+                let { history, foodInfo } = this.props;
+
+                if(history[day]) {
+                  navigate('DayDetail', {category: '아침'})
+                }
+                else {
+                  foodInfo.breakfast.calories > 0
+                  ?
+                  navigate('DayDetail', {category: '아침'})
+                  :
+                  navigate('WhatFood', {category: '아침'})
+                }
+              }}
             >
               <View
                 style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.handleColorByFood(breakfast)]}>
@@ -245,11 +339,19 @@ class DiaryDetail extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                if(this.props.foodInfo.lunch.calories > 0) {
-                    navigate('DayDetail', {category: '점심'});
-                } else {
-                    navigate('WhatFood', {category: '점심'});
-                }}}
+                let { history, foodInfo } = this.props;
+
+                if(history[day]) {
+                  navigate('DayDetail', {category: '점심'})
+                }
+                else {
+                  foodInfo.lunch.calories > 0
+                  ?
+                  navigate('DayDetail', {category: '점심'})
+                  :
+                  navigate('WhatFood', {category: '점심'})
+                }
+              }}
             >
               <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.handleColorByFood(lunch)]}>
                 <Text
@@ -266,11 +368,19 @@ class DiaryDetail extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                if(this.props.foodInfo.dinner.calories > 0) {
-                    navigate('DayDetail', {category: '저녁'});
-                } else {
-                    navigate('WhatFood', {category: '저녁'});
-                }}}
+                let { history, foodInfo } = this.props;
+
+                if(history[day]) {
+                  navigate('DayDetail', {category: '저녁'})
+                }
+                else {
+                  foodInfo.dinner.calories > 0
+                  ?
+                  navigate('DayDetail', {category: '저녁'})
+                  :
+                  navigate('WhatFood', {category: '저녁'})
+                }
+              }}
             >
               <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.handleColorByFood(dinner)]}>
                 <Text
@@ -306,11 +416,19 @@ class DiaryDetail extends Component {
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <TouchableOpacity
               onPress={() => {
-                if(this.props.foodInfo.dessert.calories > 0) {
-                    navigate('DayDetail', {category: '간식'});
-                } else {
-                    navigate('WhatFood', {category: '간식'});
-                }}}
+                let { history, foodInfo } = this.props;
+
+                if(history[day]) {
+                  navigate('DayDetail', {category: '간식'})
+                }
+                else {
+                  foodInfo.dinner.calories > 0
+                  ?
+                  navigate('DayDetail', {category: '간식'})
+                  :
+                  navigate('WhatFood', {category: '간식'})
+                }
+              }}
             >
               <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.handleColorByFood(dessert)]}>
                 <Text
@@ -327,11 +445,19 @@ class DiaryDetail extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                if(this.props.workoutInfo.calories > 0) {
-                    navigate('DayDetail', {category: '운동'});
-                } else {
-                    navigate('WhatWorkout');
-                }}}
+                let { history, workoutInfo } = this.props;
+
+                if(history[day]) {
+                  navigate('DayDetail', {category: '운동'})
+                }
+                else {
+                  workoutInfo.calories > 0
+                  ?
+                  navigate('DayDetail', {category: '운동'})
+                  :
+                  navigate('WhatFood', {category: '운동'})
+                }
+              }}
             >
               <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, margin: 5}, this.handleColorByWorkout(workoutInfo)]}>
                 <Text
@@ -379,6 +505,13 @@ class DiaryDetail extends Component {
           </View>
         </View>
 
+        <TouchableOpacity onPress={() => this.saveData(emailDB(email), day)}>
+          <View>
+            <Text>
+              저장하기
+            </Text>
+          </View>
+        </TouchableOpacity>
         <Animated.View style={[{width: 220, height: 50, justifyContent: 'center', alignItems: 'center'}, {transform: [{translateY: this.state.translateY}]}]}>
           <Text>
             아이콘을 클릭해 정보를 채워주세요!
@@ -398,7 +531,7 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, { 
   calculateResult, saveMetabolism, setDay,
-  loadData,
+  loadPersonalData, loadHistoryData
 })(DiaryDetail);
 
 const styles = StyleSheet.create({

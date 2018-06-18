@@ -32,6 +32,7 @@ class DayDetail extends Component {
   })
 
   render() {
+    const { day } = this.props;
     let { category } = this.props.navigation.state.params;
     switch(category) {
       case '아침':
@@ -51,6 +52,12 @@ class DayDetail extends Component {
         break;
     }
 
+    let { list } = this.props.history[day] 
+                    ? 
+                    category === 'workout' ? this.props.history[day].workoutInfo : this.props.history[day].foodInfo[category] 
+                    : 
+                    category === 'workout' ? this.props.workoutInfo : this.props.foodInfo[category]
+
     return (
       <View style={styles.container}>
         <View style={{marginBottom: 20}}>
@@ -65,8 +72,7 @@ class DayDetail extends Component {
           { 
             category === 'workout'
             ?
-            this.props.workoutInfo.list.map((item, index) => {
-              console.log(item)
+            list.map((item, index) => {
               return (
                 <View style={styles.item} key={index}>
                   <View style={{flex: 1, justifyContent: 'center'}}>
@@ -88,7 +94,7 @@ class DayDetail extends Component {
               )
             })
             :
-            this.props.foodInfo[category].list.map((item, index) => {
+            list.map((item, index) => {
               return (
                 <View style={styles.item} key={index}>
                   <View style={{flex: 1, justifyContent: 'center'}}>

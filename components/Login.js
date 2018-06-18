@@ -5,10 +5,10 @@ import {
   Button, TextInput, Alert
 } from 'react-native';
 import { SocialIcon } from 'react-native-elements';
-import { width } from '../utils/helpers';
 import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager } from 'react-native-fbsdk';
 import { GoogleSignin } from 'react-native-google-signin';
+import { width } from '../utils/helpers';
 
 export default class Login extends Component {
   constructor() {
@@ -26,7 +26,11 @@ export default class Login extends Component {
 
   componentDidMount() {
     this.authSubscription = firebase.auth().onAuthStateChanged((user) => {
-      user ? this.props.navigation.navigate('Drawer') : null
+      user 
+      ? 
+      this.props.navigation.navigate('Drawer') 
+      : 
+      null
     });
 
     this.setupGoogleSignin();

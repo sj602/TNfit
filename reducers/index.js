@@ -8,7 +8,8 @@ import {
     CHECK_FOOD,
     SAVE_METABOLISM,
     SET_DAY,
-    LOAD_DATA,
+    LOAD_PERSONAL_DATA,
+    LOAD_HISTORY_DATA,
 } from '../actions';
 import { REHYDRATE } from 'redux-persist';
 
@@ -24,15 +25,8 @@ const initialState = {
         wannaEatProduct: '',
         email: '',
         metabolism: '',
-        today: {
+        dayInfo: {
             date: new Date().toISOString().substring(0, 10),
-            eatenFoodList: {
-                breakfast: [],
-                lunch: [],
-                dinner: [],
-                dessert: [],
-            },
-            doneWorkoutList: [],
             result: {
                 foodCalories: '',
                 workoutCalories: '',
@@ -74,13 +68,14 @@ const initialState = {
         list: [],
     },
     productList: [],
-    result: {
-        scores: '',
-    },
-    database: {
-
-    },
     day: '',
+    history: {
+        '2018-06-15': {
+            foodInfo: {},
+            workoutInfo: {},
+            result: {},
+        },
+    }
 };
 
 // const persistConfig = {
@@ -188,19 +183,16 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 userInfo: {
                     ...state.userInfo,
-                    today: {
-                        ...state.userInfo.today,
+                    dayInfo: {
+                        ...state.userInfo.dayInfo,
                         result: {
-                            ...state.userInfo.today.result,
+                            ...state.userInfo.dayInfo.result,
                             foodCalories: action.foodCalories,
                             workoutCalories: action.workoutCalories,
                             extraCalories: action.extraCalories,
                             scores: action.result
                         }
                     }
-                },
-                result: {
-                    scores: action.result
                 }
             }
 
@@ -245,20 +237,66 @@ export default function reducer(state = initialState, action) {
                 day: action.day
             }
 
-        case LOAD_DATA:
+        case LOAD_PERSONAL_DATA:
+            const { userInfo } = action;
+
             return {
                 ...state,
                 userInfo: {
                     ...state.userInfo,
-                    name: action.userInfo.name,
-                    age: action.userInfo.age,
-                    gender: action.userInfo.gender,
-                    height: action.userInfo.height,
-                    weight: action.userInfo.weight,
-                    targetWeight: action.userInfo.targetWeight,
-                    currentlyEatingProduct: action.userInfo.currentlyEatingProduct,
-                    wannaEatProduct: action.userInfo.wannaEatProduct,
-                    email: action.userInfo.email
+                    name: userInfo.name,
+                    age: userInfo.age,
+                    gender: userInfo.gender,
+                    height: userInfo.height,
+                    weight: userInfo.weight,
+                    targetWeight: userInfo.targetWeight,
+                    currentlyEatingProduct: userInfo.currentlyEatingProduct,
+                    wannaEatProduct: userInfo.wannaEatProduct,
+                    email: userInfo.email,
+                    agreement: userInfo.agreement
+                }
+            }
+
+        case LOAD_HISTORY_DATA:
+            const { foodInfo, workoutInfo, result } = action.historyData;
+
+            return {
+                ...state,
+                history: {
+                    ...state.history,
+                    [action.day]: {
+                        foodInfo: {
+                            breakfast: {
+                                calories: foodInfo.breakfast.calories,
+                                list: foodInfo.breakfast.list,
+                            },
+                            lunch: {
+                                calories: foodInfo.lunch.calories,
+                                list: foodInfo.lunch.list,
+                            },
+                            dinner: {
+                                calories: foodInfo.dinner.calories,
+                                list: foodInfo.dinner.calories,
+                            },
+                            dessert: {
+                                calories: foodInfo.dessert.calories,
+                                list: foodInfo.dessert.calories,
+                            }
+                        },
+                        workoutInfo: {
+                            calories: workoutInfo.calories,
+                            list: workoutInfo.list
+                        },
+                        result: {
+                            foodCalories: result.foodCalories,
+                            workoutCalories: result.workoutCalories,
+                            extraCalories: result.extraCalories,
+                            carb: result.carb,
+                            protein: result.protein,
+                            fat: result.fat,
+                            scores: result.scores,
+                        }
+                    } 
                 }
             }
 

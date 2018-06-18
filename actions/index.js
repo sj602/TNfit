@@ -1,5 +1,6 @@
 import SQLite from 'react-native-sqlite-storage';
 import firebase from 'react-native-firebase';
+import { emailDB, emailNormal } from '../utils/helpers';
 
 export const SAVE_AGREEEMENT_INFO = 'SAVE_AGREEEMENT_INFO';
 export const SAVE_USER_INFO = 'SAVE_USER_INFO';
@@ -10,7 +11,8 @@ export const SAVE_DB = 'SAVE_DB';
 export const CHECK_FOOD= 'CHECK_FOOD';
 export const SAVE_METABOLISM = 'SAVE_METABOLISM';
 export const SET_DAY = 'SET_DAY';
-export const LOAD_DATA = 'LOAD_DATA';
+export const LOAD_PERSONAL_DATA = 'LOAD_PERSONAL_DATA';
+export const LOAD_HISTORY_DATA = 'LOAD_HISTORY_DATA';
 
 export const saveAgreementInfo = (data) => dispatch => {
 	return dispatch({type: SAVE_AGREEEMENT_INFO, data})
@@ -62,43 +64,71 @@ export const setDay = (day) => dispatch => {
 	return dispatch({type: SET_DAY, day});
 }
 
-export const loadData = (email) => dispatch => {
-    // let foodDB = SQLite.openDatabase({name : "db", createFromLocation : "~database.db", location: 'Library'}, () => console.log('success'), () => console.log('err'));
-    // let userInfo = [];
-
-    // foodDB.transaction(txn => {
-    //   txn.executeSql('show tables', [], (tx, res) => {
-    //   	console.log('res', res)
-    //   });
-    // });
-
+export const loadPersonalData = (email) => dispatch => {
     // email = sj602@naver.com
     // email = sj602, naver.com
-    email = email.split("@");
-    email[1] = email[1].replace(/[.]/g, '-');
-    email = email.join("@");
+    email = emailDB(email);
 
 	let database = firebase.database();
 
-	database.ref(`/users/${email}/userInfo`).once('value', (snap) => snap.val()).then(result => {
+	database.ref(`/users`).once('value', (snap) => snap.val()).then(result => {
+		let users = Object.keys(result.val())
+		let found = users.find(user => user === email);
+		if(found) {
 
-		let userInfo = {};
-		let res = result.val();
+			let userInfo = {};
+			let res = result.val()[found];
 
-		userInfo.name = res.name;
-		userInfo.age = res.age;
-		userInfo.gender = res.gender;
-		userInfo.height = String(res.height);
-		userInfo.weight = String(res.weight);
-		userInfo.targetWeight = String(res.targetWeight);
-		userInfo.currentlyEatingProduct = res.currentlyEatingProduct;
-		userInfo.wannaEatProduct = res.wannaEatProduct;
+			userInfo.name = res.userInfo.name;
+			userInfo.age = res.userInfo.age;
+			userInfo.gender = res.userInfo.gender;
+			userInfo.height = String(res.userInfo.height);
+			userInfo.weight = String(res.userInfo.weight);
+			userInfo.targetWeight = String(res.userInfo.targetWeight);
+			userInfo.currentlyEatingProduct = res.userInfo.currentlyEatingProduct;
+			userInfo.wannaEatProduct = res.userInfo.wannaEatProduct;
+			userInfo.agreement = res.userInfo.agreement;
 
-	    let email = res.email.split("@");
-	    email[1] = email[1].replace(/[-]/g, '.');
-	    email = email.join("@");
-		userInfo.email = email;
+		    email = emailNormal(email);
+			userInfo.email = email;
 
-		if(userInfo) return userInfo;
-	}).then((userInfo) => dispatch({type: LOAD_DATA, userInfo}));
+
+
+			if(userInfo) return userInfo;
+
+		} else {
+
+		}
+	})
+	.then((userInfo) => dispatch({type: LOAD_PERSONAL_DATA, userInfo}));
+}
+
+export const loadHistoryData = (email, day) => (dispatch) => {
+    email = emailDB(email);
+
+	let database = firebase.database();
+
+	database.ref(`/users/${email}/history`).once('value', (snap) => snap.val()).then(result => {
+		let dates = Object.keys(result.val())
+		let found = dates.find(date => date === day);
+		if(found) {
+
+			let historyData = {};
+			let res = result.val()[found];
+
+			historyData.foodInfo = res.foodInfo;
+			historyData.workoutInfo = res.workoutInfo;
+			historyData.result = res.result;
+
+			if(historyData) return historyData;
+
+		} else {
+			return undefined;
+		}
+	})
+	.then((historyData) => {
+		if(historyData) {
+			dispatch({type: LOAD_HISTORY_DATA, historyData, day});
+		}
+	});
 }
