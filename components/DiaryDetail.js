@@ -560,7 +560,7 @@ class DiaryDetail extends Component {
         <NavigationBar 
           menu='DiaryDetail' 
           navigation={this.props.navigation} 
-          saveData={this.saveData} 
+          saveData={() => this.saveData(emailDB(email), day)} 
           email={email}
           day={day}
           history={this.props.history}
