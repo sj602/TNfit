@@ -84,8 +84,10 @@ export const setDay = (day) => dispatch => {
 
 export const loadPersonalData = (email) => dispatch => {
     // email = sj602@naver.com
-    // email = sj602, naver.com
+    // email = ['sj602', 'naver.com']
+    console.log('load personal data email', email)
     email = emailDB(email);
+    console.log('email after email db', email)
 
 	const database = firebase.database();
 
@@ -109,8 +111,6 @@ export const loadPersonalData = (email) => dispatch => {
 
 		    email = emailNormal(email);
 			userInfo.email = email;
-
-
 
 			if(userInfo) return userInfo;
 

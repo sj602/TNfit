@@ -184,7 +184,7 @@ class NavigationBar extends Component {
       }
 
       case 'DiaryDetail': {
-        const { email, day, saveData } = this.props;
+        let { email, day, saveData } = this.props;
 
         return (
           <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>

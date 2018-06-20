@@ -72,10 +72,6 @@ class Diary extends Component {
           <CalendarList
             horizontal={true}
             maxDate={new Date().toISOString().substring(0,10)}
-            onDayPress={day => {
-              setDay(day.dateString);
-              navigate('DiaryDetail', {day});
-            }}
             monthFormat={'yyyy MM'}
             onMonthChange={(month) => {console.log('month changed', month)}}
             hideExtraDays={true}
@@ -84,37 +80,46 @@ class Diary extends Component {
             markingType={'period'}
             markedDates={this.state.dates}
             dayComponent={({date, state, marking}) => {
+              console.log('date', date)
               return (
-                <View style={{flex: 1}}>
-                  {
-                    marking && marking.scores === 'GOOD'
-                    ?
-                    (
-                      <View style={{position: 'absolute', top: 0, right: 0}}>
-                        <Icon
-                          name="mood"
-                          color='#87b242' size={20}
-                        />
-                      </View>
-                    )
-                    :
-                    marking && marking.scores === 'BAD'
-                    ?
-                    (
-                      <View style={{position: 'absolute', top: 0, right: 0}}>
-                        <Icon
-                          name="sentiment-very-dissatisfied"
-                          color='red' size={20}
-                        />
-                      </View>
-                    )
-                    :
-                    null
-                  }
-                  <Text style={{margin: 5, fontSize: 18, textAlign: 'center', color: state === 'disabled' ? 'gray' : 'black'}}>
-                    {date.day}
-                  </Text>
-                </View>
+                <TouchableOpacity
+                  onPress={() =>  {
+                    setDay(date.dateString);
+                    navigate('DiaryDetail', {day: date.dateString})
+                  }}
+                  style={{flex: 1}}
+                >
+                  <View>
+                    {
+                      marking && marking.scores === 'GOOD'
+                      ?
+                      (
+                        <View style={{position: 'absolute', top: 0, right: 0}}>
+                          <Icon
+                            name="mood"
+                            color='#87b242' size={20}
+                          />
+                        </View>
+                      )
+                      :
+                      marking && marking.scores === 'BAD'
+                      ?
+                      (
+                        <View style={{position: 'absolute', top: 0, right: 0}}>
+                          <Icon
+                            name="sentiment-very-dissatisfied"
+                            color='red' size={20}
+                          />
+                        </View>
+                      )
+                      :
+                      null
+                    }
+                    <Text style={{margin: 5, fontSize: 18, textAlign: 'center', color: state === 'disabled' ? 'gray' : 'black'}}>
+                      {date.day}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               );
             }}
           />   

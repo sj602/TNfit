@@ -65,22 +65,19 @@ class DiaryDetail extends Component {
     else return true;
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { setDay, loadPersonalData } = this.props;
 
     if(!this.props.day) setDay(new Date().toISOString().substring(0,10));
 
     let { email } = firebase.auth().currentUser._user;
     loadPersonalData(email);
-  }
 
-  componentDidMount() {
     // prevent from alerting check personal info after the info is already filled by loadData
     setTimeout(() => {
-      const { userInfo, saveMetabolism, loadHistoryData, day} = this.props;
-      const { email } = this.props.userInfo;
+      const { userInfo, saveMetabolism, loadHistoryData, day } = this.props;
 
-      this.checkPersonalInfo()
+      this.checkPersonalInfo();
       if(!this.props.userInfo.metabolism) saveMetabolism(userInfo);
 
       loadHistoryData(email, day);
@@ -91,6 +88,7 @@ class DiaryDetail extends Component {
 
   saveData(email, day) {
     let database = firebase.database();
+    console.log('saveData', email, day)
 
     database.ref(`/users/${email}/history/${day}`).set(
       {
@@ -136,6 +134,7 @@ class DiaryDetail extends Component {
   }
 
   fillInfoAnimation() {
+    console.log('animation started')
     Animated.sequence([
       Animated.timing(this.state.translateYnotice, {
         toValue: 50,
@@ -561,7 +560,7 @@ class DiaryDetail extends Component {
         <NavigationBar 
           menu='DiaryDetail' 
           navigation={this.props.navigation} 
-          saveData={(email, day) => this.saveData(emailDB(email), day)} 
+          saveData={this.saveData} 
           email={email}
           day={day}
           history={this.props.history}

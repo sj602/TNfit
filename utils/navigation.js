@@ -13,7 +13,6 @@ import DayDetail from '../components/DayDetail';
 import FoodDetail from '../components/FoodDetail';
 import WhatWorkout from '../components/WhatWorkout';
 import Result from '../components/Result';
-import CustomDrawer from '../components/CustomDrawer';
 
 const DiaryStacks = StackNavigator({
     Diary: { screen: Diary },
