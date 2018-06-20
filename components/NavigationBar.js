@@ -3,11 +3,12 @@ import {
   Platform, StyleSheet, Text,
   View, TouchableOpacity, Alert
 } from 'react-native';
+import { connect } from 'react-redux';
 import validator from 'validator';
 import firebase from 'react-native-firebase';
-import { width } from '../utils/helpers';
+import { width, emailDB } from '../utils/helpers';
 
-export default class NavigationBar extends Component {
+class NavigationBar extends Component {
   validate(data) {
     for(let k in data) {
       if(typeof data[k] === 'string' && data[k].length === 0) {
@@ -182,6 +183,25 @@ export default class NavigationBar extends Component {
         )
       }
 
+      case 'DiaryDetail': {
+        const { email, day, saveData } = this.props;
+
+        return (
+          <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
+            <TouchableOpacity 
+              onPress={() => saveData(emailDB(email), day)}
+              style={{flex:1}}
+            >
+              <View style={{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}>
+                <Text style={{textAlign: 'center', color: 'white', fontSize: 20}}>
+                  저장하기
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+
       case 'WhatFood': {
         return (
           <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
@@ -222,7 +242,24 @@ export default class NavigationBar extends Component {
       }
 
       case 'DayDetail': {
-        const { category } = this.props;
+        let { category } = this.props;
+        switch(category) {
+          case 'breakfast':
+            category = '아침';
+            break;
+          case 'lunch':
+            category = '점심';
+            break;
+          case 'dinner':
+            category = '저녁';
+            break;
+          case 'dessert':
+            category = '간식';
+            break;
+          default:
+            category = '운동';
+            break;
+        }
 
         return (
           <View style={{flex:1, flexDirection: 'row', maxHeight: 50}}>
@@ -230,7 +267,7 @@ export default class NavigationBar extends Component {
               style={{flex:1}}
               onPress={() => {
                 if(category === '운동') navigation.navigate('WhatWorkout');
-                navigation.navigate('WhatFood', { category });
+                else navigation.navigate('WhatFood', { category });
               }}
             >
               <View style={{flex:1, flexDirection: 'row',justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(240,82,34)'}}>
@@ -303,6 +340,14 @@ export default class NavigationBar extends Component {
     }
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    ...state
+  }
+}
+
+export default connect(mapStateToProps, null)(NavigationBar);
 
 const styles = StyleSheet.create({
   textView: {

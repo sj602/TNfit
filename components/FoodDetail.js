@@ -19,7 +19,7 @@ class FoodDetail extends Component {
   }
 
   static navigationOptions = ({navigation}) => ({
-    title: navigation.state.params.selectedFood['상품명'],
+    title: navigation.state.params.selectedFood['name'],
     headerTitleStyle: {flex:1, alignSelf: 'center'},
     headerTintColor: 'white',
     headerStyle: {backgroundColor: 'rgb(240,82,34)'},

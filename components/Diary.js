@@ -7,13 +7,19 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import firebase from 'react-native-firebase';
-import { setDay } from '../actions';
-import { width } from '../utils/helpers';
+import { CalendarList } from 'react-native-calendars';
 import { Icon } from 'react-native-elements';
-import { Calendar } from 'react-native-calendars';
 import NavigationBar from './NavigationBar';
+import { setDay } from '../actions';
+import { width, emailDB } from '../utils/helpers';
 
 class Diary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dates: {}
+    }
+  }
   static navigationOptions = ({navigation}) => ({
     title: '달력',
     headerTitleStyle: {flex:1, alignSelf: 'center'},
@@ -30,13 +36,30 @@ class Diary extends Component {
                 />
   })
 
-  markedDates() {
+  componentDidMount() {
+    this.renderDates();
+  }
 
-    let dates = {
-      '2018-06-11': {disabled: true, startingDay: true, color: '#87b242', endingDay: true}
-    };
+  renderDates() {
+    const database = firebase.database();
+    let { email } = this.props.userInfo;
+    email = emailDB(email);
 
-    return dates;
+    let dates = {};
+
+    database.ref(`/users/${email}/history`).once('value', (snap) => snap.val()).then(result => {
+      const history = result.val();
+
+      Object.keys(history).map(day => {
+        if(history[day].result.scores === 'GOOD') {
+          dates[day] = {scores: 'GOOD', disabled: true, startingDay: true, color: '#87b242', endingDay: true}
+        } else if(history[day].result.scores === 'BAD') {
+          dates[day] = {scores: 'BAD', disabled: true, startingDay: true, color: 'red', endingDay: true}
+        }
+      })
+
+      return dates;
+    }).then(dates => this.setState({dates}))
   }
 
   render() {
@@ -46,7 +69,8 @@ class Diary extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.containerSub}>
-          <Calendar
+          <CalendarList
+            horizontal={true}
             maxDate={new Date().toISOString().substring(0,10)}
             onDayPress={day => {
               setDay(day.dateString);
@@ -57,10 +81,45 @@ class Diary extends Component {
             hideExtraDays={true}
             onPressArrowLeft={substractMonth => substractMonth()}
             onPressArrowRight={addMonth => addMonth()}
-            markedDates={this.markedDates()}
             markingType={'period'}
+            markedDates={this.state.dates}
+            dayComponent={({date, state, marking}) => {
+              return (
+                <View style={{flex: 1}}>
+                  {
+                    marking && marking.scores === 'GOOD'
+                    ?
+                    (
+                      <View style={{position: 'absolute', top: 0, right: 0}}>
+                        <Icon
+                          name="mood"
+                          color='#87b242' size={20}
+                        />
+                      </View>
+                    )
+                    :
+                    marking && marking.scores === 'BAD'
+                    ?
+                    (
+                      <View style={{position: 'absolute', top: 0, right: 0}}>
+                        <Icon
+                          name="sentiment-very-dissatisfied"
+                          color='red' size={20}
+                        />
+                      </View>
+                    )
+                    :
+                    null
+                  }
+                  <Text style={{margin: 5, fontSize: 18, textAlign: 'center', color: state === 'disabled' ? 'gray' : 'black'}}>
+                    {date.day}
+                  </Text>
+                </View>
+              );
+            }}
           />   
         </View>
+
       </View>
     );
   }

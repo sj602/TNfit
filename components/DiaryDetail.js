@@ -7,19 +7,22 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import firebase from 'react-native-firebase';
+import PieChart from 'react-native-pie-chart';
+import { Icon } from 'react-native-elements';
 import { 
   calculateResult, saveMetabolism, setDay,
   loadPersonalData, loadHistoryData,
 } from '../actions';
-import PieChart from 'react-native-pie-chart';
-import { Icon } from 'react-native-elements';
+import NavigationBar from './NavigationBar';
 import { width, emailDB } from '../utils/helpers';
 
 class DiaryDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      translateY: new Animated.Value(0)
+      translateY: new Animated.Value(0),
+      translateYnotice: new Animated.Value(0),
+      opacity: new Animated.Value(0),
     }
   }
 
@@ -54,6 +57,8 @@ class DiaryDetail extends Component {
       nextProps.workoutInfo === this.props.workoutInfo 
       && 
       nextProps.history === this.props.history
+      &&
+      nextProps.day === this.props.day
       ) {
       return false;
     }
@@ -72,7 +77,7 @@ class DiaryDetail extends Component {
   componentDidMount() {
     // prevent from alerting check personal info after the info is already filled by loadData
     setTimeout(() => {
-      const { userInfo, saveMetabolism, loadHistoryData, day } = this.props;
+      const { userInfo, saveMetabolism, loadHistoryData, day} = this.props;
       const { email } = this.props.userInfo;
 
       this.checkPersonalInfo()
@@ -81,7 +86,7 @@ class DiaryDetail extends Component {
       loadHistoryData(email, day);
     }, 1500);
 
-    this.animation();
+    this.fillInfoAnimation();
   }
 
   saveData(email, day) {
@@ -123,20 +128,58 @@ class DiaryDetail extends Component {
       }
     ).then(() => {
       console.log('INSERTED');
+      this.notifySavedAnimation();
     }).catch(err => {
       console.log(err);
     });
 
   }
 
-  animation() {
-    Animated.spring(
-      this.state.translateY,
-      {
-        toValue: 10,
-        friction: 1
-      }
-    ).start();
+  fillInfoAnimation() {
+    Animated.sequence([
+      Animated.timing(this.state.translateYnotice, {
+        toValue: 50,
+        duration: 500,
+        useNativeDriver: true
+      }),
+      Animated.delay(2000),   
+      Animated.spring(this.state.translateY, {
+          toValue: 10,
+          friction: 1
+      }),
+      Animated.delay(2000),   
+      Animated.timing(this.state.translateYnotice, {
+        toValue: -50,
+        duration: 500,
+        useNativeDriver: true
+      })
+    ]).start();
+  }
+
+  notifySavedAnimation() {
+    Animated.sequence([
+      Animated.timing(this.state.translateYnotice, {
+        toValue: -50,
+        duration: 500,
+        useNativeDriver: true
+      }),
+      Animated.timing(this.state.opacity, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true
+      }),      
+      Animated.delay(2000),      
+      Animated.timing(this.state.opacity, {
+        toValue: 0,
+        duration: 1000,
+        useNativeDriver: true
+      }),      
+      Animated.timing(this.state.translateYnotice, {
+        toValue: 50,
+        duration: 500,
+        useNativeDriver: true
+      })
+    ]).start();
   }
 
   checkResult() {
@@ -214,27 +257,15 @@ class DiaryDetail extends Component {
     if(weight > targetWeight) {
       (extraCalories < 0)
       ?
-      (
-        console.log(1),
-        {backgroundColor: '#87b242'}
-      )
+      {backgroundColor: '#87b242'}
       :
-      (
-        console.log(2),
-        {backgroundColor: 'lightgrey'}
-      )
+      {backgroundColor: 'lightgrey'}
     } else if(weight < targetWeight) { // for gaining weight
       (extraCalories > 0)
       ?
-      (
-        console.log(3),
-        {backgroundColor: '#87b242'}
-      )
+      {backgroundColor: '#87b242'}
       :
-      (
-        console.log(4),
-        {backgroundColor: 'lightgrey'}
-      )
+      {backgroundColor: 'lightgrey'}
     }
   }
 
@@ -274,7 +305,7 @@ class DiaryDetail extends Component {
 
         <View style={{width: 80, height: 30, position: 'absolute', top: 5, right: 10}}>
           <Text>
-            {this.props.day}
+            {day}
           </Text>
         </View>
 
@@ -422,7 +453,7 @@ class DiaryDetail extends Component {
                   navigate('DayDetail', {category: '간식'})
                 }
                 else {
-                  foodInfo.dinner.calories > 0
+                  foodInfo.dessert.calories > 0
                   ?
                   navigate('DayDetail', {category: '간식'})
                   :
@@ -455,7 +486,7 @@ class DiaryDetail extends Component {
                   ?
                   navigate('DayDetail', {category: '운동'})
                   :
-                  navigate('WhatFood', {category: '운동'})
+                  navigate('WhatWorkout', {category: '운동'})
                 }
               }}
             >
@@ -489,7 +520,7 @@ class DiaryDetail extends Component {
             <View style={[{justifyContent: 'center', alignItems: 'center', width: 60, height: 60, borderRadius: 30, backgroundColor: 'lightgrey', margin: 5}, this.handleColorByResult()]}>
               <View style={{justifyContent: 'center', alignItems: 'center', width: 50, height: 50, borderRadius: 25, backgroundColor: 'white', margin: 5}}>
                 <Text
-                  style={{textAlign: 'center', color: 'rgb(240,82,34)', fontSize: 20}}
+                  style={{textAlign: 'center', color: 'rgb(240,82,34)', fontSize: 18, fontWeight: 'bold'}}
                 >
                   {result.scores ? result.scores : null}
                 </Text>
@@ -505,19 +536,36 @@ class DiaryDetail extends Component {
           </View>
         </View>
 
-        <TouchableOpacity onPress={() => this.saveData(emailDB(email), day)}>
-          <View>
-            <Text>
-              저장하기
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <Animated.View style={[{width: 220, height: 50, justifyContent: 'center', alignItems: 'center'}, {transform: [{translateY: this.state.translateY}]}]}>
+        {
+          this.props.history[day]
+          ?
+          null
+          :
+          (
+            <Animated.View style={[{position: 'absolute', bottom: -20, width: 260, height: 50, justifyContent: 'center', alignItems: 'center'}, {transform: [{translateY: this.state.translateY}]}]}>
+              <Text>
+                동그란 아이콘을 클릭해 정보를 채워주세요!
+              </Text>
+            </Animated.View>
+          )
+        }
+
+        <Animated.View 
+          style={[styles.notifySaved, {opacity: this.state.opacity, transform: [{translateY: this.state.translateYnotice}]}]}
+        >
           <Text>
-            아이콘을 클릭해 정보를 채워주세요!
+            저장되었습니다
           </Text>
         </Animated.View>
 
+        <NavigationBar 
+          menu='DiaryDetail' 
+          navigation={this.props.navigation} 
+          saveData={(email, day) => this.saveData(emailDB(email), day)} 
+          email={email}
+          day={day}
+          history={this.props.history}
+        />
       </View>
     );
   }
@@ -562,5 +610,17 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     marginTop: 10,
+  },
+  notifySaved: {
+    position: 'absolute', 
+    bottom: 10, 
+    right: 10, 
+    width: 100, 
+    height: 40, 
+    borderRadius: 5, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    elevation: 2,
+    backgroundColor: 'white'
   }
 });

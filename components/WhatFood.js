@@ -69,6 +69,7 @@ class WhatFood extends Component {
         
         this.setState({loading: false});
       } else {
+        console.log('in', defaultFoodList)
         let defaultFoodList = cloneDeep(this.props.foodInfo.foodList);
 
         defaultFoodList = defaultFoodList.map(food => ({

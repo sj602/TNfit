@@ -15,6 +15,7 @@ export function deepCopy(obj) {
 }
 
 export const emailDB = (email) => {
+	console.log('emaildb email', email)
 	email = email.split("@");
     email[1] = email[1].replace(/[.]/g, '-');
     email = email.join("@");

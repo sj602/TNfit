@@ -11,7 +11,6 @@ import {
     LOAD_PERSONAL_DATA,
     LOAD_HISTORY_DATA,
 } from '../actions';
-import { REHYDRATE } from 'redux-persist';
 
 const initialState = {
     userInfo: {
@@ -69,28 +68,11 @@ const initialState = {
     },
     productList: [],
     day: '',
-    history: {
-        '2018-06-15': {
-            foodInfo: {},
-            workoutInfo: {},
-            result: {},
-        },
-    }
+    history: {},
 };
-
-// const persistConfig = {
-//   key: 'root',
-//   storage: storage,
-//   whitelist: ['auth', 'notes']
-// };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case REHYDRATE: 
-            return {
-                ...state
-            }
-
         case SAVE_USER_INFO:
             return {
                 ...state,
@@ -98,18 +80,23 @@ export default function reducer(state = initialState, action) {
             }
 
         case SAVE_FOOD_INFO:
-            let addedFoodCalories = 0, { eatenFoodList } = action;
-            eatenFoodList = eatenFoodList.map(food => ({
-                ...food,
-                "calorie": food.calorie.replace(/[kcal]/g, '')
-            }));
-
-            eatenFoodList.map( food => addedFoodCalories += Number(food.calorie) )
-            addedFoodCalories.toFixed(0);
+            const { addedFoodCalories, eatenFoodList } = action;
 
             if (action.category === '아침') {
                 return {
                     ...state,
+                    userInfo: {
+                        ...state.userInfo,
+                        dayInfo: {
+                            ...state.userInfo.dayInfo,
+                            result: {
+                                ...state.userInfo.dayInfo.result,
+                                carb: state.userInfo.dayInfo.result.carb + action.carb,
+                                protein: state.userInfo.dayInfo.result.protein + action.protein,
+                                fat : state.userInfo.dayInfo.result.fat + action.fat,
+                            }
+                        }
+                    },
                     foodInfo: {
                         ...state.foodInfo,
                         breakfast: {
@@ -121,6 +108,18 @@ export default function reducer(state = initialState, action) {
             } else if (action.category === '점심') {
                 return {
                     ...state,
+                    userInfo: {
+                        ...state.userInfo,
+                        dayInfo: {
+                            ...state.userInfo.dayInfo,
+                            result: {
+                                ...state.userInfo.dayInfo.result,
+                                carb: state.userInfo.dayInfo.result.carb + action.carb,
+                                protein: state.userInfo.dayInfo.result.protein + action.protein,
+                                fat : state.userInfo.dayInfo.result.fat + action.fat,
+                            }
+                        }
+                    },
                     foodInfo: {
                         ...state.foodInfo,
                         lunch: {
@@ -132,6 +131,18 @@ export default function reducer(state = initialState, action) {
             } else if (action.category === '저녁') {
                 return {
                     ...state,
+                    userInfo: {
+                        ...state.userInfo,
+                        dayInfo: {
+                            ...state.userInfo.dayInfo,
+                            result: {
+                                ...state.userInfo.dayInfo.result,
+                                carb: state.userInfo.dayInfo.result.carb + action.carb,
+                                protein: state.userInfo.dayInfo.result.protein + action.protein,
+                                fat : state.userInfo.dayInfo.result.fat + action.fat,
+                            }
+                        }
+                    },
                     foodInfo: {
                         ...state.foodInfo,
                         dinner: {
@@ -143,6 +154,18 @@ export default function reducer(state = initialState, action) {
             } else if (action.category === '간식') {
                 return {
                     ...state,
+                    userInfo: {
+                        ...state.userInfo,
+                        dayInfo: {
+                            ...state.userInfo.dayInfo,
+                            result: {
+                                ...state.userInfo.dayInfo.result,
+                                carb: state.userInfo.dayInfo.result.carb + action.carb,
+                                protein: state.userInfo.dayInfo.result.protein + action.protein,
+                                fat : state.userInfo.dayInfo.result.fat + action.fat,
+                            }
+                        }
+                    },
                     foodInfo: {
                         ...state.foodInfo,
                         dessert: {
@@ -276,11 +299,11 @@ export default function reducer(state = initialState, action) {
                             },
                             dinner: {
                                 calories: foodInfo.dinner.calories,
-                                list: foodInfo.dinner.calories,
+                                list: foodInfo.dinner.list,
                             },
                             dessert: {
                                 calories: foodInfo.dessert.calories,
-                                list: foodInfo.dessert.calories,
+                                list: foodInfo.dessert.list,
                             }
                         },
                         workoutInfo: {

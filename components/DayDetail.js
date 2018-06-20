@@ -32,6 +32,7 @@ class DayDetail extends Component {
   })
 
   render() {
+    const { navigate } = this.props.navigation;
     const { day } = this.props;
     let { category } = this.props.navigation.state.params;
     switch(category) {
@@ -72,7 +73,7 @@ class DayDetail extends Component {
           { 
             category === 'workout'
             ?
-            list.map((item, index) => {
+            list && list.map((item, index) => {
               return (
                 <View style={styles.item} key={index}>
                   <View style={{flex: 1, justifyContent: 'center'}}>
@@ -94,7 +95,7 @@ class DayDetail extends Component {
               )
             })
             :
-            list.map((item, index) => {
+            list && list.map((item, index) => {
               return (
                 <View style={styles.item} key={index}>
                   <View style={{flex: 1, justifyContent: 'center'}}>
@@ -107,6 +108,17 @@ class DayDetail extends Component {
                       {item['calorie']}kcal
                     </Text>
                   </View>
+                  <TouchableOpacity
+                    onPress={() => navigate('FoodDetail', {selectedFood: item })}
+                    style={{marginLeft: 8}}
+                  >
+                    <Icon
+                      name='angle-double-right'
+                      type='font-awesome'
+                      color='rgb(240,82,34)'
+                      size={20}
+                    />
+                  </TouchableOpacity>
                 </View>
               )
             })

@@ -23,7 +23,25 @@ export const saveUserInfo = (data) => dispatch => {
 }
 
 export const saveFoodInfo = (eatenFoodList, category) => dispatch => {
-	return dispatch({type: SAVE_FOOD_INFO, eatenFoodList, category})
+	let carb = 0, protein = 0, fat = 0;
+
+	eatenFoodList.map(food => {
+		carb += Number(food.carb.replace(/[g]/g, ''));
+		protein += Number(food.protein.replace(/[g]/g, ''));
+		fat += Number(food.fat.replace(/[g]/g, ''));
+	})
+
+    let addedFoodCalories = 0;
+    eatenFoodList = eatenFoodList.map(food => ({
+        ...food,
+        "calorie": food.calorie.replace(/[kcal]/g, '')
+    }));
+
+    eatenFoodList.map(food => addedFoodCalories += Number(food.calorie))
+    addedFoodCalories.toFixed(0);
+
+
+	return dispatch({type: SAVE_FOOD_INFO, eatenFoodList, category, carb, protein, fat, addedFoodCalories})
 }
 
 export const saveWorkoutInfo = (data) => dispatch => {
@@ -69,7 +87,7 @@ export const loadPersonalData = (email) => dispatch => {
     // email = sj602, naver.com
     email = emailDB(email);
 
-	let database = firebase.database();
+	const database = firebase.database();
 
 	database.ref(`/users`).once('value', (snap) => snap.val()).then(result => {
 		let users = Object.keys(result.val())
@@ -106,7 +124,7 @@ export const loadPersonalData = (email) => dispatch => {
 export const loadHistoryData = (email, day) => (dispatch) => {
     email = emailDB(email);
 
-	let database = firebase.database();
+	const database = firebase.database();
 
 	database.ref(`/users/${email}/history`).once('value', (snap) => snap.val()).then(result => {
 		let dates = Object.keys(result.val())

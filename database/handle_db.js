@@ -4,7 +4,7 @@ import firebase from 'react-native-firebase';
 // category: choose which DB to handle(food, workout)
 export const fetchDB = (category) => {
   // firebase database setting
-  let database = firebase.database();
+  const database = firebase.database();
 
   // write data to database 1
   // let ref = database.ref().child('workout');
